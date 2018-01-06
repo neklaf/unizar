@@ -1,0 +1,7 @@
+#!/bin/bash
+
+filas=`grep -c ^ Parser.java`
+let "filas=$filas - 1"
+tail -n $filas Parser.java >> Parser2.java
+cp Parser2.java Parser.java
+rm Parser2.java

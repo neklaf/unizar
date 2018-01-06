@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Este script se utiliza para compilar el Comp.java que tenemos que hacer para 
+# llamar al Parser, Scanner y ErrorStream generados por la gramática.
+#
+
+#javac Comp.java > ecomp.txt
+
+javac Comp.java

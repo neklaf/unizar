@@ -1,0 +1,9 @@
+MODULE prueba;
+
+VAR b:REAL;
+
+PROCEDURE aitor(a:INTEGER);
+
+END aitor;
+
+END prueba.

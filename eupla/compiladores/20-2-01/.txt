@@ -1,0 +1,26 @@
+TABLA DE SIMBOLOS:
+
+NOMBRE  /*una cadena*/
+ESPECIE:CONST,TIPO,VAR,CAMPO
+TIPO /*apuntador al Tipo. Aquí se guardará  */
+VALOR /*para las constantes Object*/
+SIGUIENTE /*apuntador al siguiente simbolo*/
+
+la estructura de tipo será:
+Tipo:
+
+	CLASE:int
+	LONGITUD:int
+	CAMPOS:Objeto
+	BASE:Tipo /*Para definir el tipo a lo que apuntaría un puntero o el tipo de un array.*/
+
+
+Habrá estructuras para los tipos básicos.
+
+Para los tipos no básicos como por ejemplo registros habrá que hacer otro tipo de estructura 
+para poder almacenar los datos.
+
+Insertar y Buscar en la tabla de símbolos.
+Se podrá hacer que sólo tengamos insertar y si lo encontramos devuelve el puntero al elemento.
+Esto será hacer lo mismo que el buscar pero desde el insertar.El modo de trabajo será opcional.
+Depende de como lo queramos ver.

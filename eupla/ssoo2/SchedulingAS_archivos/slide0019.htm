@@ -1,0 +1,24 @@
+<html><head><meta http-equiv=Content-Type content="text/html; charset=macintosh"><meta name=ProgId content=PowerPoint.Slide><meta name=Generator content="Microsoft Macintosh PowerPoint 10"><link id=Main-File rel=Main-File href="../SchedulingAS.htm"><title>Presentación de PowerPoint  -  Scheduling Support for Concurrency andParallelism in the Mach Operating System</title><link title="Presentation File" type="application/powerpoint" rel=alternatehref=SchedulingAS.ppt><script>
+if ( ! top.PPTPRESENTATION ) {
+	window.location.replace( "endshow.htm" );
+}
+</script><meta name=Description content="11-ener-04: Desarrollo del contenido XI"><link rel=Stylesheet href="master03_stylesheet.css"><style media=print><!--.sld	{left:0px !important;	width:6.0in !important;	height:4.5in !important;	font-size:76% !important;}--></style><script language=JavaScript src=script.js></script><script language=JavaScript><!--
+gId="slide0019.htm"
+if ( !parent.base.g_done && (parent.base.msie < 0 ) ) {
+	parent.base.g_done = 1;
+	document.location.replace( parent.base.GetHrefObj(parent.base.g_currentSlide).m_slideHref);
+}
+if( !IsNts() ) Redirect( "PPTSld", gId );
+//-->
+</script><script for=window event=onload language=JavaScript><!--
+if( !IsSldOrNts() ) return;
+if( MakeNotesVis() ) return;
+LoadSld( gId );
+playList();MakeSldVis(0);
+//-->
+</script></head><body style='margin:0px;background-color:black' onclick="DocumentOnClick(event)"onresize="_RSW()" onkeypress="_KPH(event)"><div id=SlideObj class=sld style='position:absolute;top:0px;left:0px;width:755px;height:566px;font-size:16px;background-color:white;clip:rect(0%, 101%, 101%, 0%);visibility:hidden'><div class=T style='position:absolute;top:6.89%;left:8.47%;width:83.04%;height:8.3%'>Desarrollo del contenido XI</div><div class=O style='position:absolute;top:18.02%;left:5.16%;width:112.71%;height:79.15%'><span style='position:absolute;top:0%;left:0%;width:83.31%'><i><u>Implementación</u></i>:<br></span><spanstyle='position:absolute;top:6.69%;left:0%;width:100.0%'>La implementación enel kernel del conjunto de procesadores extiende<br></span><div style='position:absolute;top:13.39%;left:0%;width:83.31%;height:5.8%'>elplanificador de tiempo compartido de Mach.<br></div><div style='position:absolute;top:20.08%;left:0%;width:83.31%;height:5.8%'><br></div><div style='position:absolute;top:26.78%;left:0%;width:96.35%;height:5.8%'>Laestructura de datos para cada conjunto de procesadores contiene <br></div><div style='position:absolute;top:33.7%;left:0%;width:90.59%;height:5.8%'>unacola de ejecución que será global para los procesadores del <br></div><div style='position:absolute;top:40.4%;left:0%;width:83.31%;height:5.8%'>conjunto.<br></div><div style='position:absolute;top:47.09%;left:0%;width:83.31%;height:5.8%'><br></div><div style='position:absolute;top:53.79%;left:0%;width:90.24%;height:5.8%'>Tambiéncontendrá información requerida para el algoritmo de <br></div><div style='position:absolute;top:60.49%;left:0%;width:91.06%;height:5.8%'>planificación,una lista con las estructuras de datos de las tareas <br></div><div style='position:absolute;top:67.18%;left:0%;width:98.11%;height:5.8%'>asignadasy un cerrojo de exclusión mutua para controlar el acceso a <br></div><div style='position:absolute;top:73.88%;left:0%;width:83.31%;height:5.8%'>laestructura de datos.<br></div><div style='position:absolute;top:80.8%;left:0%;width:83.31%;height:5.8%'><br></div><div style='position:absolute;top:87.5%;left:0%;width:93.88%;height:5.8%'>Ademásmantendrá una lista de los procesadores libres dentro del <br></div><div style='position:absolute;top:94.19%;left:0%;width:90.24%;height:5.8%'>conjuntopara poder asignar tareas independientes del conjunto.</div></div></div><script language=JavaScript><!--
+function playList() {
+
+}
+//-->
+</script></body></html>

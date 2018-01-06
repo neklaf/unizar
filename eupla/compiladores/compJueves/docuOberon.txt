@@ -1,0 +1,46 @@
+Antes de todo, hay que tener muy en cuenta la referencia que supone el ejemplo
+del Taste.atg por lo que es muy importante entender como funciona, para poder
+aplicarlo y si puede ser mejorarlo a nuestro compilador.
+
+1) La primera fase será pues ver como está constituido el taste.
+
+2) Después escribir el oberon.atg únicamente con la sintaxis para ver si la 
+pasa y retocar las reglas que hagan falta, (recordar la recursividad a la 
+izquierda...).
+
+Bueno una vez parseadas las reglas por separado da un warning en la regla:
+
+	sentencia = [asignacion | LlamadaProc | SentenciaIf | SentenciaWhile].
+
+Ya que nos dice que bastantes de los no-terminales de la parte derecha empiezan por el 
+no-terminal 'ident'.
+Por lo q tendremos q sustituir la regla por la siguiente:
+
+	sentencia = [sentencia1 | SentenciaIf | SentenciaWhile ].
+
+	sentencia1 = ident [ selector ":=" expresion | [ParametrosActuales] ].
+
+También nos dice que varios de los no-terminales que hay entre las reglas se podrían
+borrar. Los terminales borrables, son indicados asi pq acaban derivando en la cadena
+vacia pero lo q ocurre es q son requisitos de la gramatica, por lo tanto esos warnings 
+deberian permanecer asi!!!.
+
+El siguiente paso sera introducir un archivo de entrada para ver si simplemente reconoce
+la gramatica. Mirar como se realiza el archivo q manejara los errores del compilador
+ya q se podria empezar a controlar alguna serie de errores de tipo lexico!!!.
+(Mirar el Taste :))
+
+3) Insertar las reglas semánticas en las partes en las que necesitemos para
+realizar las operaciones necesarias.
+
+La inserción de reglas semánticas se hará de forma controlada, poniendo las reglas semánticas
+de un regla de la gramática y después pasando el oberon.atg por el Coco.Comp, para 
+ver si da algún tipo de error, también probar con ficheros de entrada para la parte de la 
+gramática útil.
+
+
+NOTA: En los comentarios no se pueden poner acentos ni ñ's porque sino da fallos
+de 'invalid character'.(Los puntos si que se pueden colocar entre los comentarios!!)
+
+NOTA2: Cuando insertemos una nueva regla a la gramatica con la q estemos trabajando, tenemos 
+q acordarnos de ponerle el punto para indicar q la regla termina!!!

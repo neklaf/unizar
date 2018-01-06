@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Esto es un script para la práctica de compiladores!!
+#
+
+java Coco.Comp $1 
+./script

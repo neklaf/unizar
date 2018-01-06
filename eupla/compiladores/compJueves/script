@@ -1,0 +1,19 @@
+#!/bin/bash
+
+filas=`grep -c ^ Parser.java`
+let "filas=$filas - 1"
+tail -n $filas Parser.java >> Parser2.java
+cp Parser2.java Parser.java
+rm Parser2.java
+
+filas=`grep -c ^ Scanner.java`
+let "filas=$filas - 1"
+tail -n $filas Scanner.java >> Parser2.java
+cp Parser2.java Scanner.java
+rm Parser2.java
+
+filas=`grep -c ^ ErrorStream.java`
+let "filas=$filas - 1"
+tail -n $filas ErrorStream.java >> Parser2.java
+cp Parser2.java ErrorStream.java
+rm Parser2.java

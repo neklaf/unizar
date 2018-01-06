@@ -1,0 +1,10 @@
+La practica 4ª sera realizar una calculadora simple sin numeros 
+decimales y las operacines simples
+
+Los operandos y los operadores seran introducidos en un pantalla y el
+resultado se representara en otro.
+
+Tendremos una CL principal para recoger datos y para comunicarnos con 
+los formatos de pantalla, y se comunicara con la CL pertinente para 
+la operacion q queramos realizar. Y la principal sera la encargada de 
+visualizar el resultado.

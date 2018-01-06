@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Este otro script lo hemos realizado para la ejecución de la clase Comp
+#
+
+#java Comp > eej.txt
+
+java Comp $1

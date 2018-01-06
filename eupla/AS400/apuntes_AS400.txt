@@ -1,0 +1,25 @@
+           <-+========== AS 400 . 24-04-02 ==========+->
+
+ Vamos a definirnos el formato de pantalla de entrada -> entramos en el sda y le damos a la opcion 1 
+
+
+Ahora entramos en el miembro que queremos (dentro del objeto qdssrc o algo asin) el suyo se llama CALNOSEQUE. Para añadir le metemos a la opcion 1 y el tipo de formato de pantalla es REGISTRo.
+
+
+     Operando 1         Operacion       Operando 2
+                   '("+" "-" "*" "/")'
+     +I3                  +I3                +I3
+
+Ponemos los campos de entrada: +I3 al darle al enter se te "pone" XD ¿¿con el interrogante en el bit de campo aparece el nombre del campo y La longitud ->> long = 10 -> enter
+
+A la dcha del todo otro igual de 10 tbn
+
+En el medio pero sera solo de 1 digito -> nombre=OP y long=1
+
+Para convertir  texto a numero F4 , para trabajar con campos
+
+Le damos al 1 para seleccionar palabras clave del campo que queremos
+
+Decirle , en las opciones de tecleo?! 	que Yes 
+
+El ultimo atributo de todos es el desplazamiento del teclado, le decimos N xq es numerico

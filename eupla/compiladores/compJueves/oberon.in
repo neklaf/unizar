@@ -1,0 +1,12 @@
+MODULE aitor;
+
+VAR a:INTEGER;
+
+PROCEDURE suma(b:INTEGER);
+BEGIN 
+
+  a:=a+1;
+
+END suma;
+
+END aitor.

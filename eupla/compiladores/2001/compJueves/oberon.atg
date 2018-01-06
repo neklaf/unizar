@@ -1,0 +1,261 @@
+COMPILER oberon 
+
+	// tipos de variables
+	static final int undef = 0;
+	static final int integer = 1;
+	static final int bool = 2;
+	static final int flotante = 3;
+	static final int cte = 4;
+
+	// formas para los tipos  (modes)
+	static final int vars = 0;
+	static final int reg = 1;
+	static final int vector = 2;
+	static final int proc = 3;      //???
+
+/*----------------------------------------------------------------------------*/
+
+CHARACTERS
+  letra = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
+  digito  = "0123456789".
+  eol    = CHR(13).
+  lf     = CHR(10).
+  tab    = CHR(9).
+
+TOKENS
+  ident  = letra {letra | digito}.
+  entero = digito {digito}.
+
+IGNORE eol + lf + tab
+
+COMMENTS FROM "(*" TO "*)" NESTED
+
+PRODUCTIONS
+
+/*----------------------------------------------------------------------------*/
+
+/*en esta regla hay un pequeno cambio el simbolo inicial era 'modulo' y lo hemos
+cambiado por 'oberon'*/
+
+/*Esta es la regla principal de la gramatica por lo que podemos constatar que esta desordenada*/
+
+oberon          (. tabla.Init();  //Iniciamos el compilador!!.)
+= "MODULE" ident ";" declaraciones ["BEGIN" SecuenciaSentencias] 
+"END" ident (. tabla.verScopes(); .)".".
+
+/*----------------------------------------------------------------------------*/
+
+declaraciones    (. String tv,n1,n2=null,n3; //tabla.EnterScope(); .)       
+=
+	(. String nc=null; Obj o1; int en; .)
+	/*Ahora deberemos almacenar el valor de las constantes!!!*/
+
+	/*["CONST" {Ident<^nc> "=" expresion ";"}]*/
+
+	["CONST" {Ident<^nc> 	(. o1=tabla.NewObj(nc,cte); .)
+	(. o1.block=true; //Pq a una cte no se le puede modificar el valor.)
+	"=" Entero<^en> 	
+	(. Struct st2,st=new Struct("INTEGER"); .)
+	(. st2=tabla.buscaT(st); o1.type=st2;.)	
+	(. o1.val=new Integer(en); .)
+	";" 	(. //tabla.topScope.locals.view(); .)		}]
+		
+
+		(. Struct s; .)	
+	["TYPE" {Ident<^n3>	(. s=new Struct(n3); //Creo tipo nuevo!!.)
+				(. tabla.addT(s); //Insertado en la lista de tipos!!.)
+	"=" tipo ";"    (. //tabla.lt.view(); .)     }]
+				  
+	["VAR" {ListaIdent       
+	":" tipo1<^tv>
+	
+	(. tabla.pontipo(tv);tabla.insTablaS(); .) 
+	
+	";" }]
+		
+	{DeclaracionProcedimiento ";"  (. tabla.lt.view(); .) }.
+
+/*----------------------------------------------------------------------------*/
+
+/*Se supone q el ident q va despues del PROC tiene q ser igual q el q va 
+despues de la Declaracion del procedimiento!!!*/
+/*Esto es para los errores semanticos!!!*/
+
+DeclaracionProcedimiento = CabeceraProcedimiento ";" CuerpoProcedimiento 
+ident (.tabla.LeaveScope(); .).
+
+/*----------------------------------------------------------------------------*/
+
+CuerpoProcedimiento = declaraciones ["BEGIN" SecuenciaSentencias] "END".
+
+/*----------------------------------------------------------------------------*/
+
+/*Estos procedimientos no pueden ser funciones ya q no pueden devolver nada!!*/
+
+CabeceraProcedimiento (. String np=null; Struct s4;.)
+= "PROCEDURE" Ident<^np> (. s4=new Struct(np); tabla.addT(s4); .) 
+(. tabla.EnterScope(); .)
+/*Tipo ya ha sido insertado!!*/
+[ParametrosFormales].
+
+/*----------------------------------------------------------------------------*/
+
+ParametrosFormales = "(" [SeccionPF {";" SeccionPF}] ")".
+
+/*----------------------------------------------------------------------------*/
+
+/*Las variables aqui declaradas tendran q ir enlazadas a lt.link!!*/
+
+/*ListaIdent pasara las variables a la lista aux!!!*/
+
+SeccionPF   	(. String s2=null; .)       
+
+= 		(. boolean b=true;.)/*b lo asignaremos a tabla.lt.link.block*/
+
+["VAR" (. b=false; .)] 
+
+ListaIdent ":"    
+
+tipo1<^s2>	(. tabla.pontipo(s2);tabla.bloquea(b);tabla.insAuxR(); .)  
+(. tabla.aux=null; //Lista aux reseteada!!! .).
+
+/*----------------------------------------------------------------------------*/
+
+/*Pq puede ser un identificador el tipo!!!*/
+
+/*tipo = ident | TipoArray | TipoRecord.*/
+
+tipo = TipoArray | TipoRecord.
+tipo1<^String id> = ident (. id=token.val; .).
+
+/*----------------------------------------------------------------------------*/
+
+TipoRecord = 	
+"RECORD" (. tabla.lt.form=reg; //Marcamos q es un registro.)
+ListaCampos {";" ListaCampos}
+(. tabla.lt.size+=tabla.tamReg(); //Ponemos el tamano q ocupara el registro .)
+ "END".
+
+/*----------------------------------------------------------------------------*/
+/*Sabemos q el tipo del q estamos hablando esta apuntado por lt!!!*/
+
+/*PROBAR SI EL TAMANO DEL REGISTRO ES CORRECTO CON LAS EQUIVALENCIAS DE
+TIPOS BASICOS!!!*/
+
+/*ListaCampos = [ListaIdent ":" tipo1<^cad>]*/
+
+ListaCampos   (. String cad; Struct t1=null,t2; .)
+= 
+[ListaIdent
+":" 
+tipo1<^cad> /*Tenemos q poner el tamano e insertar los campos!!!*/ 
+	(. tabla.pontipo(cad); .)
+	(. tabla.insAuxR(); //Inserta los campos .)
+	(. t2=new Struct(cad); t1=tabla.buscaT(t2); .) 
+	/*Necesitamos aux intacta hasta aqui!!!*/
+	(. tabla.aux=null; //Reseteamos la liata de variables!! .)
+].
+
+/*----------------------------------------------------------------------------*/
+
+/*TipoArray = "ARRAY" expresion "OF" tipo.*//*Sentencia original*/
+
+TipoArray 	(. int i2; String c1=null; .)
+= "ARRAY" (. tabla.lt.form=vector; .) /*Es la marca de q es un vector*/
+/*Nos queda rellenar el tam y el baseTyp*/
+Entero<^i2> 	
+"OF" tipo1<^c1> (. Struct s3,s4;.) 	
+(. s3=new Struct(c1); s4=tabla.buscaT(s3); .)
+(. tabla.lt.size=i2*s4.size; .).
+
+/*Faltaria contemplar la posibilidad de q se defina la long del array con
+una constante!!!*/
+/*----------------------------------------------------------------------------*/
+
+ListaIdent       (. String n1,n2=null; .)
+
+=       Ident<^n1>   (. tabla.add(n1); .)
+{ ","    Ident<^n2>  (. tabla.add(n2); .)  }.
+
+/*----------------------------------------------------------------------------*/
+
+SecuenciaSentencias = sentencia {";" sentencia}.
+
+/*----------------------------------------------------------------------------*/
+
+
+sentencia = [sentencia1 | SentenciaIf | SentenciaWhile].
+
+sentencia1 = ident [ selector ":=" expresion | [ParametrosActuales] ].
+
+
+/*----------------------------------------------------------------------------*/
+
+SentenciaWhile = "WHILE" expresion "DO" SecuenciaSentencias "END".
+
+/*----------------------------------------------------------------------------*/
+
+SentenciaIf = "IF" expresion "THEN" SecuenciaSentencias 
+	      {"ELSIF" expresion "THEN" SecuenciaSentencias}
+	      ["ELSE" SecuenciaSentencias] "END".
+ 
+/*----------------------------------------------------------------------------*/
+
+/*LlamadaProc = ident [ParametrosActuales].*/
+
+/*----------------------------------------------------------------------------*/
+
+ParametrosActuales = "("[expresion {"," expresion}]")".
+
+/*----------------------------------------------------------------------------*/
+
+/*asignacion = ident selector ":=" expresion.*/
+
+/*----------------------------------------------------------------------------*/
+
+expresion = ExpresionSimple [("=" | "#" | "<" | "<=" | ">" | ">=") ExpresionSimple].
+
+/*----------------------------------------------------------------------------*/
+
+ExpresionSimple = ["+" | "-"] term {("+" | "-" | "OR") term}.
+
+/*----------------------------------------------------------------------------*/
+
+/*En esta regla podria modificar los operadores porque la division queda muy larga
+al igual que la la operacion MOD*/
+
+term = factor {("*" | "DIV" | "MOD" "&") factor}.
+
+/*----------------------------------------------------------------------------*/
+
+factor = ident selector | entero | "(" expresion ")" | "~" factor.
+
+/*----------------------------------------------------------------------------*/
+
+selector = {"." ident | "[" expresion "]"}.
+
+/*----------------------------------------------------------------------------*/
+
+/*Esto es para q Ident tenga la cadena q introducimos como identificador*/
+
+Ident<^String nombre>=ident (. nombre=token.val; .).
+
+/*----------------------------------------------------------------------------*/
+
+
+Entero<^int num> 
+ = entero (. num=0; .)
+(. try{
+	num = Integer.parseInt(token.val);
+   }catch(Exception e){
+	System.out.println("No coge el entero");
+   } 
+   //System.out.println("VALOR: "+num); .) .
+
+Booleano<^boolean b> = ident (. b = Boolean.valueOf(token.val).booleanValue(); .).
+/*Tener cuidado pq en este caso no sera un ident como en el caso del entero!!*/
+Real<^float f> = ident (. f = (new Float(token.val)).floatValue(); .).
+
+/*FIN DE LA SINTAXIS DE OBERON*/
+
+END oberon.

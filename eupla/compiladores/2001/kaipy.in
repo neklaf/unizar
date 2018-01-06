@@ -1,0 +1,31 @@
+MODULE Ejemplo;
+CONST N=15;
+TYPE
+   clase=RECORD c1,c11:INTEGER; c2:REAL END;
+   nuevo=ARRAY 4 OF clase;
+VAR
+   uno,dos:INTEGER;
+   asig:INTEGER;
+
+PROCEDURE Suma();
+VAR    s:INTEGER;
+BEGIN
+       s:=10;
+       WHILE s>5 DO
+	   s:=s-1;
+       END;
+       Write s
+END Suma;
+	
+BEGIN
+uno:=1;
+WHILE uno<7 DO
+   asig:=uno;
+   IF asig<6 THEN Write asig
+   ELSIF asig=6 THEN Write 0
+   END;
+   uno:=uno+1;
+END;
+Suma();
+
+END Ejemplo.

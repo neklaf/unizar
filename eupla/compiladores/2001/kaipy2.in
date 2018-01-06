@@ -1,0 +1,25 @@
+MODULE Ejemplo2;
+VAR
+    b:BOOLEAN;
+    a:INTEGER;
+PROCEDURE p();
+VAR pp:INTEGER;
+	PROCEDURE q();
+	VAR r:INTEGER;
+	BEGIN 
+	r:=3;
+	pp:=r;
+	Write pp
+	END q;
+BEGIN
+	a:=4;
+	IF a=3 THEN a:=a+1
+	ELSE a:=a+2
+	END;
+        q();
+END p;
+BEGIN
+a:=1;
+p();
+Write a;
+END Ejemplo2.

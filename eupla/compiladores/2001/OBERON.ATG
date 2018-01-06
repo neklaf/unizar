@@ -1,0 +1,175 @@
+
+COMPILER oberon 
+
+        // tipos
+	static final int undef = 0;
+	static final int integer = 1;
+	static final int bool = 2;
+        static final int flotante = 3;
+
+        // formas para los tipos  (modes)
+        static final int vars = 0;
+        static final int reg = 1;
+        static final int vector = 2;
+        static final int proc = 3;      //???
+        static final int scopes = 4;
+
+/*----------------------------------------------------------------------------*/
+
+CHARACTERS
+  letra = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
+  digito  = "0123456789".
+  eol    = CHR(13).
+  lf     = CHR(10).
+  tab    = CHR(9).
+
+TOKENS
+  ident  = letra {letra | digito}.
+  entero = digito {digito}.
+
+IGNORE eol + lf + tab
+
+COMMENTS FROM "(*" TO "*)" NESTED
+
+PRODUCTIONS
+
+/*----------------------------------------------------------------------------*/
+
+/*en esta regla hay un pequeno cambio el simbolo inicial era 'modulo' y lo hemos
+cambiado por 'oberon'*/
+
+/*Esta es la regla principal de la gramatica por lo que podemos constatar que esta desordenada*/
+
+oberon          (. tabla.Init();  .)
+= "MODULE" ident ";" declaraciones ["BEGIN" SecuenciaSentencias] "END" ident ".".
+
+/*----------------------------------------------------------------------------*/
+
+declaraciones    (. String n1,n2=null; tabla.EnterScope(); .)       
+=
+        ["CONST" {ident "=" expresion ";"}]
+		
+        ["TYPE" {ident "=" tipo ";"}]
+				  
+        ["VAR" {ListaIdent      (. tabla.NewObj1(); .)
+        ":" tipo ";" }]
+		
+        {DeclaracionProcedimiento ";"}.
+
+/*----------------------------------------------------------------------------*/
+
+DeclaracionProcedimiento = CabeceraProcedimiento ";" CuerpoProcedimiento ident.
+
+/*----------------------------------------------------------------------------*/
+
+CuerpoProcedimiento = declaraciones ["BEGIN" SecuenciaSentencias] "END".
+
+/*----------------------------------------------------------------------------*/
+
+CabeceraProcedimiento = "PROCEDURE" ident [ParametrosFormales].
+
+/*----------------------------------------------------------------------------*/
+
+ParametrosFormales = "(" [SeccionPF {";" SeccionPF}] ")".
+
+/*----------------------------------------------------------------------------*/
+
+SeccionPF       
+= ["VAR"] ListaIdent ":" tipo.
+
+/*----------------------------------------------------------------------------*/
+
+tipo = ident | TipoArray | TipoRecord.
+
+/*----------------------------------------------------------------------------*/
+
+TipoRecord = "RECORD" ListaCampos {";" ListaCampos} "END".
+
+/*----------------------------------------------------------------------------*/
+
+ListaCampos 
+= [ListaIdent ":" tipo].
+
+/*----------------------------------------------------------------------------*/
+
+TipoArray = "ARRAY" expresion "OF" tipo.
+
+/*----------------------------------------------------------------------------*/
+
+/*ESTO LO HACE BIEN!!*/
+
+ListaIdent       (. String n1,n2=null; .)
+=       Ident<^n1>   (. tabla.add(n1); .)
+{"," Ident<^n2>}      (. tabla.add(n2); //tabla.recorre(tabla.l); .).
+
+/*----------------------------------------------------------------------------*/
+
+SecuenciaSentencias = sentencia {";" sentencia}.
+
+/*----------------------------------------------------------------------------*/
+
+/*sentencia = [asignacion | LlamadaProc | SentenciaIf | SentenciaWhile].*/
+/*Esta regla hay q cambiarla pq no se puede tomar como una construccion posible para*/
+/*una gramatica LL(1)*/
+
+sentencia = [sentencia1 | SentenciaIf | SentenciaWhile].
+
+sentencia1 = ident [ selector ":=" expresion | [ParametrosActuales] ].
+
+
+/*----------------------------------------------------------------------------*/
+
+SentenciaWhile = "WHILE" expresion "DO" SecuenciaSentencias "END".
+
+/*----------------------------------------------------------------------------*/
+
+SentenciaIf = "IF" expresion "THEN" SecuenciaSentencias 
+	      {"ELSIF" expresion "THEN" SecuenciaSentencias}
+	      ["ELSE" SecuenciaSentencias] "END".
+ 
+/*----------------------------------------------------------------------------*/
+
+/*LlamadaProc = ident [ParametrosActuales].*/
+
+/*----------------------------------------------------------------------------*/
+
+ParametrosActuales = "("[expresion {"," expresion}]")".
+
+/*----------------------------------------------------------------------------*/
+
+/*asignacion = ident selector ":=" expresion.*/
+
+/*----------------------------------------------------------------------------*/
+
+expresion = ExpresionSimple [("=" | "#" | "<" | "<=" | ">" | ">=") ExpresionSimple].
+
+/*----------------------------------------------------------------------------*/
+
+ExpresionSimple = ["+" | "-"] term {("+" | "-" | "OR") term}.
+
+/*----------------------------------------------------------------------------*/
+
+/*En esta regla podria modificar los operadores porque la division queda muy larga
+al igual que la la operacion MOD*/
+
+term = factor {("*" | "DIV" | "MOD" "&") factor}.
+
+/*----------------------------------------------------------------------------*/
+
+factor = ident selector | entero | "(" expresion ")" | "~" factor.
+
+/*----------------------------------------------------------------------------*/
+
+selector = {"." ident | "[" expresion "]"}.
+
+/*----------------------------------------------------------------------------*/
+
+/*Esto es para q Ident tenga la cadena q introducimos como identificador*/
+
+Ident<^String nombre>=ident (. nombre=token.val; .).
+
+/*----------------------------------------------------------------------------*/
+
+/*FIN DE LA SINTAXIS DE OBERON*/
+
+END oberon.

@@ -1,0 +1,38 @@
+
+		---------------COCO FOR LINUX RULEZ!!!----------------
+				   EN REALIDAD 
+		---------------COCO FOR JDK 1.1.8 RULEZ---------------
+
+
+Para el correcto funcionamiento del Coco lo que deberemos hacer en Linux es lo siguiente:
+
+1) Tenemos que crear la variable de entorno 'CLASSPATH' y exportarla:
+	De la siguiente manera:  CLASSPATH=$CLASSPATH:/../jcoco110win:
+				 
+				 export CLASSPATH
+	Esto se hace para que la VM encuentre la clase Comp que esta en la ruta:
+		/../jcoco110win/Coco/Comp.class
+	Así tendremos que la primera parte del fichero coco.bat ya está, pero al CLASSPATH
+también deberemos añadirle el directorio en el que se encuentra el subdirectorio EjCoco
+
+(Nota: esto únicamente será necesario en las JDK 1.2 e inferiores ya no tienen automatizado el 
+mecanismo de búsqueda aunque no creo que funcione mal en JDK superiores)
+
+Lo del subdirectorio EjCoco es necesario pq los fuentes Scanner.java, Parser.java ....
+tienen la instrucción 'package EjCoco' por lo que al ejecutar java buscará a partir del 
+directorio
+actual el subdirectorio EjCoco y después en las rutas introducidas en el CLASSPATH.
+
+2) Una vez realizado esto deberemos poner por linea de comandos lo que se realiza en el archivo
+coco.bat, que será ejecutar el archivo Comp.class que esta en el subdirectorio 'Coco' del directorio
+'jcoco110win', para ello únicamente tendremos que teclear 'java Coco.Comp' y nos aparecerá la 
+ventana donde tendremos que seleccionar el archivo de la gramatica (EjCoco.atg en nuestro caso)
+y ver si el Coco lo pasa correctamente.
+ 
+3) Ahora sólo nos queda compilar el Comp.java del subdirectorio EjCoco y después ejecutarlo
+para que nos vuelva a aparecer una ventana en la que deberemos seleccionar el archivo con el 
+código fuente de entrada.
+
+
+NOTA FINAL: Una buena forma de ver si todo está bien sería probar que el ejemplo del EjCoco 
+funcione correctamente !!!

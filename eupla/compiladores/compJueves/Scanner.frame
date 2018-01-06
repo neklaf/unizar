@@ -1,0 +1,133 @@
+import java.io.*;
+import java.util.*;
+
+class Token {
+	int kind;    // token kind
+	int pos;     // token position in the source text (starting at 0)
+	int col;     // token column (starting at 0)
+	int line;    // token line (starting at 1)
+	String str;  // exact string value
+	String val;  // token string value (uppercase if ignoreCase)
+}
+
+class Buffer {
+
+// Portability - use the following for Java 1.0
+//	static byte[] buf;  // Java 1.0
+// Portability - use the following for Java 1.1
+//	static char[] buf;  // Java 1.1
+
+	static char[] buf;  // Java 1.1
+
+	static int bufLen;
+	static int pos;
+	static final int eof = 65535;
+
+	static void Fill(String name) {
+		try {
+			File f = new File(name); bufLen = (int) f.length();
+
+// Portability - use the following for Java 1.0
+//			BufferedInputStream s = new BufferedInputStream(new FileInputStream(f), bufLen);
+//			buf = new byte[bufLen];  // Java 1.0
+// Portability - use the following for Java 1.1
+//			BufferedReader s = new BufferedReader(new FileReader(f), bufLen);
+//			buf = new char[bufLen];  // Java 1.1
+
+			BufferedReader s = new BufferedReader(new FileReader(f), bufLen);
+			buf = new char[bufLen];  // Java 1.1
+
+			int n = s.read(buf); pos = 0;
+		} catch (IOException e) {
+			System.out.println("--- cannot open file " + name);
+			System.exit(0);
+		}
+	}
+
+	static void Set(int position) {
+		if (position < 0) position = 0; else if (position >= bufLen) position = bufLen;
+		pos = position;
+	}
+
+	static int read() {
+		if (pos < bufLen) return (int) buf[pos++]; else return eof;
+	}
+}
+
+class Scanner {
+
+	static ErrorStream err;  // error messages
+
+	private static final char EOF = '\0';
+	private static final char CR  = '\r';
+	private static final char LF  = '\n';
+-->declarations
+	private static Token t;        // current token
+	private static char strCh;     // current input character (original)
+	private static char ch;        // current input character (for token)
+	private static char lastCh;    // last input character
+	private static int pos;        // position of current character
+	private static int line;       // line number of current character
+	private static int lineStart;  // start position of current line
+	private static BitSet ignore;  // set of characters to be ignored by the scanner
+	private static int offset = 0; // 1 - MsDos, 0 - Unix/Mac
+
+	static void Init (String file, ErrorStream e) {
+		ignore = new BitSet(128);
+-->initialization
+		err = e;
+		Buffer.Fill(file);
+		pos = -1; line = 1; lineStart = 0; lastCh = 0;
+		NextCh();
+	}
+
+	static void Init (String file) {
+		Init(file, new ErrorStream());
+	}
+
+	private static void NextCh() {
+		lastCh = ch;
+		strCh = (char) Buffer.read(); pos++;
+-->scan0
+		if (ch == LF && lastCh == CR) offset = 1; // MS-Dos format
+		if ((ch == CR) || (ch == LF) && (lastCh != CR)) {line++; lineStart = pos + 1;}
+		if (ch > '\u007f') {
+			if (ch == '\uffff') ch = EOF;
+			else {
+				Scanner.err.SemErr(-1, line, (pos + 1 - lineStart - offset));
+				ch = ' ';
+			}
+		}
+	}
+
+-->comment
+
+	private static void CheckLiteral(StringBuffer buf) {
+-->literals
+	}
+
+	static Token Scan() {
+		int state, apx;
+		StringBuffer buf;
+		while (ignore.get((int)ch)) NextCh();
+-->scan1
+		t = new Token();
+		t.pos = pos; t.col = pos - lineStart + 1 - offset; t.line = line;
+		buf = new StringBuffer();
+		state = start[ch];
+		apx = 0;
+		loop: for (;;) {
+			buf.append(strCh);
+			NextCh();
+			switch (state) {
+				case 0:
+					{t.kind = noSym; break loop;} // NextCh already done
+-->scan2
+			}
+		}
+		t.str = buf.toString();
+-->scan3
+		return t;
+	}
+}
+$$$
