@@ -1,0 +1,213 @@
+# MEMORIA PRACTICA 4 : Utilizacion del syslog, cron, at 
+# copias de seguridad, control de procesos y sistema de
+# ficheros.
+# Aitor Acedo Legarre         NIP: XXXXXX
+# Cristina Puértolas Rebollar NIP: 460918
+#################################################################
+#		CONTENIDO DEL FICHERO CRONTAB    		#
+#################################################################			
+	La primera linea del fichero crontab pertenece a la 
+automatización de la supresión de ficheros que lleven más de 3 min
+en el directorio /tmp.
+El formato de entrada del fichero crontab es
+min---horas---dia_mes---mes---dia_semana---comando
+
+********************************************************************************
+** línea 1:: > */2 * * * * find /tmp/ -amin +3 -exec rm '{}'';' 2> /dev/null  **
+********************************************************************************
+
+	En esta línea forzamos al sistema a eliminar todos los ficheros
+que lleven más de tres minutos sin modificar o creados hace mas de 3 min. 
+La salida de error que provoca el intento de borrar el directorio /tmp es
+redirigida a /dev/null (nada) para evitar el mensaje de :
+'rm: /tmp is a directory'.
+
+	A través de la opcion -exerc permitimos la ejecución del comando
+'rm' pasándole como parámetros, uno a uno, la salida que provoca la búsqueda
+del comando 'find' anterior. Dicho comando se indica con el símbolo ';' entre 
+comillas simples.
+
+********************************************************************************
+**             línea 2 :: > */10 * * * * /home/sutra/scriptsCron/sumary       **
+********************************************************************************
+
+	Esta segunda línea del fichero crontab forzaremos al sistema a 
+ejecutar el script 'sumary' creado por nosotros, que agrupa en un único fichero
+'sumary' en /var/log/personalizado/ (el fichero de registro en cuestión),
+la información requerida en el apartado b) del ejercicio, esto es: notificación de la existencia de procesos parados, número de usuarios conectados, utilización de la CPU, utilización de memoria y utilización de disco.
+	Dicho fichero de registro 'notify' será un registro PERSONALIZADO a través del comando logger.
+A continuación analizaremos el contenido del script 'sumary':
+	Nos generaremos un directorio dentro del fichero /tmp para almacenar
+los ficheros auxiliares que utilizarmeos para ir anexando la información que
+deberemos almacenar para hacer el resumen del estado del sistema.
+Comenzaremos por generar dicho directorio y fichero si no existen.
+Para encontrar los procesos parados del sistema deberemos utilizar el comando
+'ps' junto con las opciones 'e y o'. La opción 'e' permite listar TODOS los procesos que estan corriendo en el sistema a todos los niveles de usuarios. La opción 'o' permite modificar el formato de salida de dicho listado. 
+En nuestro caso forzamos a que la primera columna de dicho listado sea la del estado del proceso, que nos dará el identificador clave para seleccionar los proceos parados. El sistema reconoce los procesos parados con el identificador 'T', de ahí que el listado que nos de el comando 'ps' se lo pasemos al comando grep para seleccionar sólo aquella/as fila/as que contengan el estado 'T', lo que implica procesos 'parados del sistema'.
+	Si el resultado de dicho listado es nulo, se añade al fichero una línea que indique lo ocurrido. En caso contrario, se añade al fichero auxSumary el estado, comando e identificador del/los proceso/s parado/s.
+	A continuación buscaremos con el comando 'who | wc -l' contaremos el número de usuarios conectados en cualquier terminal de la máquina. Se notificará en el fichero sumary el número de usuarios y el detalle de qué usuario esta bajo qué máquina.
+	Análogamente se ejecutarán los comandos 'uptime', 'free' y 'df' para averiguar la utilización de la CPU en ese mismo instante, la utilización de memoria y de disco respectivamente,  anexándose así al fichero sumary.
+	Finalmente será con el comando logger con el que volcaremos la información recopilada en auxSumary al fichero de registro 'sumary' localizado en /var/log/personalizado/. 
+	El comando 'logger' es el idóneo para realizar entradas al log desde un programa shell. Le pasaremos al logger el fichero que queremos que introduzca como fichero log junto con la opción -t para que desaparezca al etiqueta 'logger:' al comienzo de cada línea y -s para redireccionar la salida a la salida de error, y dicha salida de error se la pasemos al fichero de registro personalizado.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+# SCRIPT NOTIFY
+#!/bin/sh
+if [ ! -d /tmp/tmp2 ]; then
+	mkdir /tmp/tmp2
+fi
+
+if [ ! -f /tmp/tmp2/auxSumary ]; then
+	touch /tmp/tmp2/auxSumary
+fi
+
+ps=`ps -eo state,command,pid | grep "^T"`
+num=`who | wc -l`
+if [ !$ps ];then
+	echo No existen procesos parados en el sistema. >> /tmp/tmp2/auxSumary
+else
+	echo $ps >> /tmp/tmp2/auxSumary
+fi
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+echo Numero de usuarios $num >> /tmp/tmp2/auxSumary
+who >> /tmp/tmp2/auxSumary
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+uptime >> /tmp/tmp2/auxSumary
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+free >> /tmp/tmp2/auxSumary
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+df >> /tmp/tmp2/auxSumary
+sudo logger -f /tmp/tmp2/auxSumary -s -t "" 2> /var/log/personalizado/sumary
+cat /tmp/tmp2/auxSumary > /dev/null
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+**********************************************************************************           linea 3 :: */10 * * * * /home/sutra/scriptsCron/notify           **
+********************************************************************************
+	Análogamente, en la tercera línea del fichero crontab hemos utilizado un script realizado por nosotros, para la notificación del estado de los sistemas de ficheros a un fichero de registro nuevo, que esta vez se llamará 'notify' y que se ubicará, lógicamnete, en /var/log/personalizado.
+	De nuevo generaremos un fichero auxNotify para utilizarlo posteriormente con el comando logger, con las mismas opciones que en el script anterior (salida de errores, eliminación de la etiqueta 'logger:' , y uso de ficheros externos).
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+# SCRIPT NOTIFY
+#!/bin/sh
+if [ ! -d /var/log/personalizado ]; then
+	sudo mkdir /var/log/personalizado
+	sudo chmod 757 /var/log/personalizado
+fi
+if [ ! -f /var/log/personalizado/notify ] ; then
+	sudo touch /var/log/personalizado/notify
+	sudo chmod 757 /var/log/personalizado/notify
+fi
+# hacemos el fsck de la partición swap del zip
+	sudo fsck -V /dev/hdb1 -n >> /tmp/tmp2/auxNotify
+
+sudo logger -f /tmp/tmp2/auxNotify -t "" -s 2> /var/log/personalizado/notify
+cat /tmp/tmp2/auxNotify > /dev/null
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*******************************************************************************
+**             linea 4 :: */5 * * * * /home/sutra/scripsCron/dump3 0         **
+*******************************************************************************
+**         linea 5 ::  1-59/2 * * * * /home/sutra/scriptsCron/dump3 1        **
+*******************************************************************************
+	La primera peculiaridad que encontramos en estas dos líneas del crontab es el formato de control de los minutos en los que deseamos que se produzcan dichas ejecuciones. En la primera de ellas (línea 4) se ejecutará, como dice el enuncaido, una copia de nivel 0 cada 5 min. La segunda de estas dos (línea 5) tiene un formato un poco más peculiar: forzaremos al sistema a ejecutar la copia de nivel 1 cada dos minutos , PERO en los minutos IMPARES, pues no tiene mucho sentido realizar una copia de nivel 0 y otra de nivel 1 A LA VEZ cuando se diese el caso del minuto 5*2n.
+	La estrategia utilizada en este script para las copias incrementales es de nivel MODERADO, es decir, realizaremos una copia completa (nivel 0) cada 5 minutos y una copia de nivel 1 cada 2 minutos durante el perido activo.
+	Cuando se produzca por primera vez una copia cualquiera, se creará un directorio dentro del dispositivo de almacenamiento con el mismo nombre del nivel al que pertenzca la copia, es decir, si se procede a una copia de nivel 0 en primer lugar, se creará un directorio /0 dentro de /floppy en nuestro caso. Seguidamente se creará una copia de nivel 1 (incremental), creándose así el directorio /1 dentro del /floppy.
+	Dentro de estos directorios, se guardarán las copias de todos los ficheros del /tmp (en caso de que sea nivel 0), o en su defecto, los ficheros modificados desde la última copia (bien sea global o incremental, la más cercana en la línea del tiempo) en el formato que sigue : YYYY_DiaDelAño_HH_mm.tar (por ejemplo: 2002_345_22_11.tar --> copia realizada el 18 de Diciembre de 2002 a las 22:11).
+	Lo ideal en cualquier caso, hubiese sido crear una estrategia un poco más elaborada para evitar redundancias. Nuestra idea inicial fue generar copias incrementales de distintos niveles (seleccionadas por el administrador). Cada vez que se realizase una copia incremental, verificar cuál fue la copia incremental de nivel inferior, volcar los ficheros de ese XXX.tar, verificar cuál de estos ficheros fueron modificados en ese intervalo de tiempo y agruparlos (con tar) en el nuevo fichero de nivel n+1 con respecto al nivel n inmediatamente inferior.
+La problemática surgió para sacar la fecha de los archivos modificados ya incluidos en un xxxxx.tar, y por falta de tiempo se planteó la opción aquí desarrollada.
+	¿Cuál sería la estrategia para recuperar un fichero perdido en un momento dado?
+	Gracias al formato en el que se guarda cada uno de los *.tar, bastará con comprobar el número correspondiente al día en que se ha hecho la copia, verificar que es el mayor hasta la fecha, y de entre todos ellos seleccionar aquel con la hora más cercana al presente. De ahí se pasará hacia atrás en el tiempo (horas:minutos), y en caso de que no se haya localizado el fichero a recuperar, se recurriría a la carpeta en la que se guardan todas las copias globales y se accedería a la última copia global.
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+#!/bin/sh
+# Supondremos q no esta creada la jerarquia de directorios
+fd=""
+fecha=`date +%Y_%j_%k_%M`
+
+if [ $# -ne 1 ]; then
+	echo Formato: dump2 nivel
+else
+	# Comprobamos el punto de montaje!!
+	fd=`grep fd0 /etc/mtab | cut -d ' ' -f 2`
+	
+	if [ ! $fd ]; then
+		fd="/floppy"
+		sudo mount -t auto /dev/fd0 $fd 
+	fi
+
+	if [ ! -d ${fd}/${1} ]; then
+		sudo mkdir ${fd}/${1}
+	fi
+
+	if [ $1 -eq 0 ]; then
+		# Copia global
+		sudo tar cf ${fd}/${1}/${fecha}.tar /home/sutra/tmp/* 
+	else
+		# Copias de otro nivel
+		find /home/sutra/tmp/* -mmin -2 -exec sudo tar cf ${fd}/${1}/${fecha}.tar '{}' ';'
+	fi
+
+fi	
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+********************************************************************************
+**                    RESUMEN FINAL DEL FICHERO 'CRONTAB'                     **
+********************************************************************************
+
+# Borrado de ficheros que lleven mas de X min en el directorio /tmp
+ */7 * * * * find /tmp/ -amin +3 -exec rm '{}'';'
+ */10 * * * * /home/sutra/scriptsCron/sumary
+# Este 'sumary' genera un fichero en /var/log/personalizado/sumary
+ */10 * * * * /home/sutra/scriptsCron/notify
+# Este 'notify' genera un fichero en /var/log/personalizado/notify
+ */5 * * * * /home/sutra/scripsCron/dump3 0
+ 1-59/2 * * * * /home/sutra/scriptsCron/dump3 1
+# La copia global (dump3 0) se genererará en los minutos pares
+# mientras que las incrementales (dump3 1)se generan en los minutos impares
+# para que no existan problemas en la llegada del minuto 5*2n
+
+Parte 2 --> Probar la ejecución retardada con el at y el batch.
+	Se probó la ejecución del comando 'sumary' con el at del siguiente modo:
+at -f sumary 10:31 
+con la correspondiente salida en el fichero sumary del /var/log/personalizado/sumary:
+
+: No existen procesos parados en el sistema.
+: *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+: Numero de usuarios 5
+: sutra    tty1         Dec 11 08:53         
+: sutra    tty2         Dec 11 08:54         
+: sutra    tty3         Dec 11 08:54         
+: sutra    tty4         Dec 11 08:54         
+: sutra    tty5         Dec 11 08:58         
+: *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+:  10:31:01 up  1:39,  5 users,  load average: 0.08, 0.03, 0.01
+: *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+:              total       used       free     shared    buffers     cached
+: Mem:         62224      59856       2368      12064      36664      15288
+: -/+ buffers/cache:       7904      54320
+: Swap:       289160         72     289088
+: *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+: S.ficheros           1k-blocks      Used Available Use% Montado en
+: /dev/hda2              1731460    256844   1386664  16% /
+
+en el que efectivamente vemos la hora monitorizada por el comando uptime, que corresonde a 1 segundo después de programar nuestra tarea 'sumary' con el comando 'at'.
+	Cuando ejecutamos la tarea programada con el batch (por ejemplo 'notify') tenemos que aunque nuestro programa NO genere ninguna salida, la confirmación de la ejecución del script se realiza mediante mail al usuario que ha lanzado dicha petición (en este caso 'sutra'), cuya salida ha sido:
+
+
+From sutra@gizmo2 Wed Dec 11 10:38:46 2002
+Return-path: <sutra@gizmo2>
+Envelope-to: sutra@gizmo2
+Received: from sutra by gizmo2 with local (Exim 3.33 #1 (Debian))
+	id 18M3KI-0000AK-00
+	for <sutra@gizmo2>; Wed, 11 Dec 2002 10:38:46 +0100
+Subject: Output from your job        3
+To: sutra@gizmo2
+Message-Id: <E18M3KI-0000AK-00@gizmo2>
+From: Cristina <sutra@gizmo2>
+Date: Wed, 11 Dec 2002 10:38:46 +0100
+Status: RO
+
+e2fsck 1.25 (20-Sep-2001)
+

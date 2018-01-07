@@ -1,0 +1,35 @@
+TEST AVL | Tamaño:        100, Búsquedas:        100, Borrados:        100
+Inserción | Tiempo:        994
+Búsqueda | Tiempo:        285
+Borrado | Tiempo:        292
+
+TEST AVL | Tamaño:       1000, Búsquedas:        100, Borrados:        100
+Inserción | Tiempo:     106740
+Búsqueda | Tiempo:        344
+Borrado | Tiempo:        607
+
+TEST AVL | Tamaño:       1000, Búsquedas:       1000, Borrados:       1000
+Inserción | Tiempo:      99131
+Búsqueda | Tiempo:      89804
+Borrado | Tiempo:      90543
+
+TEST AVL | Tamaño:      10000, Búsquedas:      10000, Borrados:      10000
+Inserción | Tiempo:     193587
+Búsqueda | Tiempo:     123785
+Borrado | Tiempo:     132069
+
+TEST ROJINEGRO | Tamaño:       1000, Búsquedas:        100, Borrados:        100
+Inserción | Tiempo:     117261
+Búsqueda | Tiempo:      82788
+Borrado | Tiempo:      81759
+
+TEST ROJINEGRO | Tamaño:       1000, Búsquedas:       1000, Borrados:       1000
+Inserción | Tiempo:     117542
+Búsqueda | Tiempo:     129070
+Borrado | Tiempo:     114749
+
+TEST ROJINEGRO | Tamaño:      10000, Búsquedas:      10000, Borrados:      10000
+Inserción | Tiempo:    5298523
+Búsqueda | Tiempo:    5931202
+Borrado | Tiempo:    5820318
+

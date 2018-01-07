@@ -1,0 +1,6 @@
+(defun comparar(patron frase)
+(cond ((and (null patron) (null frase)) t)
+((or (null patron) (null frase)) nil)
+((eq (car patron) (car frase))
+(comparar (cdr patron) (cdr frase)))
+(t nil)))

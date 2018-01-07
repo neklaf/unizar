@@ -1,0 +1,192 @@
+\documentclass[12pt]{article}
+\usepackage[latin1]{inputenc}   
+
+\author{Acedo Legarre, Aitor \\ Faci Miguel, Santiago }
+\title{Técnicas Avanzadas de Programación: \\ Práctica 1ª: \\ AVL versus Rojinegros}
+\date{Agosto de 2004} 
+\pagestyle{headings}
+%%
+\begin{document}
+\large
+\maketitle
+\begin{center}{Powered by \LaTeX.}\end{center}
+\newpage
+\tableofcontents
+\newpage
+\hyphenation{na-tu-ra-les}
+\hyphenation{bo-rra-do}
+
+
+\section{Introducción al problema}
+
+El problema que se plantea consiste en comparar la eficiencia práctica de dos implementaciones: una de árbol AVL y otra
+de árbol rojinegro para el TAD diccionario con las operaciones citadas en el enunciado. Para ello se deberán buscar o
+desarrollar implementanciones para ambas estructuras de datos y realizar una batería de tests con el fin de obtener
+resultados comparativos presentando éstos en un fichero.
+
+\newpage
+
+\section{Solución propuesta}
+
+Para la estructura de árbol AVL se ha escogido la implementación del profesor de la asignatura, Javier Campos,
+disponible desde su página web ya que proporciona toda la funcionalidad requerida para la práctica y adaptada al TAD
+diccionario.
+\par
+Para la estructura de árbol Rojinegro se ha seguido la implementación en pseudocódigo que se proporciona en el libro
+\emph{Introduction to Algorithms} de Cormen, Leiserson y Rivest.
+
+\subsection{Estructuras de datos utilizadas}
+
+A continuación, se especifican los detalles de las estructuras de datos utilizados para la solución propuesta.
+
+\subsubsection{Árbol AVL}
+
+\begin{itemize}
+\item La estructura del árbol.
+\begin{verbatim}
+type avl is access nodo;
+\end{verbatim}
+
+\item La estructura para cada nodo del árbol.
+
+\begin{verbatim}
+type nodo is
+   record
+      -- Almacena la palabra 
+      clave:tp_clave;
+      -- Almacena la definición de la palabra
+      valor:tp_valor;
+      -- Indica el equilibrado del nodo
+      equilibrio:factor_equilibrio;
+      -- Hijos izquierdo y derecho del nodo
+      izq,dch:avl;
+   end record;
+\end{verbatim}
+
+\item Procedimientos implementados. Están implementados los procedimientos de \emph{vacio}, \emph{buscar},
+\emph{modificar} y \emph{borrar}. El procedimiento \emph{vacio} crea un árbol AVL vacío,
+\emph{buscar} busca una palabra en algún nodo del árbol, \emph{modificar} inserta una palabra y su definición en el
+árbol como un nuevo nodo, \emph{borrar} elimina una palabra y su definición del árbol. Los procedimientos que se
+detallan aqui son los requisitos en cuanto a cumplir las restricciones para implementar un TAD diccionario, pero es
+necesario una serie de procedimientos auxiliares para mantener equilibrado el árbol que también se encuentran
+implementados en el código.
+
+\begin{verbatim}
+procedure vacio(a:out avl);
+-- devuelve un diccionario vacío
+procedure modificar(a:in out avl; clave:in tp_clave; 
+   valor:in tp_valor);
+-- inserta una nueva "clave" con su "valor" en el 
+-- diccionario;
+-- si la "clave" ya estaba, actualiza su "valor";
+procedure borrar(a:in out avl; clave:in tp_clave);
+-- borra la "clave" (y su "valor") del diccionario;
+-- si la "clave" no estaba en el diccionario, 
+-- lo deja igual
+procedure buscar(a:in avl; clave:in tp_clave; 
+   exito:out boolean; valor:out tp_valor);
+-- si la "clave" está en el diccionario devuelve su 
+-- "valor" (y "exito" es true);
+-- en caso contrario, "exito" toma el valor false
+\end{verbatim}
+
+\end{itemize}
+
+\subsubsection{Árbol Rojinegro}
+
+\begin{itemize}
+\item La estructura del árbol. Se trata de un puntero a un nodo. Ese nodo hará de nodo raíz por lo tanto su nodo padre
+siempre sera igual a \emph{null}. A partir de ahi se irán expandiendo los nodos a través de los punteros "hijos" de cada
+nodo.
+\begin{verbatim}
+type tree is access nodo;
+\end{verbatim}
+
+\item La estructura para cada nodo del árbol. Además de almacenar la palabra y su definición (TAD diccionario) se
+guardan punteros a los hijos izquierdo y derecho del nodo y al nodo padre (necesario para realizar la rotación). También
+tendremos un campo que nos indicará el color del nodo: rojo | negro.
+\begin{verbatim}
+type nodo is
+   record
+      -- Palabra del nodo
+      palabra: tipo_palabra;
+      -- Definición
+      definicion: tipo_definicion;
+      -- Nodos hijo izquierda, derecha y nodo padre
+      izq, dch, padre: tree;
+      -- Campo que indica el color del nodo
+      color: colores;
+   end record;
+\end{verbatim}
+\item Procedimientos implementados. Se han implementado los procedimientos \emph{vacio}, \emph{buscar},
+\emph{insertar}, \emph{borrar}, \emph{rotacion\_dcha}, \emph{rotacion\_izq} y
+\emph{dibujar}. El procedimiento \emph{crear} crea un árbol rojinegro vacío,
+\emph{buscar} busca una palabra determinada en todo el árbol,
+\emph{insertar} inserta un nuevo nodo con palabra y definición, si la palabra ya existía se actualiza su definición;
+\emph{borrar} elimina una palabra que exista en el árbol junto con su definición, \emph{rotacion\_dch / rotacion\_izq}
+rota a derechas/izquierdas
+el árbol rojinegro siempre que sea necesario (tras algunas inserciones o borrados) y
+\emph{dibujar}
+realiza un boceto de la estructura del árbol y su contenido.
+\begin{verbatim}
+-- Crea un árbol Rojinegro vacío
+procedure vacio (t: out tree);
+-- Inserta una palabra con su definición en el árbol, 
+-- si esta palabra ya existe se actualiza su definición
+procedure insertar (t: in out tree; palabra: in tipo_palabra; 
+   definicion: in tipo_definicion);
+-- Borra el nodo que almacena la palabra que se pasa como 
+-- parámetro
+procedure borrar (t: in out tree; palabra: in tipo_palabra);
+-- Busca el nodo que contiene a la palabra. Además, dicho nodo 
+-- es apuntado por el parámetro de salida "el_nodo"
+procedure buscar (t: in tree; palabra: in tipo_palabra; 
+   encontrada: out boolean; el_nodo: out tree);
+-- Rota a izquierdas el árbol Rojinegro
+procedure rotacion_dch (t: in out tree; x: in out tree);
+-- Rota a derechas el árbol Rojinegro
+procedure rotacion_izq (t: in out tree; x: in out tree);
+ -- Realiza un boceto de la estructura del árbol y su contenido
+procedure dibujar (t: in tree);
+
+\end{verbatim}
+
+\end{itemize}
+
+\subsection{Paquete ustrings}
+
+Para el manejo de las cadenas de texto de tipo \emph{ustring} se ha utilizado en ambas implementaciones el paquete
+\emph{ustrings}, que se encontraba disponible desde la página de la asignatura.
+
+\section{Programas de prueba}
+
+Para la obtención de resultados se ha creado un pequeño programa con un procedimiento (uno para cada implementación) que se encarga de realizar
+diversas operaciones de inserción y búsqueda sobre las estructuras de datos descritas anteriormente, y obtiene datos de
+eficiencia práctica de las mismas.
+\par
+Para medir los rendimientos de ambas implementaciones se han probado estructuras de diferentes tamaños (número de
+elementos) y se han medido los resultados. Se han realizado diferentes número de búsquedas sobre tamaños de estructuras de 10, 100,
+1000 y 10000 elementos para ambas implementaciones; de esta manera se pueden comparar para diferentes tamaños y a su vez
+observar la escalabilidad de los mismos, es decir, como actúa ante el crecimiento del número de elementos una misma
+implementación de cualquiera de las estructuras de datos estudiadas.
+\par
+Todos los resultados de esta comparativa se obtienen ejecutando el programa \emph{test\_rbtree} /
+\emph{test\_avl}, según se quiera probar una u otra implementación. Dichos resultados se escriben en el fichero
+\emph{resultados\_practica1.txt} \footnote{Los tiempos se indican en microsegundos}.
+\par
+El fichero de resultados tiene el siguiente formato:
+\begin{verbatim}
+TEST ROJINEGRO | Tamaño:   100, Búsquedas:  100, Borrados:  100
+Inserción | Tiempo:       1093
+Búsqueda | Tiempo:        638
+Borrado | Tiempo:        537
+\end{verbatim}
+
+\section{Bibliografía}
+
+\begin{itemize}
+    \item Apuntes de la asignatura de Técnicas Avanzadas de Programación
+    \item Introduction to Algorithms, Thomas H. Cormen, Charles E. Leiserson, Ronals L. Rivest
+\end{itemize}
+
+\end{document}

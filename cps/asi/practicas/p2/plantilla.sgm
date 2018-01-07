@@ -1,0 +1,109 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN">
+
+<book lang="es">
+
+	<title></title>
+
+	<bookinfo>
+		<date>10 de Diciembre de 2002</date>
+	<authorgroup>
+		<author>
+			<firstname>Aitor</firstname>
+			<surname>Acedo Legarre</surname>
+		</author>
+
+		<author>
+			<firstname>Cristina</firstname>
+			<surname>Puertolas Rebollar</surname>
+		</author>
+	</authorgroup>
+	</bookinfo>
+
+<chapter>
+
+	<title></title>
+	
+	<para>
+	</para>
+
+	<para>
+	</para>
+	
+	<para>
+	<informalexample>
+	<programlisting>
+
+	</programlisting>
+	</informalexample>
+	</para>
+
+	<para>
+	</para>
+
+	<para>
+	</para>
+
+	<para>
+	<informalexample>
+	<programlisting>
+
+	</programlisting>
+	</informalexample>
+	</para>
+
+	<para>
+	</para>
+
+
+</chapter>
+
+<chapter>
+
+	<title></title>
+	
+	<para>
+	</para>
+	
+	<itemizedlist>
+	<listitem>
+	<para></para>
+	</listitem>
+	<listitem>
+	<para></para>
+	</listitem>
+	<listitem>
+	<para></para>
+	</listitem>
+	</itemizedlist>
+
+	<para>
+	</para>
+	
+	<itemizedlist>
+	<listitem>
+	<para></para>
+	</listitem>
+	<listitem>
+	<para></para>
+	</listitem>
+	<listitem>
+	<para></para>
+	</listitem>
+	<listitem>
+	<para></para>
+	</listitem>
+	</itemizedlist>
+
+	<para>
+	</para>
+
+	<para>
+	<informalexample>
+	<programlisting>
+
+	</programlisting>
+	</informalexample>
+	</para>
+	
+</chapter>
+</book>

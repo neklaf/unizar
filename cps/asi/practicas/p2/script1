@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# Objetivo: aceptar una lista de nombres de usuario y mirar si estan en /etc/passwd
+
+# NOTA IMPORTANTE: cuando pongamos la expresion para el comando 'test' despues del primer corchete
+# tendremos que dejar un espacio si no aparece un error en la salida estandar.
+
+
+# Deberemos tener permisos de lectura sobre el fichero en cuestion, en este caso, /etc/passwd
+# por lo que deberemos intentar cerciorarnos de ello antes de intentar leer el fichero con 'grep'
+# La opcion -r implica que el archivo existe y se puede leer!!! por lo tanto es la que tendremos que usar
+
+# La opcion '-q '
+
+#
+# En el primer if tendran que cumplirse las dos condiciones para que se ejecute el cuerpo del if 
+# sino no debera ejecutarse por lo que debemos de colocar un and logico 
+#
+
+
+if [ $# -eq 0 -a -r /etc/passwd ]; then
+	
+	echo No hay argumentos o el archivo no existe o no puede ser leido 	
+
+else
+
+	for nombre in $*	#para recorrer cada parametro	
+	do
+		#if [ `grep -w -c -q $nombre /etc/passwd` -ne 0 ]; then
+		
+		if [ `grep -c -q $nombre /etc/passwd` -ne 0 ]; then
+			echo Usuario $nombre encontrado
+		else
+			echo Usuario $nombre NO encontrado
+		fi
+	done
+fi
+
+
+
+
+
+# Notar una serie de diferentes posibillidades para poner lo mismo:
+#	if [ -f /etc/passwd ]; then
+#
+#	if [ -f /etc/passwd ]
+#	then
+#
+# Para terminar un comando podremos utilizar esto ';' o un retorno de carro, ya que tendremos que indicar la 
+# finalizacion del comando 'test'

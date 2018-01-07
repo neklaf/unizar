@@ -1,0 +1,6 @@
+(defun cuenta-atomos (lst)
+(cond 	((null lst) 0) 
+	((atom (car lst)) (+ 1 (cuenta-atomos (cdr lst)))) 
+	((listp (car lst)) (+ (cuenta-atomos (car lst)) (cuenta-atomos (cdr lst)))
+	)
+)

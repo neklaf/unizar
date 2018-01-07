@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Una alternativa al metodo de crear la password puede ser la siguiente:
+# Pasar la password como parametro al script, aunque no me parece muy alla ??
+# Tambien se podria mirar la opcion de crear la cuenta sin necesidad de aportar
+# contraseña y que sea el usuario posteriormente el que introduzca la clave deseada!!
+
+if [ $# -ne 0 ]
+then
+	# sudo adduser $1 Utilizaremos el comando useradd (no saca msgs)
+
+#	sudo useradd $1 -p $1 -d /home/`echo $1 | cut -b 1`/${1} 
+#	sudo mkdir -p /home/`echo $1 | cut -b 1`/${1} 
+#	sudo chown $1.100 /home/`echo $1 | cut -b 1`/${1} 
+
+	# El usuario tendra como contraseña el nombre de usuario  
+	# No es muy seguro por lo que deberiamos obligarle a cambiarla
+
+	# Esto se puede hacer con un campo de adduser.conf el DIR_MODE=0700
+	# Pero cambiaria los permisos de todos los creados posteriormente
+#	sudo chmod 700 /home/`echo $1 | cut -b 1`/${1}
+	sudo adduser --gecos "" --quiet $1
+	# Añadir la linea al sudoers para el nuevo usuario
+	sudo cat /etc/sudoers > /tmp/sudores.tmp
+	
+
+	# echo $1 $HOSTNAME=NOPASSWD: /bin/*, /usr/bin/*, /sbin/*, /usr/sbin/\* >>/tmp/sudores.tmp 
+
+	# Ahora tienen los permisos justos para poder ejecutar los programas!!
+	# 
+	echo $1	$HOSTNAME=NOPASSWD: /sbin/mkfs /dev/fd0 >> /tmp/sudores.tmp
+	echo $1	$HOSTNAME=NOPASSWD: /bin/mount /dev/fd0 >> /tmp/sudores.tmp
+	echo $1	$HOSTNAME=NOPASSWD: /bin/umount /dev/fd0 >> /tmp/sudores.tmp
+
+	sudo chmod 440 /tmp/sudores.tmp
+	sudo chown root.root /tmp/sudores.tmp
+	sudo mv /tmp/sudores.tmp /etc/sudoers
+	 
+	echo Usuario $1 creado con exito
+else
+	#echo Introduzca nombre de usuario
+	echo Formato: ./creacuenta nombre_usuario
+fi

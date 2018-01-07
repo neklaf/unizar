@@ -1,0 +1,20 @@
+#!/bin/sh
+ps=`ps -eo state,command,pid | grep "^T"`
+if [ ! -f /tmp/tmp2/auxSumary ]; then
+	touch /tmp/tmp2/auxSumary
+fi
+if [ !$ps ];then
+	echo No existen procesos parados en el sistema. >> /tmp/tmp2/auxSumary
+else
+	echo $ps >> /tmp/tmp2/auxSumary
+fi
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+who --count >> /tmp/tmp2/auxSumary
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+uptime >> /tmp/tmp2/auxSumary
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+free >> /tmp/tmp2/auxSumary
+echo *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* >> /tmp/tmp2/auxSumary
+df >> /tmp/tmp2/auxSumary
+sudo logger -f /tmp/tmp2/auxSumary -s -t "" 2> /var/log/personalizado/sumary
+cat /tmp/tmp2/auxSumary > /dev/null

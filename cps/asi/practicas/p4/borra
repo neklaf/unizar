@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# fecha del sistema en minutos
+sys=`date +%m`
+
+fich=`ls /tmp`
+
+for nombre in $fich; do
+	num=`date -r $nombre +%m`
+	if [ `expr $sys - $num` -ge 30]; then
+		rm /tmp/${nombre}
+		echo Fichero $nombre borrado
+	fi
+done

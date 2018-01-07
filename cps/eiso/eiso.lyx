@@ -1,0 +1,5746 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Estructura Interna de los Sistemas Operativos
+\layout Author
+\pagebreak_bottom 
+Javier Uruen Val y Aitor Acedo
+\layout Standard
+\pagebreak_top \pagebreak_bottom 
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Práctica 1.
+ Acceso a la tabla de procesos mediante una nueva llamada al sistema.
+\layout Subsection
+
+Introducción
+\layout Standard
+
+Esta práctica consiste en la adición de una nueva llamada al sistema para
+ proporcionar información de los procesos de un usuario, incluyendo las
+ llamadas al sistema que realiza.
+ Para la realización de este trabajo hemos optado por un kernel de desarrollo
+\noun on 
+ 2.6.0-test11.
+ 
+\layout Standard
+
+Al no existir documentación actualizada sobre los kernels en desarrollo,
+ nuestra principal fuente de información ha sido el código en sí mismo.
+ Para ayudarnos a desplazarnos por las fuentes del kernel hemos usado un
+ 
+\emph on 
+lxr(linux-cross-reference) 
+\emph default 
+, disponible en 
+\begin_inset LatexCommand \htmlurl{http://lxr.linux.no}
+
+\end_inset 
+
+, se trata de una referencia cruzada de todas las estructuras, variables,
+ funciones...
+ que han sido declaradas y utilizadas en el kernel.
+ Se usa vía web, siendo html y pudiendo así usarlo cómodamente desde consola,
+ con ayuda de un navegador tipo
+\noun on 
+ lynx.
+\layout Standard
+
+Como sistema de desarrollo hemos usado la distribución 
+\noun on 
+Debian 
+\noun default 
+en su versión inestable.
+ Cabe reseñar que para utilizar un kernel 2.6.x en Debian se debe tener en
+ cuenta lo siguiente:
+\layout Itemize
+
+La serie 2.6.x usa un nuevo sistema de ficheros para mostrar información sobre
+ el sistema, véase drivers, módulos, etc...
+ este sistema es conocido como 
+\emph on 
+sysfs 
+\emph default 
+y debe ser añadido al fichero 
+\emph on 
+/etc/fstab
+\emph default 
+ para su utilización al arrancar.
+\layout Itemize
+
+Para poder utilizar módulos del kernel se debe actualizar el paquete 
+\emph on 
+module-init-tools.
+ 
+\emph default 
+Ya que ha habido un cambio notable en la utilización y compilación de los
+ módulos en esta serie.
+\layout Itemize
+
+El sistema de compilación del kernel ha mejorado notablemente, siendo optimizado
+ para estríctamente recompilar aquellas partes que lo necesitan.
+ Además de eso, ahora ya no se tiene que realizar el típico
+\emph on 
+ make dep && make clean && make bzImage 
+\emph default 
+, ahora tendremos todo listo con un simple 
+\emph on 
+make
+\emph default 
+ en el directorio raíz de las fuentes.
+\layout Subsection
+
+Detalles de la Implementación
+\layout Subsubsection
+
+Modificación de entry.S
+\layout Standard
+
+Como se aprecia en el siguiente código, ya no es necesario utilizar 
+\emph on 
+SYMBOL_NAME
+\emph default 
+().
+ 
+\layout LyX-Code
+\noindent 
+ENTRY(system_call)
+\layout LyX-Code
+
+pushl %eax              # save orig_eax
+\layout LyX-Code
+
+SAVE_ALL
+\layout LyX-Code
+
+GET_THREAD_INFO(%ebp)
+\layout LyX-Code
+
+cmpl $(nr_syscalls), %eax
+\layout LyX-Code
+
+jae syscall_badsys
+\layout LyX-Code
+
+testb $_TIF_SYSCALL_TRACE,TI_FLAGS(%ebp)
+\layout LyX-Code
+
+jnz syscall_trace_entry
+\layout LyX-Code
+
+syscall_call:
+\layout LyX-Code
+
+pushl %eax              # EISO SysCall number in %eax 
+\layout LyX-Code
+
+call eiso_llama         # EISO Get the number as parameter
+\layout LyX-Code
+
+popl  %eax              # EISO Restore stack
+\layout LyX-Code
+
+call *sys_call_table(,%eax,4)
+\layout LyX-Code
+
+movl %eax,EAX(%esp)     # store the return value
+\layout LyX-Code
+
+pushl %eax              # EISO Right-Most parameter: return value
+\layout LyX-Code
+
+movl ORIG_EAX+4(%esp), %eax# EISO Get the SysCall number
+\layout LyX-Code
+
+pushl %eax              # EISO Pass as parameter
+\layout LyX-Code
+
+call eiso_salida        # EISO Call the function
+\layout LyX-Code
+
+popl %eax               # EISO Restore stack
+\layout LyX-Code
+
+popl %eax               # EISO Restore stack
+\layout LyX-Code
+
+\layout Standard
+
+También ha sido preciso en el mismo fichero añadir al vector 
+\emph on 
+ENTRY(sys_call_table) , 
+\emph default 
+nuestra nueva llamada al sistema.
+ Nótese, que ya no es preciso modificar el tamaño del vector, ya que es
+ calculado automáticamente.
+ En 
+\emph on 
+/asm/unistd.h
+\emph default 
+ hemos introducido el valor de nuestra nueva llamada, esto es 
+\emph on 
+274
+\emph default 
+.
+\layout LyX-Code
+
+   ENTRY(sys_call_table)
+\layout LyX-Code
+
+          ...
+\layout LyX-Code
+
+          ...
+\layout LyX-Code
+
+   .long sys_tgkill        /* 270 */
+\layout LyX-Code
+
+   .long sys_utimes
+\layout LyX-Code
+
+   .long sys_fadvise64_64
+\layout LyX-Code
+
+   .long sys_ni_syscall    /* sys_vserver */
+\layout LyX-Code
+
+   long sys_psplus        /* EISO */
+\layout LyX-Code
+
+syscall_table_size=(.-sys_call_table)
+\layout LyX-Code
+
+\layout Subsubsection
+
+Exportar símbolos
+\layout Standard
+
+Para exportar símbolos, como por ejemplo la variable 
+\emph on 
+eiso_run 
+\emph default 
+que tiene que ser visible en 
+\emph on 
+vigila.c 
+\emph default 
+y en 
+\emph on 
+psplus.c, 
+\emph default 
+hay que utilizar la directiva EXPORT_SYMBOL().
+ Como ejemplo, un extracto del fichero 
+\emph on 
+vigila.c 
+\emph default 
+donde 
+\emph on 
+eiso_run 
+\emph default 
+es declarada.
+      
+\layout LyX-Code
+
+volatile int eiso_run = 0;
+\layout LyX-Code
+
+EXPORT_SYMBOL(eiso_run); 
+\layout Subsubsection
+
+Compilación de nuestras modificaciones
+\layout Standard
+
+Un rápido vistazo a los 
+\emph on 
+Makefiles 
+\emph default 
+de los directorios de las fuentes del kernel, revela que, para que una unidad
+ de compilación de un archivo .c a un objeto .o se lleve a cabo, el fichero
+ objecto debe estar declarado dentro de la variable 
+\emph on 
+obj-y 
+\emph default 
+del 
+\emph on 
+Makefile
+\emph default 
+ del directorio donde se encuentran nuestros nuevos ficheros.
+ He aquí el ejemplo del fichero 
+\emph on 
+Makefile
+\emph default 
+ del directorio 
+\emph on 
+/kernel/Makefile
+\emph default 
+.
+\layout LyX-Code
+
+obj-y= sched.o fork.o exec_domain.o panic.o printk.o profile.o 
+\backslash 
+
+\layout LyX-Code
+
+    exit.o itimer.o time.o softirq.o resource.o 
+\backslash 
+
+\layout LyX-Code
+
+    sysctl.o capability.o ptrace.o timer.o user.o 
+\backslash 
+
+\layout LyX-Code
+
+    signal.o sys.o kmod.o workqueue.o pid.o psplus.o vigila.o
+\backslash 
+
+\layout LyX-Code
+
+    rcupdate.o intermodule.o extable.o params.o posix-timers.o
+\layout Subsubsection
+
+Modificaciones de la práctica
+\layout Standard
+
+Hemos cambiado la declaración de 
+\emph on 
+sysinfo
+\emph default 
+ en 
+\emph on 
+task_struct
+\emph default 
+ para que sea un puntero a estructura.
+ De tal manera que cuando un proceso es creado, 
+\emph on 
+do_fork
+\emph default 
+(), se comprueba si la variable 
+\emph on 
+eiso_run
+\emph default 
+ está activa, si lo está reservamos espacio para la estructura 
+\emph on 
+sysinfo
+\emph default 
+.
+ Además cuando se activa la monitorización, la llamada al sistema se encarga
+ de recorrer toda lista de procesos, y todos aquellos que tengan el campo
+ 
+\emph on 
+sysinfo
+\emph default 
+ apuntando a 
+\emph on 
+NULL
+\emph default 
+, se reserva espacio.
+ También hay que tener en cuenta que cuando un proceso termine, es decir,
+ ejecute do_exit(), habrá que liberar la memoria de 
+\emph on 
+sysinfo
+\emph default 
+ para no desperdiciarla.
+\layout Standard
+
+La modificación de la práctica que debe conseguir que cuando un proceso
+ acabe se desactive la monitorización, la hemos fusionado con la modificación
+ que permite que varios procesos monitoricen concurrentemente.
+ Lo que hemos hecho es utilizar un semáforo (
+\emph on 
+list_mutex)
+\emph default 
+ y un vector de PIDs (
+\emph on 
+list_pids
+\emph default 
+) donde guardamos qué procesos se están monitorizando, además una variable
+ global 
+\emph on 
+num_procs, 
+\emph default 
+que indica cuantos procesos hay concurrentemente monitorizando.
+ El acceso y modificación tanto a 
+\emph on 
+num_procs
+\emph default 
+ como 
+\emph on 
+list_pids, 
+\emph default 
+se realiza en exclusión mútua usando el semáforo.
+ Básicamente lo que hacemos es: cada vez que un proceso inicia la monitorización
+ buscamos un sitio libre en 
+\emph on 
+list_pids,
+\emph default 
+ esto se denota porque estará puesto a EMPTY, anotamos el PID actual del
+ proceso en el hueco libre y si somos el primer proceso en activar la monitoriza
+ción, esto es 
+\emph on 
+num_proc 
+\emph default 
+es igual 0, entonces ponemos la variable 
+\emph on 
+eiso_run
+\emph default 
+ a 1.
+ Ahora realizaremos la operación de indicar que un proceso ha dejado de
+ monitorizar, esto es, o ha desactivado la monitorización vía 
+\emph on 
+ioctl
+\emph default 
+() o el proceso ha acabado.
+
+\emph on 
+ 
+\emph default 
+La operación consistirá en buscar el PID del proceso que desea acabar o
+ desactivar la monitorización, en 
+\emph on 
+list_pids, 
+\emph default 
+liberará la posición que ocupaba, decrementará en 1 el número de procesos
+ concurrentes, y si este último número es igual a 0 querrá decir que somos
+ el último proceso que monitoriza.
+ Con lo cual desactivaremos 
+\emph on 
+eiso_run
+\emph default 
+ y resetaremos las estructuras a 0.
+\layout Standard
+
+Nótese que en esta implementación limitamos el número de procesos concurrentes
+ por el tamaño del vector.
+ Una opción más escalable sería usar una lista genérica, por ejemplo la
+ que se encuentra en 
+\emph on 
+<linux/list.h>.
+ 
+\emph default 
+Aunque consideramos que esa solución es más elegante, pero no la implementamos
+ porque creemos que no es objeto de está práctica, sino la sincronización
+ en sí misma, la cual ya la conseguimos con el semáforo y el vector.
+\layout Subsection
+
+Relación de los ficheros generados y de los ficheros modificados
+\layout Subsubsection
+
+Ficheros generados
+\layout Itemize
+
+kernel/psplus.c 
+\layout Itemize
+
+kernel/vigila.c
+\layout Itemize
+
+include/linux/psplus.h 
+\layout Subsubsection
+
+Ficheros modificados
+\layout Itemize
+
+arch/i386/kernel/entry.S
+\layout Itemize
+
+include/asm/unistd.h
+\layout Itemize
+
+include/linux/sched.h
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+Modificado también para parte opcional 3
+\end_inset 
+
+
+\layout Itemize
+
+kernel/Makefile
+\layout Itemize
+
+kernel/exit.c
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+Parte opcional 1
+\end_inset 
+
+
+\layout Itemize
+
+kernel/fork.c
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+Parte opcional 2
+\end_inset 
+
+
+\layout Subsection
+
+Fuente de los ficheros generados
+\layout Subsubsection
+
+kernel/psplus.c
+\layout LyX-Code
+\noindent 
+/*
+\layout LyX-Code
+
+ * psplus.c 
+\layout LyX-Code
+
+ *     Implementación de una nueva llamada al sistema
+\layout LyX-Code
+
+ *     para el proyecto 1.
+ EISO      
+\layout LyX-Code
+
+ *      
+\layout LyX-Code
+
+ *         
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Version:     0.1     5/01/2004
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Authors:     Aitor Acedo, <460829@celes.unizar.es>
+\layout LyX-Code
+
+ *              Javier Uruen Val, <460821@celes.unizar.es>
+\layout LyX-Code
+
+ *              
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * This program is free software; you can redistribute it and/or
+\layout LyX-Code
+
+ * modify it under the terms of the GNU General Public License
+\layout LyX-Code
+
+ * as published by the Free Software Foundation; either version
+\layout LyX-Code
+
+ * 2 of the License, or (at your option) any later version.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+\layout LyX-Code
+
+\layout LyX-Code
+
+#include <linux/config.h>
+\layout LyX-Code
+
+#include <linux/sched.h>
+\layout LyX-Code
+
+#include <linux/stddef.h>
+\layout LyX-Code
+
+#include <asm/uaccess.h>
+\layout LyX-Code
+
+#include <asm/unistd.h>
+\layout LyX-Code
+
+#include <asm/semaphore.h>
+\layout LyX-Code
+
+#include <linux/fs.h>
+\layout LyX-Code
+
+#include <linux/fs_struct.h>
+\layout LyX-Code
+
+#include <linux/psplus.h>
+\layout LyX-Code
+
+\layout LyX-Code
+
+extern int eiso_run;
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Distingimos si estamos en la ampliación
+\layout LyX-Code
+
+ * de la práctica o en la primera implementación.
+\layout LyX-Code
+
+ * Utilizando para ello el flag AMPLIACION
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#ifdef AMPLIACION
+\layout LyX-Code
+
+#define SYSINFO (void *)p->sysinfo
+\layout LyX-Code
+
+DECLARE_MUTEX(list_mutex); /* Semáforo para mutex */
+\layout LyX-Code
+
+int list_pids[MAXPROC];    /* Lista de procesos
+\layout LyX-Code
+
+                            * que están monitorizando
+\layout LyX-Code
+
+                            */
+\layout LyX-Code
+
+int num_proc = 0;
+\layout LyX-Code
+
+#else
+\layout LyX-Code
+
+#define SYSINFO (void *)&p->sysinfo
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Rellena una estructura t_syscall_all y la copia
+\layout LyX-Code
+
+ * a espacio de usuario.
+\layout LyX-Code
+
+ * Variables globales accedidas: 
+\layout LyX-Code
+
+ *   - current
+\layout LyX-Code
+
+ * Variables globales modificadas:
+\layout LyX-Code
+
+ * Funciones del núcleo utilizadas:
+\layout LyX-Code
+
+ *   - memcpy()
+\layout LyX-Code
+
+ *   - copy_to_user()
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+\layout LyX-Code
+
+static int make_syscall_all(unsigned int uid, int max, void *dst){
+\layout LyX-Code
+
+  struct t_syscall_all syscall_all;  
+\layout LyX-Code
+
+  struct task_struct *p;
+\layout LyX-Code
+
+  int byte_cp; /* Bytes copiados a user space */
+\layout LyX-Code
+
+  int times = 0;
+\layout LyX-Code
+
+  for_each_process(p){
+\layout LyX-Code
+
+    if ( uid == p->uid  && (SYSINFO != NULL) ) {
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      times++;
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Rellenamos la estructura
+\layout LyX-Code
+
+       * syscall_all con los datos
+\layout LyX-Code
+
+       * del proceso.
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      syscall_all.basica_all.basica_ident.pid = p->pid;
+\layout LyX-Code
+
+      syscall_all.basica_all.basica_ident.ppid = p->parent->pid;
+\layout LyX-Code
+
+      syscall_all.basica_all.basica_ident.uid = p->uid;
+\layout LyX-Code
+
+      syscall_all.basica_all.basica_ident.gid = p->gid;
+\layout LyX-Code
+
+      syscall_all.basica_all.prioridad = p->prio;
+\layout LyX-Code
+
+      syscall_all.basica_all.estado = p->state;
+\layout LyX-Code
+
+      syscall_all.basica_all.tiempo = p->start_time;
+\layout LyX-Code
+
+      syscall_all.basica_all.root_inode = 
+\newline 
+       p->fs->root->d_inode->i_ino;
+\layout LyX-Code
+
+     syscall_all.basica_all.cwd_inode = 
+\newline 
+       p->fs->pwd->d_inode->i_ino;
+\layout LyX-Code
+
+      strcpy(syscall_all.basica_all.comando, p->comm);
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Hacemos esto o rellenamos campo a campo
+\layout LyX-Code
+
+       *
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      memcpy( (void *)&syscall_all.open, SYSINFO,
+\layout LyX-Code
+
+        sizeof(t_syscall_kernel) );
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Una vez rellena la estructura la copiamos
+\layout LyX-Code
+
+       * a espacio de usuario
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      byte_cp = copy_to_user( dst, &syscall_all,
+\layout LyX-Code
+
+            sizeof(struct t_syscall_all));
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Si la copia ha sido correcta actualizamos 
+\layout LyX-Code
+
+       * el puntero al espacio de usuario
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if ( !byte_cp )
+\layout LyX-Code
+
+        
+\layout LyX-Code
+
+        dst+= sizeof(struct t_syscall_all);
+\layout LyX-Code
+
+      else 
+\layout LyX-Code
+
+        return -1;
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Comprobamos que no rebasamos el número
+\layout LyX-Code
+
+       * máximo de procesos a copiar
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if(times >= max)
+\layout LyX-Code
+
+        break;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  return times;
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Rellena una estructura t_basica_indent y la copia
+\layout LyX-Code
+
+ * a espacio de usuario.
+\layout LyX-Code
+
+ * Variables globales accedidas: 
+\layout LyX-Code
+
+ *   - current
+\layout LyX-Code
+
+ * Variables globales modificadas:
+\layout LyX-Code
+
+ * Funciones del núcleo utilizadas:
+\layout LyX-Code
+
+ *   - memcpy()
+\layout LyX-Code
+
+ *   - copy_to_user()
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+static int make_syscall_ident(unsigned int uid, int max, void *dst){
+\layout LyX-Code
+
+  struct t_basica_ident syscall_ident;  
+\layout LyX-Code
+
+  struct task_struct *p;
+\layout LyX-Code
+
+  int byte_cp; /* Bytes copiados a user space */
+\layout LyX-Code
+
+  int times = 0;
+\layout LyX-Code
+
+  for_each_process(p){
+\layout LyX-Code
+
+    if ( uid == p->uid  && (SYSINFO != NULL) ) {
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      times++;
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Rellenamos la estructura
+\layout LyX-Code
+
+       * syscall_ident con los datos
+\layout LyX-Code
+
+       * del proceso.
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      syscall_ident.pid = p->pid;
+\layout LyX-Code
+
+      syscall_ident.ppid = p->parent->pid;
+\layout LyX-Code
+
+      syscall_ident.uid = p->uid;
+\layout LyX-Code
+
+      syscall_ident.gid = p->gid;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Hacemos esto o rellenamos campo a campo
+\layout LyX-Code
+
+       *
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      memcpy( (void *)&syscall_ident, SYSINFO,
+\layout LyX-Code
+
+        sizeof(struct t_basica_ident) );
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Una vez rellena la estructura la copiamos
+\layout LyX-Code
+
+       * a espacio de usuario
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      byte_cp = copy_to_user( dst, &syscall_ident,
+\layout LyX-Code
+
+            sizeof(struct t_basica_ident));
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Si la copia ha sido correcta actualizamos 
+\layout LyX-Code
+
+       * el puntero al espacio de usuario
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if ( !byte_cp )
+\layout LyX-Code
+
+        
+\layout LyX-Code
+
+        dst+= sizeof(struct t_basica_ident);
+\layout LyX-Code
+
+      else 
+\layout LyX-Code
+
+        return -1;
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Comprobamos que no rebasamos el número
+\layout LyX-Code
+
+       * máximo de procesos a copiar
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if(times >= max)
+\layout LyX-Code
+
+        break;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  return times;
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Realiza la llamada al sistema sys_psplus.
+\layout LyX-Code
+
+ * Variables globales accedidas: 
+\layout LyX-Code
+
+ *   - current
+\layout LyX-Code
+
+ *   - eiso_run
+\layout LyX-Code
+
+ *   - list_pids[] ( Ampliación)
+\layout LyX-Code
+
+ *   - list_mutex  ( Ampliación)
+\layout LyX-Code
+
+ *   - num_proc    ( Ampliación)
+\layout LyX-Code
+
+ * Variables globales modificadas:
+\layout LyX-Code
+
+ * Funciones del núcleo utilizadas:
+\layout LyX-Code
+
+ *   - printk()
+\layout LyX-Code
+
+ *   - down_interruptible() (Ampliación)
+\layout LyX-Code
+
+ *   - up() (Ampliación(
+\layout LyX-Code
+
+ */   
+\layout LyX-Code
+
+asmlinkage long sys_psplus(unsigned int uid, int max, void *ptr, int CMD)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+\layout LyX-Code
+
+struct task_struct *p;
+\layout LyX-Code
+
+int i;
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+  switch(CMD){
+\layout LyX-Code
+
+    case OFF:
+\layout LyX-Code
+
+      printk("Desactivando eiso_run
+\backslash 
+n");
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Acceso en mutex a la lista de procesos
+\layout LyX-Code
+
+       * que están monitorizando.
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if ( down_interruptible(&list_mutex) != 0 )
+\layout LyX-Code
+
+        return -1;
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Buscamos el pid en la lista
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      for ( i = 0; i < MAXPROC; i++)
+\layout LyX-Code
+
+        if ( list_pids[i] == current->pid ){
+\layout LyX-Code
+
+          /*
+\layout LyX-Code
+
+           * Lo liberamos
+\layout LyX-Code
+
+           */
+\layout LyX-Code
+
+          list_pids[i] = EMPTYPID;
+\layout LyX-Code
+
+          printk("Liberamos pos %i del pid %i
+\backslash 
+n",
+\layout LyX-Code
+
+            i, current->pid);
+\layout LyX-Code
+
+          num_proc--;
+\layout LyX-Code
+
+          break;
+\layout LyX-Code
+
+        }
+\layout LyX-Code
+
+      /* Si se cumple la siguiente condición quiere decir
+\layout LyX-Code
+
+       * que un proceso que no ha activado la monitorización
+\layout LyX-Code
+
+       * está intentando desactivarla
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if ( i == MAXPROC ){
+\layout LyX-Code
+
+        printk("Proceso %i no habia activado monitor.",
+\layout LyX-Code
+
+          current->pid);
+\layout LyX-Code
+
+        up(&list_mutex);
+\layout LyX-Code
+
+        return -1;
+\layout LyX-Code
+
+      }
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      if ( !num_proc ){ /* Somos el último proceso */
+\layout LyX-Code
+
+        eiso_run = 0;
+\layout LyX-Code
+
+        for_each_process(p){ / * Reiniciamos contadores */
+\layout LyX-Code
+
+          if ( p->sysinfo != NULL ){ 
+\layout LyX-Code
+
+            memset(p->sysinfo, 0, sizeof(t_syscall_kernel));
+\layout LyX-Code
+
+          }
+\layout LyX-Code
+
+        }
+\layout LyX-Code
+
+      }
+\layout LyX-Code
+
+       
+\layout LyX-Code
+
+      /* Soltamos el semáforo */
+\layout LyX-Code
+
+       up(&list_mutex);
+\layout LyX-Code
+
+\layout LyX-Code
+
+    return 0;
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+    case ON:
+\layout LyX-Code
+
+      printk("Activando eiso_run
+\backslash 
+n");
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Acceso en mutex a la lista de procesos
+\layout LyX-Code
+
+       * que están monitorizando.
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if ( down_interruptible(&list_mutex) != 0 )
+\layout LyX-Code
+
+        return -1;
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Si es la primera llamada a sysplus,
+\layout LyX-Code
+
+       * inicializo el vector que almacena
+\layout LyX-Code
+
+       * los pids de los procesos monitorizando
+\layout LyX-Code
+
+       * a la vez
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if ( eiso_run == 0 )
+\layout LyX-Code
+
+        for ( i = 0; i < MAXPROC; i++)
+\layout LyX-Code
+
+          list_pids[i] = EMPTYPID;
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Colocamos el pid del proceso actual
+\layout LyX-Code
+
+       * en la primera posición libre
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      if ( num_proc < MAXPROC ) {
+\layout LyX-Code
+
+        for ( i = 0; i < MAXPROC; i++)
+\layout LyX-Code
+
+          if ( list_pids[i] == EMPTYPID )
+\layout LyX-Code
+
+            break;
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+        printk("Añadiendo pid %i a la posición %i
+\backslash 
+n",
+\layout LyX-Code
+
+          current->pid, i);
+\layout LyX-Code
+
+        list_pids[i] = current->pid;
+\layout LyX-Code
+
+         num_proc++;   
+\layout LyX-Code
+
+      }
+\layout LyX-Code
+
+        
+\layout LyX-Code
+
+      else {
+\layout LyX-Code
+
+        up(&list_mutex);
+\layout LyX-Code
+
+        return -1;
+\layout LyX-Code
+
+      }
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Debemos recorrer todos los procesos
+\layout LyX-Code
+
+       * y reservar memoria para aquellos procesos
+\layout LyX-Code
+
+       * que tenga sysinfo apuntando a NULL
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      for_each_process(p){
+\layout LyX-Code
+
+        if ( p->sysinfo == NULL ){ 
+\layout LyX-Code
+
+           p->sysinfo = kmalloc(sizeof(t_syscall_kernel), 
+\newline 
+                                GFP_KERNEL);
+\layout LyX-Code
+
+           if ( p->sysinfo)
+\layout LyX-Code
+
+               memset(p->sysinfo, 0, sizeof(t_syscall_kernel));
+\layout LyX-Code
+
+        }              
+\layout LyX-Code
+
+      }
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+       /* Soltamos el semaforo */
+\layout LyX-Code
+
+       up(&list_mutex);
+\layout LyX-Code
+
+      return 0;
+\layout LyX-Code
+
+    case IDENT:
+\layout LyX-Code
+
+      if(!eiso_run)
+\layout LyX-Code
+
+        return EINVAL;
+\layout LyX-Code
+
+      return make_syscall_ident(uid, max, ptr);
+\layout LyX-Code
+
+    case ALL:
+\layout LyX-Code
+
+      if(!eiso_run)
+\layout LyX-Code
+
+        return EINVAL;
+\layout LyX-Code
+
+      return make_syscall_all(uid, max, ptr);
+\layout LyX-Code
+
+    default:
+\layout LyX-Code
+
+      return EINVAL;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+      
+\layout LyX-Code
+
+}
+\layout Subsubsection
+
+kernel/vigila.c
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * vigila.c 
+\layout LyX-Code
+
+ *     Funciones que actualizan las estadisísticas
+\layout LyX-Code
+
+ *     de acceso a las llamada de sistema, fallos,
+\layout LyX-Code
+
+ *     aciertos, etc...
+\layout LyX-Code
+
+ *      
+\layout LyX-Code
+
+ *         
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Version:     0.1     5/01/2004
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Authors:     Aitor Acedo, <460829@celes.unizar.es>
+\layout LyX-Code
+
+ *              Javier Uruen Val, <460821@celes.unizar.es>
+\layout LyX-Code
+
+ *              
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * This program is free software; you can redistribute it and/or
+\layout LyX-Code
+
+ * modify it under the terms of the GNU General Public License
+\layout LyX-Code
+
+ * as published by the Free Software Foundation; either version
+\layout LyX-Code
+
+ * 2 of the License, or (at your option) any later version.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#include <linux/config.h>
+\layout LyX-Code
+
+#include <linux/sched.h>
+\layout LyX-Code
+
+#include <linux/module.h>
+\layout LyX-Code
+
+#include <asm/uaccess.h>
+\layout LyX-Code
+
+#include <asm/unistd.h>
+\layout LyX-Code
+
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Macros para actualizar las estructuras de información
+\layout LyX-Code
+
+ * que almacenan los resultados de las llamadas al sistema.
+\layout LyX-Code
+
+ * Dependiendo si estamos en la ampliación o no, el acceso
+\layout LyX-Code
+
+ * será por puntero o por estructura estática.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#ifndef AMPLIACION
+\layout LyX-Code
+
+#define UPDATE_ENTRADA(call) 
+\backslash 
+
+\layout LyX-Code
+
+    current->sysinfo.call.entradas++
+\layout LyX-Code
+
+#define UPDATE_OK(call) 
+\backslash 
+
+\layout LyX-Code
+
+    current->sysinfo.call.salidas_ok++
+\layout LyX-Code
+
+#define UPDATE_ERROR(call) 
+\backslash 
+
+\layout LyX-Code
+
+    current->sysinfo.call.salidas_error++
+\layout LyX-Code
+
+#else
+\layout LyX-Code
+
+#define UPDATE_ENTRADA(call) do {
+\backslash 
+
+\layout LyX-Code
+
+  if (current->sysinfo) current->sysinfo->call.entradas++;  }while(0)
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+#define UPDATE_OK(call)  do{ 
+\backslash 
+
+\layout LyX-Code
+
+  if (current->sysinfo) current->sysinfo->call.salidas_ok++; }while(0)
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+#define UPDATE_ERROR(call) do {
+\backslash 
+
+\layout LyX-Code
+
+  if (current->sysinfo) current->sysinfo->call.salidas_error++;}while(0)
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+int eiso_run = 0;
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Hacemos visible la variable al resto del kernel
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+EXPORT_SYMBOL(eiso_run);
+\layout LyX-Code
+
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * 
+\layout LyX-Code
+
+ * Variables globales accedidas: 
+\layout LyX-Code
+
+ *   - current
+\layout LyX-Code
+
+ *   - eiso_run
+\layout LyX-Code
+
+ *   - current->sysinfo
+\layout LyX-Code
+
+ * Variables globales modificadas:
+\layout LyX-Code
+
+ *   - current->sysinfo
+\layout LyX-Code
+
+ * Funciones del núcleo utilizadas:
+\layout LyX-Code
+
+ */   
+\layout LyX-Code
+
+asmlinkage long eiso_llamada(int num_syscall)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+  if (!eiso_run)
+\layout LyX-Code
+
+    return 0;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+  switch(num_syscall)
+\layout LyX-Code
+
+  {
+\layout LyX-Code
+
+    case __NR_open:
+\layout LyX-Code
+
+      UPDATE_ENTRADA(open);  
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_close:
+\layout LyX-Code
+
+      UPDATE_ENTRADA(close);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_read:
+\layout LyX-Code
+
+      UPDATE_ENTRADA(read);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_write:
+\layout LyX-Code
+
+      UPDATE_ENTRADA(write);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_exit:
+\layout LyX-Code
+
+      UPDATE_ENTRADA(exit);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_fork:
+\layout LyX-Code
+
+      UPDATE_ENTRADA(fork);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    default:
+\layout LyX-Code
+
+      return 0;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  return 0;
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * 
+\layout LyX-Code
+
+ * Variables globales accedidas: 
+\layout LyX-Code
+
+ *   - current
+\layout LyX-Code
+
+ *   - eiso_run
+\layout LyX-Code
+
+ *   - current->sysinfo
+\layout LyX-Code
+
+ * Variables globales modificadas:
+\layout LyX-Code
+
+ *   - current->sysinfo
+\layout LyX-Code
+
+ * Funciones del núcleo utilizadas:
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+asmlinkage long eiso_salida(int num_syscall, int ret)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+  if (!eiso_run)
+\layout LyX-Code
+
+    return 0;
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  switch(num_syscall)
+\layout LyX-Code
+
+  {
+\layout LyX-Code
+
+    case __NR_open:
+\layout LyX-Code
+
+      if ( ret < 0 )  UPDATE_ERROR(open);
+\layout LyX-Code
+
+      else     UPDATE_OK(open);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_close:
+\layout LyX-Code
+
+      if ( ret < 0 )   UPDATE_ERROR(close);
+\layout LyX-Code
+
+             else      UPDATE_OK(close);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_read:
+\layout LyX-Code
+
+      if (ret < 0)     UPDATE_ERROR(read);
+\layout LyX-Code
+
+      else             UPDATE_OK(read);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_write:
+\layout LyX-Code
+
+      if (ret < 0)     UPDATE_ERROR(write);
+\layout LyX-Code
+
+      else             UPDATE_OK(write);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_exit:
+\layout LyX-Code
+
+      if (ret < 0)     UPDATE_ERROR(exit); 
+\layout LyX-Code
+
+      else             UPDATE_OK(exit);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    case __NR_fork:
+\layout LyX-Code
+
+      if (ret < 0)     UPDATE_ERROR(fork); 
+\layout LyX-Code
+
+      else             UPDATE_OK(fork);
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    default:
+\layout LyX-Code
+
+      return 0;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  return 0;
+\layout LyX-Code
+
+}
+\layout Subsubsection
+
+include/linux/psplus.h
+\layout Standard
+
+#ifndef _LINUX_PSPLUS
+\layout Standard
+
+#define _LINUX_PSPLUS
+\layout Standard
+
+#define AMPLIACION
+\layout Standard
+
+#define MAXPROC 10 //Máximo número de procesos monitorizando concurrentemente
+\layout Standard
+
+#define EMPTYPID -1 //Indica que hay un hueco en el vector de pids
+\layout Standard
+
+/*
+\layout Standard
+
+* EISO estructuras
+\layout Standard
+
+*
+\layout Standard
+
+*/
+\layout Standard
+
+#define OFF 0
+\layout Standard
+
+#define ON 1
+\layout Standard
+
+#define ALL 2
+\layout Standard
+
+#define IDENT 3
+\layout Standard
+
+struct t_info_syscall{
+\layout Standard
+
+int entradas;
+\layout Standard
+
+int salidas_ok;
+\layout Standard
+
+int salidas_error;
+\layout Standard
+
+};
+\layout Standard
+
+#ifdef __KERNEL__
+\layout Standard
+
+typedef struct {
+\layout Standard
+
+struct t_info_syscall open;
+\layout Standard
+
+struct t_info_syscall close;
+\layout Standard
+
+struct t_info_syscall read;
+\layout Standard
+
+struct t_info_syscall write;
+\layout Standard
+
+struct t_info_syscall exit;
+\layout Standard
+
+struct t_info_syscall fork;
+\layout Standard
+
+} t_syscall_kernel;
+\layout Standard
+
+#endif
+\layout Standard
+
+struct t_basica_ident{
+\layout Standard
+
+int pid;
+\layout Standard
+
+int ppid;
+\layout Standard
+
+int uid;
+\layout Standard
+
+int gid;
+\layout Standard
+
+};
+\layout Standard
+
+struct t_basica_all{
+\layout Standard
+
+struct t_basica_ident basica_ident;
+\layout Standard
+
+int prioridad;
+\layout Standard
+
+int estado;
+\layout Standard
+
+unsigned long long int tiempo;
+\layout Standard
+
+int root_inode;
+\layout Standard
+
+int cwd_inode;
+\layout Standard
+
+char comando[16];
+\layout Standard
+
+};
+\layout Standard
+
+struct t_syscall_all{
+\layout Standard
+
+struct t_basica_all basica_all;
+\layout Standard
+
+struct t_info_syscall open;
+\layout Standard
+
+struct t_info_syscall close;
+\layout Standard
+
+struct t_info_syscall read;
+\layout Standard
+
+struct t_info_syscall write;
+\layout Standard
+
+struct t_info_syscall exit;
+\layout Standard
+
+struct t_info_syscall fork;
+\layout Standard
+
+}; 
+\layout Standard
+
+#endif
+\layout Subsection
+
+Fuente de los ficheros modificados
+\layout Subsubsection
+
+arch/i386/kernel/entry.S
+\layout LyX-Code
+
+ENTRY(system_call)
+\layout LyX-Code
+
+pushl %eax              # save orig_eax
+\layout LyX-Code
+
+SAVE_ALL
+\layout LyX-Code
+
+GET_THREAD_INFO(%ebp)
+\layout LyX-Code
+
+cmpl $(nr_syscalls), %eax
+\layout LyX-Code
+
+jae syscall_badsys
+\layout LyX-Code
+
+testb $_TIF_SYSCALL_TRACE,TI_FLAGS(%ebp)
+\layout LyX-Code
+
+jnz syscall_trace_entry
+\layout LyX-Code
+
+syscall_call:
+\layout LyX-Code
+
+pushl %eax              # EISO SysCall number in %eax 
+\layout LyX-Code
+
+call eiso_llama         # EISO Get the number as parameter
+\layout LyX-Code
+
+popl  %eax              # EISO Restore stack
+\layout LyX-Code
+
+call *sys_call_table(,%eax,4)
+\layout LyX-Code
+
+movl %eax,EAX(%esp)     # store the return value
+\layout LyX-Code
+
+pushl %eax              # EISO Right-Most parameter: return value
+\layout LyX-Code
+
+movl ORIG_EAX+4(%esp), %eax# EISO Get the SysCall number
+\layout LyX-Code
+
+pushl %eax              # EISO Pass as parameter
+\layout LyX-Code
+
+call eiso_salida        # EISO Call the function
+\layout LyX-Code
+
+popl %eax               # EISO Restore stack
+\layout LyX-Code
+
+popl %eax               # EISO Restore stack
+\layout LyX-Code
+
+       ...
+\layout LyX-Code
+
+       ...
+\layout LyX-Code
+
+ENTRY(sys_call_table)
+\layout LyX-Code
+
+       ...
+\layout LyX-Code
+
+       ...
+\layout LyX-Code
+
+.long sys_tgkill        /* 270 */
+\layout LyX-Code
+
+.long sys_utimes
+\layout LyX-Code
+
+.long sys_fadvise64_64
+\layout LyX-Code
+
+.long sys_ni_syscall    /* sys_vserver */
+\layout LyX-Code
+
+.long sys_psplus        /* EISO */
+\layout LyX-Code
+
+syscall_table_size=(.-sys_call_table)
+\layout Subsubsection
+
+include/asm/unistd.h
+\layout LyX-Code
+
+#define __NR_statfs64           268
+\layout LyX-Code
+
+#define __NR_fstatfs64          269
+\layout LyX-Code
+
+#define __NR_tgkill             270
+\layout LyX-Code
+
+#define __NR_utimes             271
+\layout LyX-Code
+
+#define __NR_fadvise64_64       272
+\layout LyX-Code
+
+#define __NR_vserver            273
+\layout LyX-Code
+
+#define __NR_psplus             274 /* Practica EISO */
+\layout LyX-Code
+
+#define NR_syscalls 275
+\layout LyX-Code
+
+\layout Subsubsection
+
+include/linux/sched.h
+\layout LyX-Code
+
+struct task_struct{
+\layout LyX-Code
+
+     ...
+\layout LyX-Code
+
+     ...
+\layout LyX-Code
+
+        struct reclaim_state *reclaim_state;
+\layout LyX-Code
+
+        struct dentry *proc_dentry;
+\layout LyX-Code
+
+        struct backing_dev_info *backing_dev_info;
+\layout LyX-Code
+
+        
+\layout LyX-Code
+
+        struct io_context *io_context;
+\layout LyX-Code
+
+        
+\layout LyX-Code
+
+        unsigned long ptrace_message;
+\layout LyX-Code
+
+        siginfo_t *last_siginfo; /* For ptrace use.
+  */
+\layout LyX-Code
+
+#ifndef AMPLIACION      
+\layout LyX-Code
+
+        t_syscall_kernel sysinfo; /* Static struct EISO */
+\layout LyX-Code
+
+#else   
+\layout LyX-Code
+
+        t_syscall_kernel *sysinfo; /* Dinamic struct EISO */
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+};      
+\layout LyX-Code
+
+       
+\layout Subsubsection
+
+kernel/Makefile
+\layout LyX-Code
+
+ Makefile for the linux kernel.
+\layout LyX-Code
+
+#
+\layout LyX-Code
+
+obj-y     = sched.o fork.o exec_domain.o panic.o printk.o profile.o 
+\backslash 
+
+\layout LyX-Code
+
+            exit.o itimer.o time.o softirq.o resource.o 
+\backslash 
+
+\layout LyX-Code
+
+            sysctl.o capability.o ptrace.o timer.o user.o 
+\backslash 
+
+\layout LyX-Code
+
+            signal.o sys.o kmod.o workqueue.o pid.o 
+\series bold 
+psplus.o
+\series default 
+ 
+\series bold 
+vigila.o
+\series default 
+
+\backslash 
+
+\layout LyX-Code
+
+            rcupdate.o intermodule.o extable.o params.o posix-timers.o
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout Subsubsection
+
+kernel/exit.c
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+include <asm/pgtable.h>
+\layout LyX-Code
+
+#include <asm/mmu_context.h>
+\layout LyX-Code
+
+#include <linux/psplus.h> /* EISO */
+\layout LyX-Code
+
+extern void sem_exit (void);
+\layout LyX-Code
+
+extern struct task_struct *child_reaper;
+\layout LyX-Code
+
+extern int eiso_run;
+\layout LyX-Code
+
+#ifdef AMPLIACION
+\layout LyX-Code
+
+extern int list_pids[MAXPROC];
+\layout LyX-Code
+
+extern struct semaphore list_mutex;
+\layout LyX-Code
+
+extern int num_proc;
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+NORET_TYPE void do_exit(long code)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+  struct task_struct   *tsk = current;
+\layout LyX-Code
+
+  struct task_struct *p; /* EISO */
+\layout LyX-Code
+
+  int i;
+\layout LyX-Code
+
+  if (unlikely(in_interrupt()))
+\layout LyX-Code
+
+    panic("Aiee, killing interrupt handler!");
+\layout LyX-Code
+
+  if (unlikely(!tsk->pid))
+\layout LyX-Code
+
+    panic("Attempted to kill the idle task!");
+\layout LyX-Code
+
+  if (unlikely(tsk->pid == 1))
+\layout LyX-Code
+
+    panic("Attempted to kill init!");
+\layout LyX-Code
+
+  if (tsk->io_context)
+\layout LyX-Code
+
+    exit_io_context();
+\layout LyX-Code
+
+  tsk->flags |= PF_EXITING;
+\layout LyX-Code
+
+  del_timer_sync(&tsk->real_timer);
+\layout LyX-Code
+
+  if (unlikely(in_atomic()))
+\layout LyX-Code
+
+    printk(KERN_INFO "note: %s[%d] exited with preempt_count %d
+\backslash 
+n",
+\layout LyX-Code
+
+        current->comm, current->pid,
+\layout LyX-Code
+
+        preempt_count());
+\layout LyX-Code
+
+#ifdef AMPLIACION  
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * EISO
+\layout LyX-Code
+
+   * Si un proceso se acaba antes de que se haya puesto
+\layout LyX-Code
+
+   * eiso_run a 0, entonces debemos liberar el espacio
+\layout LyX-Code
+
+   * de sysinfo
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  if (  tsk->sysinfo ) {
+\layout LyX-Code
+
+    kfree(tsk->sysinfo);
+\layout LyX-Code
+
+    tsk->sysinfo = NULL;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Acceso en mutex a la lista de procesos
+\layout LyX-Code
+
+   * que están monitorizando.
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  down_interruptible(&list_mutex);
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Buscamos el pid en la lista
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  for ( i = 0; i < MAXPROC; i++)
+\layout LyX-Code
+
+    if ( list_pids[i] == current->pid ){
+\layout LyX-Code
+
+      /*
+\layout LyX-Code
+
+       * Lo liberamos
+\layout LyX-Code
+
+       */
+\layout LyX-Code
+
+      list_pids[i] = EMPTYPID;
+\layout LyX-Code
+
+      printk("Liberamos pos %i del pid %i
+\backslash 
+n",
+\layout LyX-Code
+
+        i, current->pid);
+\layout LyX-Code
+
+      num_proc--;
+\layout LyX-Code
+
+      break;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+  if ( !num_proc) {
+\layout LyX-Code
+
+ if ( !num_proc) {
+\layout LyX-Code
+
+    /*
+\layout LyX-Code
+
+     * Si somos el proceso que ha activado la monitorización
+\layout LyX-Code
+
+     * entonces ponemos eiso_run a 0 y liberamos espacio
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    if ( tsk->pid == eiso_run ){
+\layout LyX-Code
+
+      for_each_process(p){
+\layout LyX-Code
+
+        if ( p->sysinfo != NULL ){
+\layout LyX-Code
+
+           memset(p->sysinfo, 0, sizeof(t_syscall_kernel));
+\layout LyX-Code
+
+           //p = NULL;
+\layout LyX-Code
+
+        }
+\layout LyX-Code
+
+      }
+\layout LyX-Code
+
+      printk("Forzando desactivación de eiso_run
+\backslash 
+n");
+\layout LyX-Code
+
+      eiso_run = 0;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  up(&list_mutex);
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Fin EISO
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+\layout LyX-Code
+
+  profile_exit_task(tsk);
+\layout LyX-Code
+
+  if (unlikely(current->ptrace & PT_TRACE_EXIT)) {
+\layout LyX-Code
+
+    current->ptrace_message = code;
+\layout LyX-Code
+
+    ptrace_notify((PTRACE_EVENT_EXIT << 8) | SIGTRAP);
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+\layout Subsubsection
+
+kernel/fork.c
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+extern int eiso_run;
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+\layout LyX-Code
+
+long do_fork(unsigned long clone_flags,
+\layout LyX-Code
+
+        unsigned long stack_start,
+\layout LyX-Code
+
+        struct pt_regs *regs,
+\layout LyX-Code
+
+        unsigned long stack_size,
+\layout LyX-Code
+
+        int __user *parent_tidptr,
+\layout LyX-Code
+
+        int __user *child_tidptr)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+  struct task_struct *p;
+\layout LyX-Code
+
+  int trace = 0;
+\layout LyX-Code
+
+  long pid;
+\layout LyX-Code
+
+  if (unlikely(current->ptrace)) {
+\layout LyX-Code
+
+    trace = fork_traceflag (clone_flags);
+\layout LyX-Code
+
+    if (trace)
+\layout LyX-Code
+
+      clone_flags |= CLONE_PTRACE;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  p = copy_process(clone_flags, stack_start, 
+\newline 
+      regs, stack_size, parent_tidptr, child_tidptr);
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Do this prior waking up the new thread - the thread pointer
+\layout LyX-Code
+
+   * might get invalid after that point, if the thread exits   quickly.
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  pid = IS_ERR(p) ? PTR_ERR(p) : p->pid;
+\layout LyX-Code
+
+  if (!IS_ERR(p)) {
+\layout LyX-Code
+
+    struct completion vfork;
+\layout LyX-Code
+
+#ifdef AMPLIACION
+\layout LyX-Code
+
+    /* EISO
+\layout LyX-Code
+
+     * Si eiso_run está activada, reservamos espacio
+\layout LyX-Code
+
+     * para nuestra estructura.
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    if ( eiso_run ) {
+\layout LyX-Code
+
+      p->sysinfo = kmalloc(sizeof(t_syscall_kernel), GFP_KERNEL);
+\layout LyX-Code
+
+      if ( p->sysinfo)
+\layout LyX-Code
+
+        memset(p->sysinfo, 0, sizeof(t_syscall_kernel));
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    else
+\layout LyX-Code
+
+      p->sysinfo = NULL;
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout Subsection
+
+Fuente de los programas de prueba
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * testit.c 
+\layout LyX-Code
+
+ *     Code to test project 1.
+\layout LyX-Code
+
+ *     
+\layout LyX-Code
+
+ *      
+\layout LyX-Code
+
+ *         
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Version:     0.1     5/01/2004
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Authors:     Aitor Acedo, <460829@celes.unizar.es>
+\layout LyX-Code
+
+ *              Javier Uruen Val, <460821@celes.unizar.es>
+\layout LyX-Code
+
+ *              
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * This program is free software; you can redistribute it and/or
+\layout LyX-Code
+
+ * modify it under the terms of the GNU General Public License
+\layout LyX-Code
+
+ * as published by the Free Software Foundation; either version
+\layout LyX-Code
+
+ * 2 of the License, or (at your option) any later version.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#include <asm/unistd.h>
+\layout LyX-Code
+
+#include <pwd.h> /* getpwnam() */
+\layout LyX-Code
+
+#include <sys/types.h>
+\layout LyX-Code
+
+#include <linux/psplus.h>
+\layout LyX-Code
+
+#include <errno.h>
+\layout LyX-Code
+
+#include <stdio.h>
+\layout LyX-Code
+
+\layout LyX-Code
+
+#define MAXPROC 20  
+\layout LyX-Code
+
+\layout LyX-Code
+
+#define PRINT_SYSCALL(syscall_all,field) 
+\backslash 
+
+\layout LyX-Code
+
+  fprintf(stdout, #field ": Entradas %i
+\backslash 
+t
+\backslash 
+tOk %i
+\backslash 
+t
+\backslash 
+tError %i
+\backslash 
+n",
+\backslash 
+
+\layout LyX-Code
+
+  syscall_all.field.entradas, syscall_all.field.salidas_ok,
+\backslash 
+
+\layout LyX-Code
+
+  syscall_all.field.salidas_error)
+\layout LyX-Code
+
+#define PRINT_BASICA_IDENT(syscall_all,fmt,field) 
+\backslash 
+
+\layout LyX-Code
+
+  fprintf(stdout, #field ": "  #fmt "
+\backslash 
+n" , syscall_all.basica_all.basica_ident.field)
+\layout LyX-Code
+
+#define PRINT_BASICA(syscall_all,fmt,field) 
+\backslash 
+
+\layout LyX-Code
+
+  fprintf(stdout, #field ": "  #fmt "
+\backslash 
+n" , syscall_all.basica_all.field)
+\layout LyX-Code
+
+#define SHOWINFO(syscall_all) do {
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA_IDENT(syscall_all,%i,pid);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA_IDENT(syscall_all,%i,ppid);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA_IDENT(syscall_all,%i,uid);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA_IDENT(syscall_all,%i,gid);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA(syscall_all,%i,prioridad);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA(syscall_all,%i,estado);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA(syscall_all,%lli,tiempo);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA(syscall_all,%i,root_inode);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_BASICA(syscall_all,%s,comando);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_SYSCALL(syscall_all,open);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_SYSCALL(syscall_all,close);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_SYSCALL(syscall_all,read);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_SYSCALL(syscall_all,write);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_SYSCALL(syscall_all,exit);
+\backslash 
+
+\layout LyX-Code
+
+  PRINT_SYSCALL(syscall_all,fork);
+\backslash 
+
+\layout LyX-Code
+
+  } while(0)
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Macro for a 4 arguments system call
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+_syscall4(int, psplus , int,  a, int, b, void*, foo, int,  c)
+\layout LyX-Code
+
+int main(int argc, char *argv[]){
+\layout LyX-Code
+
+  struct passwd *pass;
+\layout LyX-Code
+
+  struct t_syscall_all info[MAXPROC];  
+\layout LyX-Code
+
+  int num, i;
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  if ( argc < 2 ) {
+\layout LyX-Code
+
+    fprintf(stderr, "Usage: %s <name>
+\backslash 
+n", argv[0] );
+\layout LyX-Code
+
+    return -1;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Getting the uid
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  if ( ! ( pass = getpwnam(argv[1])) ) {
+\layout LyX-Code
+
+    fprintf(stderr, "No such username %s
+\backslash 
+n", argv[0] );
+\layout LyX-Code
+
+                return -1;
+\layout LyX-Code
+
+        
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  fprintf(stdout, "Username %s has uid %i
+\backslash 
+n", argv[1], pass->pw_uid);
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Setting monitoring mode on
+\layout LyX-Code
+
+   *
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  psplus(0, 0, NULL, ON);
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * We let 5 seconds for system running
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  sleep(5);
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Getting info
+\layout LyX-Code
+
+   *
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+   num = psplus(pass->pw_uid, MAXPROC, &info, ALL);
+\layout LyX-Code
+
+   if ( num < 0 ){
+\layout LyX-Code
+
+    fprintf(stderr, "Couldnt get info 
+\backslash 
+n" );
+\layout LyX-Code
+
+    return -1;
+\layout LyX-Code
+
+   }
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+   else if ( num == 0 ) {
+\layout LyX-Code
+
+    fprintf(stdout, "No process for this uid
+\backslash 
+n");
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+   }
+\layout LyX-Code
+
+   else {
+\layout LyX-Code
+
+     for ( i = 0; i < num ; i++){
+\layout LyX-Code
+
+       fprintf(stdout, "
+\backslash 
+n
+\backslash 
+n==========
+\backslash 
+n");
+\layout LyX-Code
+
+       SHOWINFO(info[i]);
+\layout LyX-Code
+
+       
+\layout LyX-Code
+
+     }  
+\layout LyX-Code
+
+   }
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Setting monitoring mode 
+\layout LyX-Code
+
+   * We let the kernel auto-off monitoring after
+\layout LyX-Code
+
+   * last process exits.
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+//  psplus(0, 0, NULL, OFF);
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  return 1;
+\layout LyX-Code
+\pagebreak_bottom 
+}
+\layout Section
+
+Práctica 2.
+ Programación de un módulo para monitorizar el Slab Allocator
+\layout Subsection
+
+Introducción
+\layout Standard
+
+Esta práctica consiste en la creación de un módulo de kernel que utilizará
+ un dispositivo de tipo carácter para dar a conocer al usuario información
+ sobre la utilización de las caches genéricas del Slab Allocator.
+ Para ello hemos optado por implementarlo para la versión 2.6.2 del kernel
+ de linux.
+\layout Standard
+
+Al igual que en la práctica anterior nuestra principal fuente de información
+ ha sido las fuentes del kernel.
+ Pero además, para conocer el funcionamiento del Slab Alloctor hemos utilizado
+ el libro 
+\emph on 
+UNIX Internals: The New Frontier by Uresh Vahalia, 
+\emph default 
+y una explicación más detallada en el trabajo de 
+\emph on 
+Jeff Bonwick (Sun Mcirosystems) 
+\emph default 
+para el 
+\emph on 
+USENIX Summer 1994 Technical Conference.
+ 
+\emph default 
+También cabe destacar una interesante fuente de información para el 
+\emph on 
+porting 
+\emph default 
+de drivers a 2.6.x en 
+\begin_inset LatexCommand \url{http://lwn.net}
+
+\end_inset 
+
+.
+\layout Standard
+
+Como sistema de desarrollo hemos usado la distribución 
+\noun on 
+Debian 
+\noun default 
+en su versión inestable.
+ Cabe reseñar que para utilizar un kernel 2.6.x en Debian se debe tener en
+ cuenta lo siguiente:
+\layout Itemize
+
+La serie 2.6.x usa un nuevo sistema de ficheros para mostrar información sobre
+ el sistema, véase drivers, módulos, etc...
+ este sistema es conocido como 
+\emph on 
+sysfs 
+\emph default 
+y debe ser añadido al fichero 
+\emph on 
+/etc/fstab
+\emph default 
+ para su utilización al arrancar.
+\layout Itemize
+
+Para poder utilizar módulos del kernel se debe actualizar el paquete 
+\emph on 
+module-init-tools.
+ 
+\emph default 
+Ya que ha habido un cambio notable en la utilización y compilación de los
+ módulos en esta serie.
+ Sin este paquete actualizado será imposible cargar nuestro módulo.
+\layout Itemize
+
+El sistema de compilación del kernel ha mejorado notablemente, siendo optimizado
+ para estrictamente recompilar aquellas partes que lo necesitan.
+ Además de eso, ahora ya no se tiene que realizar el típico
+\emph on 
+ make dep && make clean && make bzImage 
+\emph default 
+, ahora tendremos todo listo con un simple 
+\emph on 
+make
+\emph default 
+ en el directorio raíz de las fuentes.
+\layout Itemize
+
+Este anterior punto concierne directamente a la compilación de nuestro módulo.
+ Si bien en los núcleos inferiores a 2.5.x, compilábamos un módulo donde la
+ fase de linkado se obviaba hasta que este se cargaba en el kernel.
+ Es decir, sólo necesitábamos las fuentes del kernel y no necesitábamos
+ ningún otro fichero objeto a parte de nuestros módulos para compilar nuestro
+ módulo.
+ Ahora la cosa cambia, el cargador de módulo necesita conocer la localización
+ de ciertos símbolos a la hora de cargar el módulo.
+ Así pues a partir de los kernels 2.6.x es preciso este paso de pre-linkado
+ contra las librerías que incluye el kernel.
+ Haciendo, en principio, más complicado la compilación de los módulos externos.
+ Decimos en principio más complicado, porque como se verá en la siguiente
+ sección, la complejidad del proceso aumenta, pero desde el punto de vista
+ del programador de módulos se hace más transparente.
+\layout Subsection
+
+Detalles de la implementación
+\layout Subsubsection
+
+Detalles de la compilación
+\layout Standard
+
+Como hemos explicado en la anterior sección, el paradigma de compilación
+ de módulos cambia sensiblemente en la última rama del kernel.
+ Para facilitar el trabajo al programador, lo que hacemos es usar la opción
+\emph on 
+ -C, 
+\emph default 
+del progama 
+\emph on 
+make,
+\emph default 
+ este flag recibe como parámetro un directorio, en este caso será el directorio
+ raíz de nuestras fuentes del kernel además le pasaremos a 
+\emph on 
+make 
+\emph default 
+la variable 
+\emph on 
+SUBDIRS
+\emph default 
+ que contendrá el directorio donde se encuentre las fuentes de nuestros
+ módulos.
+ Lo que hará entonces el programa make será trasladarse al directorio que
+ le hemos pasado tras la opción 
+\emph on 
+-C
+\emph default 
+, es decir, las fuentes del kernel, leerá entonces la información de los
+ 
+\emph on 
+Makefiles
+\emph default 
+, configs, etc..
+ necesarios.
+ Posteriormente, con la configuración del kernel, pasará a ejecutar los
+ 
+\emph on 
+Makefiles
+\emph default 
+ que se encuentran en el directorio de 
+\emph on 
+SUBDIRS
+\emph default 
+, estos 
+\emph on 
+Makefiles
+\emph default 
+ simplemente dirán al 
+\emph on 
+Makefile
+\emph default 
+ principal del kernel que queremos compilar nuestro módulo, y éste así lo
+ hará, pero utilizando la configuración de kernel tal y como si hubiéramos
+ añadido un directorio nuevo a las fuentes del kernel, con nuestro módulo,
+ hubiéramos modificado los 
+\emph on 
+Makefiles
+\emph default 
+ para que leyera el de nuestro nuevo directorio, etc...
+ En síntesis lo que deberemos añadir al directorio donde se encuentre nuestro
+ módulo será un 
+\emph on 
+Makefile
+\emph default 
+ que contendrá simplemente:
+\layout LyX-Code
+
+obj-y := eiso.o
+\layout Standard
+
+Posteriormente si nos situamos dentro del directorio donde tenemos las fuentes
+ de nuestro módulo, simplemente tendremos que ejecutar:
+\layout LyX-Code
+
+make -C /path/to/kernelsource SUBDIRS=$PWD modules
+\layout Standard
+
+Tras la compilación obtendremos un bonito 
+\emph on 
+eiso.ko 
+\emph default 
+(nótese el cambio de extensión, muy zaragozana ella), listo para ser insertado
+ en el kernel.
+\layout Subsubsection
+
+Cambios en el registro de char devices
+\layout Standard
+
+En esta nueva versión del kernel se ha trabajado en aumentar el número de
+ posibles dispositivos, limitado anteriormente por el tamaño que podía tener
+ el número 
+\emph on 
+major 
+\emph default 
+y 
+\emph on 
+minor
+\emph default 
+.
+ Por supuesto hay compatibilidad hacia atrás, pero si un dispositivo quiere
+ usar un mayor rango de valores deberá usar el nuevo API para el registro
+ de dispositivos de carácter.
+ Como hemos mencionado, el antiguo 
+\emph on 
+register_chrdev
+\emph default 
+(), sigue existiendo.
+ Ahora podemos usar, si conocemos el número major de antemano:
+\layout LyX-Code
+
+int register_chrdev_region(dev_t from, uint32 count, char*name);
+\layout Standard
+
+Aunque seguimos teniendo compatibilidad hacia atrás, ahora no registramos
+ un par de major/minor, sino un rango de dispositivos.
+ Desde 
+\emph on 
+from 
+\emph default 
+hasta 
+\emph on 
+from + count,
+\emph default 
+ si hay disponibles.
+ Sino se pueden intercalar.
+\layout Standard
+
+Sin embargo, nuestra decisión no es utilizar un 
+\emph on 
+major
+\emph default 
+ preestablecido, sino permitir al kernel que nos asigne uno dinámicamente.
+ Así que usamos la función:
+\layout LyX-Code
+
+int alloc_chrdev_region(dev_t *dev, uint32 baseminor,
+\layout LyX-Code
+
+                         unint32 count, char* name);
+\layout Standard
+
+Como se aprecia aquí, hasta ahora no hemos registrado ningún 
+\emph on 
+file_ops, 
+\emph default 
+como hubiéramos hecho en otras versiones inferiores del kernel.
+ Para ello tenemos una nueva estructura 
+\emph on 
+struct cdev
+\emph default 
+, la cual es responsable de ello además de hacer visible al driver en el
+ sistema de archivos.
+ Esta nueva estructura además, es la encargada de aumentar en 1 el contador
+ de uso del módulo cada vez que sea hace un 
+\emph on 
+open() 
+\emph default 
+y decremetnar en los 
+\emph on 
+close().
+
+\emph default 
+ Esto es útil, ya que las macros MODULE_INC_USE() y MODULE_DEC_USE() se
+ considerán 
+\emph on 
+deprecated 
+\emph default 
+en esta nueva versión de kernel.
+
+\emph on 
+ A
+\emph default 
+ su vez, dentro de esta estructura contiene un 
+\emph on 
+kobject, 
+\emph default 
+este nuevo tipo de estructura ha sido añadido en esta versión de kernel
+ y no es trivial de entender.
+ Viene a ser una tipo de apaño para conseguir algo de orientación a objetos
+ en el kernel, reusable en muchas partes...
+ Para intentar aprender a utilizar esta nueva API nos hemos basado en los
+ escasos ejemplos que podemos encontrar en el kernel, en este caso la inicializa
+ción de una 
+\emph on 
+tty, 
+\emph default 
+correspondiente al fichero: 
+\emph on 
+drivers/char/tty_io.c
+\layout LyX-Code
+
+int tty_register_driver(struct tty_driver *driver)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+  int error;
+\layout LyX-Code
+
+        int i;
+\layout LyX-Code
+
+  dev_t dev;
+\layout LyX-Code
+
+  char *s;
+\layout LyX-Code
+
+  void **p;
+\layout LyX-Code
+
+  if (driver->flags & TTY_DRIVER_INSTALLED)
+\layout LyX-Code
+
+    return 0;
+\layout LyX-Code
+
+  p = kmalloc(driver->num * 3 * sizeof(void *), GFP_KERNEL);
+\layout LyX-Code
+
+  if (!p)
+\layout LyX-Code
+
+    return -ENOMEM;
+\layout LyX-Code
+
+  memset(p, 0, driver->num * 3 * sizeof(void *));
+\layout LyX-Code
+
+  if (!driver->major) {
+\layout LyX-Code
+
+    error = alloc_chrdev_region(&dev, driver->minor_start, driver->num,
+\layout LyX-Code
+
+            (char*)driver->name);
+\layout LyX-Code
+
+    if (!error) {
+\layout LyX-Code
+
+      driver->major = MAJOR(dev);
+\layout LyX-Code
+
+      driver->minor_start = MINOR(dev);
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+  } else {
+\layout LyX-Code
+
+    dev = MKDEV(driver->major, driver->minor_start);
+\layout LyX-Code
+
+    error = register_chrdev_region(dev, driver->num,
+\layout LyX-Code
+
+            (char*)driver->name);
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  if (error < 0) {
+\layout LyX-Code
+
+    kfree(p);
+\layout LyX-Code
+
+    return error;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  driver->ttys = (struct tty_struct **)p;
+\layout LyX-Code
+
+  driver->termios = (struct termios **)(p + driver->num);
+\layout LyX-Code
+
+  driver->termios_locked = (struct termios **)(p + driver->num * 2);
+\layout LyX-Code
+
+  driver->cdev.kobj.parent = &tty_kobj;
+\layout LyX-Code
+
+  strcpy(driver->cdev.kobj.name, driver->name);
+\layout LyX-Code
+
+  for (s = strchr(driver->cdev.kobj.name, '/'); s; s = strchr(s, '/'))
+\layout LyX-Code
+
+    *s = '!';
+\layout LyX-Code
+
+  cdev_init(&driver->cdev, &tty_fops);
+\layout LyX-Code
+
+  driver->cdev.owner = driver->owner;
+\layout LyX-Code
+
+  error = cdev_add(&driver->cdev, dev, driver->num);
+\layout LyX-Code
+
+  if (error) {
+\layout LyX-Code
+
+    kobject_del(&driver->cdev.kobj);
+\layout LyX-Code
+
+    unregister_chrdev_region(dev, driver->num);
+\layout LyX-Code
+
+    driver->ttys = NULL;
+\layout LyX-Code
+
+    driver->termios = driver->termios_locked = NULL;
+\layout LyX-Code
+
+    kfree(p);
+\layout LyX-Code
+
+    return error;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  if (!driver->put_char)
+\layout LyX-Code
+
+    driver->put_char = tty_default_put_char;
+\layout LyX-Code
+
+  list_add(&driver->tty_drivers, &tty_drivers);
+\layout LyX-Code
+
+ if ( !(driver->flags & TTY_DRIVER_NO_DEVFS) ) {
+\layout LyX-Code
+
+    for(i = 0; i < driver->num; i++)
+\layout LyX-Code
+
+        tty_register_device(driver, i, NULL);
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  proc_tty_register_driver(driver);
+\layout LyX-Code
+
+  return 0;
+\layout LyX-Code
+
+}
+\layout Subsubsection
+
+Obtención de la información del Slab Allocator
+\layout Standard
+
+Pará obtener información de los aciertos/fallos del Slab Allocator, hemos
+ modificado la función:
+\layout LyX-Code
+
+void * __cache_alloc (kmem_cache_t *cachep, int flags)
+\layout Standard
+
+Para comprobar si ha habido acierto o fallo, miramos dentro de esa función
+ si se ha podido devolver el espacio solicitado.
+ Además de eso, tenemos que validar que se trate de nuestras caches a estudiar,
+ es decir las comprendidas entre 
+\begin_inset Formula $2^{5}$
+\end_inset 
+
+B-
+\begin_inset Formula $2^{17}$
+\end_inset 
+
+B.
+ Para ello debemos comprobar que el tamaño de la cache solicitada es alguno
+ de los que queremos monitorizar, 
+\emph on 
+cachep->cachesize.
+ 
+\emph default 
+Además tenemos que ser capaces de distinguir si estamos ante el tamaño de
+ una cache general o el de alguna estructura.
+ Para esta última comprobación bastará con saber si el nombre de la misma,
+ 
+\emph on 
+cachep->name, 
+\emph default 
+comienza con la cadena 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\emph on 
+size-
+\emph default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+, si es así deberemos actualizar el contador de aciertos/fallos de la cache.
+\layout Subsubsection
+
+Detallar uso de driver concurrente por varios procesos
+\layout Standard
+
+Para que varios procesos pudieran monitorizar el Slab Allocator con nuestro
+ driver concurrentemente, deberíamos llevar a cabo la misma solución que
+ la primera práctica.
+ Es decir, mantener una lista con los procesos que estén monitorizando el
+ Slab Allocator, accediendo a ella en 
+\emph on 
+mutex
+\emph default 
+ usando un semáforo.
+ Cada vez que un proceso abriera el dispositivo deberíamos añadir el 
+\emph on 
+pid
+\emph default 
+ del proceso a esa lista.
+ Si somos el primer proceso en monitorizar, 
+\emph on 
+setearíamos 
+\emph default 
+la variable 
+\emph on 
+eisopeep_run
+\emph default 
+ a 1, y claro está reservaríamos espacio para las estructuras donde almacenamos
+ las estadísticas.
+ Los restantes procesos que abrieran el dispositivo harían lo mismo pero
+ sin modificar 
+\emph on 
+esiopeep_run
+\emph default 
+.
+ El otro aspecto a controlar es la salida del driver, es decir la ejecución
+ de la función 
+\emph on 
+release().
+
+\emph default 
+ El proceso sería parecido: acceder a la lista en mutex, borrarnos de la
+ lista, y si somos el último proceso desactivar la monitorización y liberar
+ el espacio de las estructuras usadas para almacenar el conteo.
+\layout Subsubsection
+
+Uso de flags aditivos para los comandos
+\layout Standard
+
+Nuestra solución es numerar los comandos de manera que no compartan ningún
+ bit entre ellos, es decir:
+\layout LyX-Code
+
+#define CHMON   _IOW(EISOPEEP_IOC_MAGIC, 1, int)
+\layout LyX-Code
+
+#define CHPID   _IOW(EISOPEEP_IOC_MAGIC, 2, int)
+\layout LyX-Code
+
+#define RESET   _IOW(EISOPEEP_IOC_MAGIC, 4, int)
+\layout LyX-Code
+
+#define STOP    _IOW(EISOPEEP_IOC_MAGIC, 8, int)
+\layout LyX-Code
+
+#define RESUME  _IOW(EISOPEEP_IOC_MAGIC, 16, int)
+\layout Standard
+
+De esta manera en un sólo entero podemos pasar más de un comando, incluso
+ todos.
+\layout Subsection
+
+Relación de los ficheros generados y de los ficheros modificados
+\layout Subsubsection
+
+Ficheros generados
+\layout Itemize
+
+eiso.c
+\layout Itemize
+
+include/linux/eisopeep.h
+\layout Itemize
+
+Makefile
+\layout Subsubsection
+
+Ficheros modifcados
+\layout Itemize
+
+mm/slab.c
+\layout Subsection
+
+Fuente de los ficheros generados
+\layout Subsubsection
+
+eiso.c
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * EISOPEEP   An implmentation for project 3, for the subject 
+\layout LyX-Code
+
+ *    EISO at University of Zaragoza
+\layout LyX-Code
+
+ *  
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ *    
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Version:  0.1  5/01/2004
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Authors:  Aitor Acedo <460829@celes.unizar.es>
+\layout LyX-Code
+
+ *    Javier Uruen Val, <460821@celes.unizar.es>
+\layout LyX-Code
+
+ *    
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ *This program is free software; you can redistribute it and/or
+\layout LyX-Code
+
+ *modify it under the terms of the GNU General Public License
+\layout LyX-Code
+
+ *as published by the Free Software Foundation; either version
+\layout LyX-Code
+
+ *2 of the License, or (at your option) any later version.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#include <linux/config.h>
+\layout LyX-Code
+
+#include <linux/module.h>
+\layout LyX-Code
+
+#include <linux/kernel.h>  /* printk() */
+\layout LyX-Code
+
+#include <linux/version.h>
+\layout LyX-Code
+
+#include <linux/init.h>
+\layout LyX-Code
+
+#include <asm/uaccess.h>
+\layout LyX-Code
+
+#include <linux/kobject.h>
+\layout LyX-Code
+
+#include <linux/sysfs.h>
+\layout LyX-Code
+
+#include <linux/fs.h>      /* everything...
+ */
+\layout LyX-Code
+
+#include <linux/cdev.h>    /* char dev estuff */
+\layout LyX-Code
+
+#include <linux/slab.h>    /* kmalloc() */
+\layout LyX-Code
+
+#include <linux/errno.h>   /* error codes */
+\layout LyX-Code
+
+#include <linux/types.h>   /* size_t */
+\layout LyX-Code
+
+#include <linux/proc_fs.h> /* proc system */
+\layout LyX-Code
+
+#include <linux/fcntl.h>  /* O_ACCMODE */
+\layout LyX-Code
+
+#include <linux/string.h> /* strcpy() ..*/
+\layout LyX-Code
+
+#include <asm/system.h>   /* cli(), *_flags */
+\layout LyX-Code
+
+#include "eisopeep.h"     /* local definitions */
+\layout LyX-Code
+
+#include <linux/eisopeep.h>
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Global var to check if the monitoring is activated
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+extern unsigned int eisopeep_run ;
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Global var to store the old value before stopping
+\layout LyX-Code
+
+ * to be able to restore it
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+unsigned int old_eisopeep;
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * These pointers to structs have been declared
+\layout LyX-Code
+
+ * in mm/slab.c.
+\layout LyX-Code
+
+ */ 
+\layout LyX-Code
+
+extern t_eisopeep_ctrl *p_eisopeep_ctrl;
+\layout LyX-Code
+
+extern t_slabstats *p_slabstats;
+\layout LyX-Code
+
+dev_t dev; /* Kdev is no longer used */
+\layout LyX-Code
+
+struct cdev  cdev; /* Char device */ 
+\layout LyX-Code
+
+int eisopeep_major =   EISOPEEP_MAJOR;
+\layout LyX-Code
+
+MODULE_LICENSE("GPL");
+\layout LyX-Code
+
+#define EISOPEEP_USE_PROC
+\layout LyX-Code
+
+#ifdef EISOPEEP_USE_PROC /* don't waste space if unused */
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * The proc filesystem: function to read and entry
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+int eisopeep_read_procmem(char *buf, char **start, off_t offset,
+\layout LyX-Code
+
+                   int count, int *eof, void *data)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+   int len = 0 , i;
+\layout LyX-Code
+
+  if (p_slabstats) 
+\layout LyX-Code
+
+            for ( i = CACHE_POS(MIN_CACHE_SIZE); 
+\layout LyX-Code
+
+                i < CACHE_POS(MAX_CACHE_SIZE)+1 ; i++ )
+\layout LyX-Code
+
+        
+\layout LyX-Code
+
+           len += sprintf(buf + len, "Cache
+\backslash 
+t%uB
+\backslash 
+t%u
+\backslash 
+t %u
+\backslash 
+n",
+\layout LyX-Code
+
+                         MIN_CACHE_SIZE << i, p_slabstats[i].misses, 
+\layout LyX-Code
+
+                         p_slabstats[i].hits );
+\layout LyX-Code
+
+  else 
+\layout LyX-Code
+
+    len = sprintf(buf, "Monitoring not active
+\backslash 
+n");
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  return len;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+#ifdef USE_PROC_REGISTER
+\layout LyX-Code
+
+static int eisopeep_get_info (char *buf, char **start, off_t offset,
+\layout LyX-Code
+
+                int len, int unused)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    int eof = 0;
+\layout LyX-Code
+
+    return eisopeep_read_procmem(buf, start, offset, len, &eof, NULL);
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+struct proc_dir_entry eisopeep_proc_entry = {
+\layout LyX-Code
+
+        0,                 /* low_ino: the inode -- dynamic */
+\layout LyX-Code
+
+        9, "eisopeepmem",     /* len of name and name */
+\layout LyX-Code
+
+        S_IFREG | S_IRUGO, /* mode */
+\layout LyX-Code
+
+        1, 0, 0,           /* nlinks, owner, group */
+\layout LyX-Code
+
+        0, NULL,           /* size - unused; operations -- use default */
+\layout LyX-Code
+
+        eisopeep_get_info,   /* function used to read data */
+\layout LyX-Code
+
+        /* nothing more */
+\layout LyX-Code
+
+    };
+\layout LyX-Code
+
+static inline void create_proc_read_entry (const char *name, mode_t mode,
+\layout LyX-Code
+
+                struct proc_dir_entry *base, void *read_func, void *data)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    proc_register_dynamic (&proc_root, &eisopeep_proc_entry);
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+static inline void remove_proc_entry (char *name, void *parent)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    proc_unregister (&proc_root, eisopeep_proc_entry.low_ino);
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+#endif /* USE_PROC_REGISTER */
+\layout LyX-Code
+
+#endif /* EISOPEEP_USE_PROC */
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Open and close
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+int eisopeep_open (struct inode *inode, struct file *filp)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+   if ( eisopeep_run )
+\layout LyX-Code
+
+     return -1; /* Busy */
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+   /*
+\layout LyX-Code
+
+    * Allocate memory to collect the stats in mm/slab.c
+\layout LyX-Code
+
+    */
+\layout LyX-Code
+
+   p_slabstats = kmalloc(sizeof(t_slabstats) * NUM_CACHES, GFP_KERNEL);
+\layout LyX-Code
+
+   p_eisopeep_ctrl = kmalloc(sizeof(t_eisopeep_ctrl), GFP_KERNEL);
+\layout LyX-Code
+
+   memset(p_slabstats, 0, sizeof(t_slabstats) * NUM_CACHES);
+\layout LyX-Code
+
+   memset(p_eisopeep_ctrl, 0, sizeof(t_eisopeep_ctrl));
+\layout LyX-Code
+
+       
+\layout LyX-Code
+
+   p_eisopeep_ctrl->pid  = 0;
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+   if ( !p_slabstats || !p_eisopeep_ctrl ){
+\layout LyX-Code
+
+       printk(KERN_ERR "Couldnt allocate space for p_slabstats
+\backslash 
+n");
+\layout LyX-Code
+
+    eisopeep_run = 0;
+\layout LyX-Code
+
+    return -ENOMEM;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+   }
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+   eisopeep_run = 0x02;  
+\layout LyX-Code
+
+   return 0;          /* success */
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+int eisopeep_release (struct inode *inode, struct file *filp)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    eisopeep_run = 0;
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+    /*
+\layout LyX-Code
+
+     * We must free p_slabstats
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    eisopeep_run = 0;
+\layout LyX-Code
+
+    kfree(p_slabstats);
+\layout LyX-Code
+
+    kfree(p_eisopeep_ctrl);
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+    p_slabstats = NULL;
+\layout LyX-Code
+
+    p_eisopeep_ctrl = NULL;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    return 0;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Data management: read 
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+ssize_t eisopeep_read (struct file *filp, char *buf, size_t count,
+\layout LyX-Code
+
+                loff_t *f_pos)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+    int retval = -EFAULT;  
+\layout LyX-Code
+
+    printk("Read device 
+\backslash 
+n");
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    if ( p_slabstats == NULL )
+\layout LyX-Code
+
+      goto nothing;
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+    printk("Count is %i f_pos %i tolta size %i
+\backslash 
+n", count, (int)*f_pos, (NUM_CACHES * sizeof(t_slabstats))  );
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    if ( count < (NUM_CACHES * sizeof(t_slabstats)) )
+\layout LyX-Code
+
+      goto nothing;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    printk("Here
+\backslash 
+n");
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    if ( *f_pos >= (NUM_CACHES * sizeof(t_slabstats)) )
+\layout LyX-Code
+
+      goto nothing;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    if ( *f_pos + count >  (NUM_CACHES * sizeof(t_slabstats)) )
+\layout LyX-Code
+
+      count =  (NUM_CACHES * sizeof(t_slabstats))  - *f_pos;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    if (copy_to_user (buf, p_slabstats, count)) {
+\layout LyX-Code
+
+        goto nothing;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    *f_pos += count;
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+    if ( *f_pos == (NUM_CACHES * sizeof(t_slabstats)) )
+\layout LyX-Code
+
+      *f_pos = 0;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    retval = count;
+\layout LyX-Code
+
+  nothing:
+\layout LyX-Code
+
+    return retval;
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * The ioctl() implementation
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+int eisopeep_ioctl (struct inode *inode, struct file *filp,
+\layout LyX-Code
+
+                 unsigned int cmd, unsigned long arg)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    int ret = 0;
+\layout LyX-Code
+
+    /* don't even decode wrong cmds: better returning  ENOTTY than EFAULT
+ */
+\layout LyX-Code
+
+    //if (_IOC_TYPE(cmd) != EISOPEEP_IOC_MAGIC) return -ENOTTY;
+\layout LyX-Code
+
+    //if (_IOC_NR(cmd) > EISOPEEP_IOC_MAXNR) return -ENOTTY;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    printk("cmd %i y %i
+\backslash 
+n", _IOC_NR(cmd), _IOC_NR(CHMON));
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    if ( (_IOC_NR(cmd)  & _IOC_NR(CHPID)) ) {
+\layout LyX-Code
+
+  p_eisopeep_ctrl->pid = arg;
+\layout LyX-Code
+
+  printk("EISOPEEP: Changing PID to %i 
+\backslash 
+n", ( unsigned int )arg);
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    if ( _IOC_NR(cmd) & _IOC_NR(RESET) ) {
+\layout LyX-Code
+
+   // Initialize monitoring stats   
+\layout LyX-Code
+
+  memset(p_slabstats, 0, sizeof(t_slabstats) * NUM_CACHES);      
+\layout LyX-Code
+
+  printk("EISOPEEP: Reset stats 
+\backslash 
+n");
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    if ( _IOC_NR(cmd) & _IOC_NR(STOP) ) {
+\layout LyX-Code
+
+  old_eisopeep = eisopeep_run ;
+\layout LyX-Code
+
+  eisopeep_run = 0;
+\layout LyX-Code
+
+  printk("EISOPEEP: Stop monitoring 
+\backslash 
+n");
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    if ( _IOC_NR(cmd) & _IOC_NR(RESUME) ){
+\layout LyX-Code
+
+  eisopeep_run = old_eisopeep;
+\layout LyX-Code
+
+  printk("EISOPEEP: Resume monitoring 
+\backslash 
+n");
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    return ret;
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+ 
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * The fops struct intialized in C99 fashion
+\layout LyX-Code
+
+ * This should be standard in kernels > 2.6.x
+\layout LyX-Code
+
+ * to be C99-compliant
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+struct file_operations eisopeep_fops = {
+\layout LyX-Code
+
+    .read    =  eisopeep_read,
+\layout LyX-Code
+
+    .ioctl   =  eisopeep_ioctl,
+\layout LyX-Code
+
+    .open    =  eisopeep_open,
+\layout LyX-Code
+
+    .release = eisopeep_release,
+\layout LyX-Code
+
+};
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Finally, the module stuff
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+int __init eisopeep_init(void)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    int error;
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    /*
+\layout LyX-Code
+
+     * Register your major, and accept a dynamic number
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    error = alloc_chrdev_region(&dev, 0, 1, "eisopeepnew");
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    if (error){
+\layout LyX-Code
+
+      printk("Error allocating chardev region
+\backslash 
+n");
+\layout LyX-Code
+
+          return error;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    else {
+\layout LyX-Code
+
+     printk("Chardev allocated with major %i 
+\backslash 
+n", MAJOR(dev));
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+    /*
+\layout LyX-Code
+
+     * Cdev stuff
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    cdev.kobj.parent = NULL; // Hasn't got parent in sysfs
+\layout LyX-Code
+
+    strcpy(cdev.kobj.name, "eisopeepnew");
+\layout LyX-Code
+
+    /* Here we init the char device and assign  its fops.
+\layout LyX-Code
+
+     * Recall, In kernels < 2.6.x we did this at the function
+\layout LyX-Code
+
+     * register_chrdev()
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+     cdev_init(&cdev, &eisopeep_fops);
+\layout LyX-Code
+
+     cdev.owner = THIS_MODULE;
+\layout LyX-Code
+
+     error = cdev_add(&cdev, dev, 1);
+\layout LyX-Code
+
+     if (error){
+\layout LyX-Code
+
+    kobject_put(&cdev.kobj);
+\layout LyX-Code
+
+        unregister_chrdev_region(dev, 1);
+\layout LyX-Code
+
+    return error;   
+\layout LyX-Code
+
+     }
+\layout LyX-Code
+
+    
+\layout LyX-Code
+
+#ifdef EISOPEEP_USE_PROC /* only when available */
+\layout LyX-Code
+
+    create_proc_read_entry("eisopeepmem", 0, NULL, eisopeep_read_procmem,
+ NULL);
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+    return 0; /* succeed */
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+void eisopeep_cleanup(void)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+    unregister_chrdev_region(dev, 1);
+\layout LyX-Code
+
+     /* This function is responsible for deleting
+\layout LyX-Code
+
+        the kobject which is contained in the struct
+\layout LyX-Code
+
+        cdev.
+ If it's no called it'll be quite possible
+\layout LyX-Code
+
+        to crash the system, for example at the moment the
+\layout LyX-Code
+
+         sysfs is unmounted
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    cdev_del(&cdev);
+\layout LyX-Code
+
+#ifdef EISOPEEP_USE_PROC
+\layout LyX-Code
+
+    remove_proc_entry("eisopeepmem", 0);
+\layout LyX-Code
+
+#endif
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * We've to explict which functions are used as
+\layout LyX-Code
+
+ * entry point and exit point for the module
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+module_init(eisopeep_init);
+\layout LyX-Code
+
+module_exit(eisopeep_cleanup);
+\layout Subsubsection
+
+include/linux/eisopeep.h
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * EISOPEEP   An implmentation for project 3, for the subject 
+\layout LyX-Code
+
+ *    EISO at University of Zaragoza
+\layout LyX-Code
+
+ *  
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ *    
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Version:  0.1  5/01/2004
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Authors:  Aitor Acedo <460829@celes.unizar.es>
+\layout LyX-Code
+
+ *    Javier Uruen Val, <460821@celes.unizar.es>
+\layout LyX-Code
+
+ *    
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ *This program is free software; you can redistribute it and/or
+\layout LyX-Code
+
+ *modify it under the terms of the GNU General Public License
+\layout LyX-Code
+
+ *as published by the Free Software Foundation; either version
+\layout LyX-Code
+
+ *2 of the License, or (at your option) any later version.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#ifndef _LINUX_EISOPEEP_H
+\layout LyX-Code
+
+#define _LINUX_EISOPEEP_H
+\layout LyX-Code
+
+#include <linux/ioctl.h>
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * IOCTL commands for our char device
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+/* Use 'j' as magic number */
+\layout LyX-Code
+
+#define EISOPEEP_IOC_MAGIC 'j'
+\layout LyX-Code
+
+#define CHMON   _IOW(EISOPEEP_IOC_MAGIC, 1, int)
+\layout LyX-Code
+
+#define CHPID   _IOW(EISOPEEP_IOC_MAGIC, 2, int)
+\layout LyX-Code
+
+#define RESET   _IOW(EISOPEEP_IOC_MAGIC, 4, int)
+\layout LyX-Code
+
+#define STOP    _IOW(EISOPEEP_IOC_MAGIC, 8, int)
+\layout LyX-Code
+
+#define RESUME  _IOW(EISOPEEP_IOC_MAGIC, 16, int)
+\layout LyX-Code
+
+#define ESISOPEEP_IOC_MAXNR 17
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Flags for the var eisopeep_run.
+ Show us if
+\layout LyX-Code
+
+ * want to collect stats from every proccess requesting
+\layout LyX-Code
+
+ * memory from the Slab Allocator.
+ Or on the other hand
+\layout LyX-Code
+
+ * we want to know about a unique PID.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#define COLLECT_SLAB_ALL 0x1
+\layout LyX-Code
+
+#define COLLECT_SLAB_PID 0x2
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Caches to monitor
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#define MIN_CACHE_SIZE 32 //2^5B
+\layout LyX-Code
+
+#define MAX_CACHE_SIZE 131072 //2^17B
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Inline function used to get the index in the slabs stats
+\layout LyX-Code
+
+ * array from the cache size.
+ Sizes are 32, 64, 512, 1024,
+\layout LyX-Code
+
+ * 2048...,131072.
+ So they are power of two, so our
+\layout LyX-Code
+
+ * first position in the array [0] will be for the 32B, second one 
+\layout LyX-Code
+
+ * [1] for the 64B, third one [2] for the 128B and so on.
+\layout LyX-Code
+
+ * To get the position, we need to know which bit in 'n',
+\layout LyX-Code
+
+ * i.e: the cache size, is set to 1.
+ So that's what
+\layout LyX-Code
+
+ * this function is for.
+ It returns the position of the 
+\layout LyX-Code
+
+ * first 1 found in number 'n'.
+ Note that the caller
+\layout LyX-Code
+
+ * has to make sure he's no passing value '0' to n.
+ 
+\layout LyX-Code
+
+ * Anyway, we'll never do it.
+ Because there's no cache size 0
+\layout LyX-Code
+
+ * at all :)
+\layout LyX-Code
+
+ */ 
+\layout LyX-Code
+
+static inline unsigned int bit_pos(unsigned int n){
+\layout LyX-Code
+
+        short i;
+\layout LyX-Code
+
+        unsigned int a = 0x1;
+\layout LyX-Code
+
+        for( i = 0; i < 32; i++){
+\layout LyX-Code
+
+                if ( a & n)
+\layout LyX-Code
+
+                        break;
+\layout LyX-Code
+
+                a<<= 0x1;
+\layout LyX-Code
+
+        }
+\layout LyX-Code
+
+        return i;
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * This macro is complementary to the above inline
+\layout LyX-Code
+
+ * function.
+ We just substract 5 to get the position
+\layout LyX-Code
+
+ * in the array.
+\layout LyX-Code
+
+ */ 
+\layout LyX-Code
+
+#define CACHE_POS(X) (bit_pos(X)-5)
+\layout LyX-Code
+
+#define NUM_CACHES  (CACHE_POS(MAX_CACHE_SIZE) - CACHE_POS(MIN_CACHE_SIZE)
+ + 1)
+\layout LyX-Code
+
+typedef struct {
+\layout LyX-Code
+
+        unsigned int csize;
+\layout LyX-Code
+
+        unsigned int hits;
+\layout LyX-Code
+
+        unsigned int misses;
+\layout LyX-Code
+
+} t_slabstats;
+\layout LyX-Code
+
+typedef struct {
+\layout LyX-Code
+
+  int bread;
+\layout LyX-Code
+
+  int brelse;
+\layout LyX-Code
+
+  int ext2_new_inodee;
+\layout LyX-Code
+
+  int ext2_free_inode;
+\layout LyX-Code
+
+  int namei;
+\layout LyX-Code
+
+  int open_namei;
+\layout LyX-Code
+
+  int bufcache_hit;
+\layout LyX-Code
+
+  int bufcache_miss;
+\layout LyX-Code
+
+}t_bufcache;
+\layout LyX-Code
+
+typedef struct {
+\layout LyX-Code
+
+  int pid;
+\layout LyX-Code
+
+  int type;
+\layout LyX-Code
+
+  void *ptr;
+\layout LyX-Code
+
+}t_eisopeep_ctrl;
+\layout LyX-Code
+
+#endif /* LINUX_EISOPEEP_H */
+\layout Subsubsection
+
+Makefile
+\layout LyX-Code
+
+obj-y := eiso.o
+\layout Subsection
+
+Fuente de los ficheros modificados
+\layout Subsubsection
+
+mm/slab.c
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * EISO: Var used to point out if hits/misses checking
+\layout LyX-Code
+
+ * has to be done it.
+ Depending on flags contained on it
+\layout LyX-Code
+
+ * we are able to know if we have to collect stats for an
+\layout LyX-Code
+
+ * unique PID or for every PID.
+\layout LyX-Code
+
+ * It has to be visible from the rest of kernel, even
+\layout LyX-Code
+
+ * our module.
+ That's why we export it;
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+unsigned int eisopeep_run = 0;
+\layout LyX-Code
+
+EXPORT_SYMBOL(eisopeep_run);
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * The pointer to eisopeep_ctrl struct is declared here.
+ Nevertheless,
+\layout LyX-Code
+
+ * the memory allocation/dellocation is carried out from the module.
+\layout LyX-Code
+
+ * This makes sense, because if there is no module loaded, there must not
+\layout LyX-Code
+
+ * be any waste of memory for a structure which is not going to be used
+\layout LyX-Code
+
+ * at all.
+ Same with the struct t_slabstats.
+ This structure is used to
+\layout LyX-Code
+
+ * store the statistics for the slab.
+ Of course, as the symbol eisopeep_run
+\layout LyX-Code
+
+ * above, we have to export them.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+t_eisopeep_ctrl *p_eisopeep_ctrl;
+\layout LyX-Code
+
+t_slabstats *p_slabstats;
+\layout LyX-Code
+
+EXPORT_SYMBOL(p_eisopeep_ctrl);
+\layout LyX-Code
+
+EXPORT_SYMBOL(p_slabstats);
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+static inline void * __cache_alloc (kmem_cache_t *cachep, int flags)
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+  unsigned int hit = 0;    // EISO: We use this var to check if we get a
+ hit or miss
+\layout LyX-Code
+
+  unsigned int cache_size; // EISO: Which cache size we are in.
+\layout LyX-Code
+
+  unsigned long save_flags;
+\layout LyX-Code
+
+  void* objp;
+\layout LyX-Code
+
+  struct array_cache *ac;
+\layout LyX-Code
+
+  cache_alloc_debugcheck_before(cachep, flags);
+\layout LyX-Code
+
+  local_irq_save(save_flags);
+\layout LyX-Code
+
+  ac = ac_data(cachep);
+\layout LyX-Code
+
+  if (likely(ac->avail)) {
+\layout LyX-Code
+
+    STATS_INC_ALLOCHIT(cachep);
+\layout LyX-Code
+
+    /*
+\layout LyX-Code
+
+     * EISO!!
+\layout LyX-Code
+
+     * We mark we are in a hit
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    hit = 1;
+\layout LyX-Code
+
+    ac->touched = 1;
+\layout LyX-Code
+
+    objp = ac_entry(ac)[--ac->avail];
+\layout LyX-Code
+
+  } else {
+\layout LyX-Code
+
+    STATS_INC_ALLOCMISS(cachep);
+\layout LyX-Code
+
+    if ( eisopeep_run & (COLLECT_SLAB_ALL | COLLECT_SLAB_PID) ) {
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    objp = cache_alloc_refill(cachep, flags);
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  local_irq_restore(save_flags);
+\layout LyX-Code
+
+  objp = cache_alloc_debugcheck_after(cachep, flags, objp, __builtin_return_addr
+ess(0));
+\layout LyX-Code
+
+   /*
+\layout LyX-Code
+
+   * EISO !!
+\layout LyX-Code
+
+   * Here we know if we have a  hit or miss in the slab allocator.
+\layout LyX-Code
+
+   * Note that the macro aboves, STATS_INC_ALLOCHIT and STATS_INC_ALLOCMISS,
+ 
+\layout LyX-Code
+
+   * are already used it for our purposes.
+ However, they  get actived
+\layout LyX-Code
+
+   * only when the DEBUG mode for the slab is selected.
+ Well,
+\layout LyX-Code
+
+   * we made the decision of not overload the Slab Alloctor with
+\layout LyX-Code
+
+   * all that debug and implent only what we need.
+\layout LyX-Code
+
+   * The first step is to check if we have to collect any stats, if
+\layout LyX-Code
+
+   * we do then we have to make sure if the cache which is being used 
+\layout LyX-Code
+
+   * belongs to any of those we are interested in.
+ After finding out 
+\layout LyX-Code
+
+   * that, we have to index in the p_slabstats array to update
+\layout LyX-Code
+
+   * the right cache size.
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  if ( eisopeep_run & (COLLECT_SLAB_ALL | COLLECT_SLAB_PID) ) {
+\layout LyX-Code
+
+    //Get the index 
+\layout LyX-Code
+
+    cache_size = CACHE_POS(cachep->objsize);
+\layout LyX-Code
+
+    //Check if index belongs to our caches
+\layout LyX-Code
+
+    if ( (cache_size > CACHE_POS(MAX_CACHE_SIZE)) ||
+\layout LyX-Code
+
+         (cache_size < CACHE_POS(MIN_CACHE_SIZE))  )
+\layout LyX-Code
+
+           goto out;
+\layout LyX-Code
+
+ /*
+\layout LyX-Code
+
+     * Check if we have screwed it up.
+ If the
+\layout LyX-Code
+
+     * next condition is true, we are in troubles
+\layout LyX-Code
+
+     * because our module does not exit any longer or
+\layout LyX-Code
+
+     * something bad is happening.
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    if ( p_slabstats == NULL || p_eisopeep_ctrl == NULL ) {
+\layout LyX-Code
+
+      printk(KERN_ERR "HOUSTON WE'VE GOT A PROBLEM!!!
+\backslash 
+n");
+\layout LyX-Code
+
+      goto out;
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    /*
+\layout LyX-Code
+
+     * Check if pid has to match
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    if ( eisopeep_run == COLLECT_SLAB_PID  &&
+\layout LyX-Code
+
+         p_eisopeep_ctrl->pid != current->pid)
+\layout LyX-Code
+
+      goto out;
+\layout LyX-Code
+
+    if ( eisopeep_run == COLLECT_SLAB_PID  &&
+\layout LyX-Code
+
+         p_eisopeep_ctrl->pid == current->pid){
+\layout LyX-Code
+
+      printk("Hit: %i, size %i, index %i,  pid %i
+\backslash 
+n", hit, cachep->objsize, cache_size,  current->pid);
+\layout LyX-Code
+
+    }
+\layout LyX-Code
+
+    /*
+\layout LyX-Code
+
+     * Check what we have to update
+\layout LyX-Code
+
+     */
+\layout LyX-Code
+
+    if(hit)
+\layout LyX-Code
+
+      p_slabstats[cache_size].hits++;
+\layout LyX-Code
+
+    else
+\layout LyX-Code
+
+      p_slabstats[cache_size].misses++;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+out:
+\layout LyX-Code
+
+  return objp;
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout LyX-Code
+
+...
+\layout Subsection
+
+Fuente de los programas de prueba
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * TESIT   An implmentation for project 3, for the subject 
+\layout LyX-Code
+
+ *    EISO at (C.P.S) University of Zaragoza
+\layout LyX-Code
+
+ *    Code to test this project, a kernel module to monitor
+\layout LyX-Code
+
+ *    hits/missess on the slab allocator, user space code
+\layout LyX-Code
+
+ *    using ptrace().
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Version:  0.1  5/01/2004
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ * Authors:  Aitor Acedo
+\layout LyX-Code
+
+ *    Javier Uruen Val, <460821@celes.unizar.es>
+\layout LyX-Code
+
+ *    
+\layout LyX-Code
+
+ *
+\layout LyX-Code
+
+ *  This program is free software; you can redistribute it and/or
+\layout LyX-Code
+
+ *  modify it under the terms of the GNU General Public License
+\layout LyX-Code
+
+ *  as published by the Free Software Foundation; either version
+\layout LyX-Code
+
+ *  2 of the License, or (at your option) any later version.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#include <sys/types.h>   /* fork */
+\layout LyX-Code
+
+#include <unistd.h>      /* fork */
+\layout LyX-Code
+
+#include <sys/ptrace.h> /* ptrace */
+\layout LyX-Code
+
+#include <errno.h>  /* perror */
+\layout LyX-Code
+
+#include <stdio.h>  /* error, fprintf */
+\layout LyX-Code
+
+#include <sys/wait.h>  /* wait */
+\layout LyX-Code
+
+#include <sys/types.h>  /* open */
+\layout LyX-Code
+
+#include <sys/stat.h>
+\layout LyX-Code
+
+#include <fcntl.h>
+\layout LyX-Code
+
+#include <sys/ioctl.h>
+\layout LyX-Code
+
+#include <linux/eisopeep.h>
+\layout LyX-Code
+
+#define EISODEV "/dev/eisopeep"
+\layout LyX-Code
+
+/*
+\layout LyX-Code
+
+ * Macro to compute the number of bytes that should
+\layout LyX-Code
+
+ * be read to get the whole statistic.
+\layout LyX-Code
+
+ */
+\layout LyX-Code
+
+#define BYTESTOREAD (NUM_CACHES * sizeof(t_slabstats))
+\layout LyX-Code
+
+#define MAXARGS 5
+\layout LyX-Code
+
+int main( int argc,  char *argv[]){
+\layout LyX-Code
+
+  int pid, fd, status, i;
+\layout LyX-Code
+
+  char *args[MAXARGS];
+\layout LyX-Code
+
+  t_slabstats stats[NUM_CACHES];
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  if ( argc < 2 ){
+\layout LyX-Code
+
+    fprintf(stderr, "Usage: %s <file> [parameters] 
+\backslash 
+n", argv[0] );
+\layout LyX-Code
+
+    return -1;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  //Fork
+\layout LyX-Code
+
+  if ( !(pid = fork()) ){
+\layout LyX-Code
+
+    //Children process is set for tracing
+\layout LyX-Code
+
+    ptrace(PTRACE_TRACEME, 0, 0, 0);
+\layout LyX-Code
+
+    execvp(argv[1], &argv[1]);
+\layout LyX-Code
+
+  //  perror("exit"); return -1;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Parent is the tracer process.
+\layout LyX-Code
+
+   * Wait for traced process to stop
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  wait(&status);
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  fd = open(EISODEV, 0);
+\layout LyX-Code
+
+  if ( fd < 0 ) {
+\layout LyX-Code
+
+    fprintf(stderr, "Damn it! Cannot open device: %s
+\backslash 
+n", EISODEV);
+\layout LyX-Code
+
+    return -1;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Ioctl() call, we change the pid for monitoring and reset the stats
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  if ( ioctl(fd, CHPID | RESET, pid) ) {
+\layout LyX-Code
+
+    fprintf(stderr, "Ough! There's something funny in ioctl():(
+\backslash 
+n");
+\layout LyX-Code
+
+    return -1;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * The children process is stopped until executing the next call,
+\layout LyX-Code
+
+   * where we allow the traced process to keep running
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  ptrace(PTRACE_CONT, pid, 0, 0);
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * We are gonna wait until traced process stops.
+ We use the
+\layout LyX-Code
+
+   * flag WNOHANG to point out we have to stop waitting if
+\layout LyX-Code
+
+   * there is no children process to wait.
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  wait4(pid, &status, 0, NULL);
+\layout LyX-Code
+
+  /*
+\layout LyX-Code
+
+   * Now we are going to read the device to gather statistics.
+ 
+\layout LyX-Code
+
+   * We are supposed to read NUM_CACHES * sizeof(t_slabstats) bytes.
+\layout LyX-Code
+
+   * If we dont read this amount of bytes we consider as
+\layout LyX-Code
+
+   * something went wrong.
+\layout LyX-Code
+
+   */
+\layout LyX-Code
+
+  //getchar();  
+\layout LyX-Code
+
+  if ( read(fd, stats, BYTESTOREAD) != BYTESTOREAD ){
+\layout LyX-Code
+
+    fprintf(stderr, "I'm really  sorry, couldnt read the stats
+\backslash 
+n");
+\layout LyX-Code
+
+    return -1;
+\layout LyX-Code
+
+  }
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+   for (i = 0; i < NUM_CACHES; i++ )
+\layout LyX-Code
+
+      printf("Cache %i: %i - %i
+\backslash 
+n", MIN_CACHE_SIZE << i, 
+\layout LyX-Code
+
+                   stats[i].misses, stats[i].hits);
+\layout LyX-Code
+
+   
+\layout LyX-Code
+
+  close(fd);
+\layout LyX-Code
+
+  
+\layout LyX-Code
+
+  return 1;
+\layout LyX-Code
+
+}
+\layout LyX-Code
+
+\layout LyX-Code
+
+\the_end

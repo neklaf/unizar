@@ -1,0 +1,83 @@
+#!/bin/sh
+
+if [ `grep fd0 /etc/mtab | grep /mnt` ]; then
+	# tenemos el dispositivo montado en el punto de montaje /mnt
+	if [ $# -eq 2 ]; then
+		# comprobamos que tenemos todos los parametros requeridos!!
+		
+		# comprobar si tenemos que escribir en el disquete!!
+		# tenemos q comprobar los parametros!!
+			
+		# la condicion del if siguiente se puede poner asi ya q cuando montamos el disquete en /mnt
+		# todo el contenido anterior de /mnt desaparece por tanto sera copia desde disquete (seguro)!!!
+		if [ `echo $1 | grep /mnt/` ]; then
+			# aqui tendremos q leer solamente
+			if [ ! -r /mnt ]; then
+				sudo umount /mnt
+				
+				# tendremos que comprobar si el destino tb es el disquete
+				if [ `echo $2 | grep /mnt/` ]; then
+					sudo mount -t auto -o rw /dev/fd0 /mnt 
+				else
+					sudo mount -t auto -o ro /dev/fd0 /mnt
+				fi
+			fi
+
+			# comprobamos el directorio destino
+			if [ ! -w $2 ]; then
+				echo No hay permiso de escritura en el destino
+			else
+				cp $1 $2
+			fi
+		else
+			# aqui tendremos que es escritura
+			if [ `echo $2 | grep /mnt/` ]; then
+				if [ ! -w /mnt ]; then
+					sudo umount /mnt
+					sudo mount -t auto -o rw /dev/fd0 /mnt
+				fi
+
+				if [ ! -r $1 ]; then
+					echo Debemos tener permisos de lectura en el directorio origen.
+				else
+					cp $1 $2
+				fi
+			elsne
+				echo Formato: copy camino_origen camino_destino
+				echo Nota: Uno de los dos caminos o ambos tienen que referenciar al disquete!!
+			fi
+		fi
+	else
+		echo Formato: copy camino_origen camino_destino
+	fi
+else
+		# tenemos el dispositivo sin montar!!
+		if [ `echo $1 | grep /mnt/` ]; then
+			if [ `echo $2 | grep /mnt/` ]; then
+				# copia de disquete a disquete
+				sudo mount -t auto -o rw /dev/fd0 /mnt
+				cp $1 $2
+			else
+				# copia de disquete a disco rigido
+				sudo mount -t auto -o ro /dev/fd0 /mnt
+				if [ ! -w $2 ]; then
+					echo No hay permiso de escritura en el destino
+				else
+					cp $1 $2
+				fi
+			fi
+		else
+			# aqui tendremos que es escritura
+			if [ `echo $2 | grep /mnt/` ]; then
+				sudo mount -t auto -o rw /dev/fd0 /mnt
+				cp $1 $2
+			else
+				echo Formato: copy camino_origen camino_destino
+				echo Nota: Uno de los dos caminos tiene que referenciar al disquete!!
+			fi
+		fi
+fi
+
+
+# Faltaria comprobar los permisos que el otro directorio que participa en la copia!!!
+# Ya que tb puede dar un conflicto!!!

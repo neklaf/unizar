@@ -1,0 +1,16 @@
+#!/bin/sh
+if [ ! -d /var/log/personalizado ]; then
+	sudo mkdir /var/log/personalizado
+	sudo chmod 757 /var/log/personalizado
+	if [ ! -f /var/log/personalizado/notify ] ; then
+		touch /var/log/personalizado/notify
+	fi
+fi
+# hacemos el fsck de la partición swap del zip
+#fsck=`sudo fsck -V /dev/hdb1 -n`
+	sudo fsck -V /dev/hdb1 -n >> /tmp/tmp2/auxNotify
+
+sudo logger -f /tmp/tmp2/auxNotify -t "" -s 2> /var/log/personalizado/notify
+cat /tmp/tmp2/auxNotify > /dev/null
+
+ 

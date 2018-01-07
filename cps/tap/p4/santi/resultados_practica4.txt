@@ -1,0 +1,45 @@
+TEST LISTA | Tamaño:        100, Búsquedas:        100, Borrados:        100
+Inserción | Tiempo:      77437
+Búsqueda | Tiempo:        478
+Borrado | Tiempo:        261
+
+TEST LISTA | Tamaño:       1000, Búsquedas:        100, Borrados:        100
+Inserción | Tiempo:     149043
+Búsqueda | Tiempo:      83894
+Borrado | Tiempo:      82143
+
+TEST LISTA | Tamaño:       1000, Búsquedas:       1000, Borrados:       1000
+Inserción | Tiempo:     112855
+Búsqueda | Tiempo:     121875
+Borrado | Tiempo:      97801
+
+TEST LISTA | Tamaño:      10000, Búsquedas:      10000, Borrados:      10000
+Inserción | Tiempo:    4725975
+Búsqueda | Tiempo:   16304586
+Borrado | Tiempo:    8005290
+
+TEST SPLAY | Tamaño:        100, Búsquedas:        100, Borrados:        100
+Inserción | Tiempo:        917
+Búsqueda | Tiempo:        343
+Borrado | Tiempo:        459
+
+TEST SPLAY | Tamaño:       1000, Búsquedas:        100, Borrados:        100
+Inserción | Tiempo:      89700
+Búsqueda | Tiempo:        555
+Borrado | Tiempo:        628
+
+TEST SPLAY | Tamaño:       1000, Búsquedas:       1000, Borrados:       1000
+Inserción | Tiempo:     148294
+Búsqueda | Tiempo:      84685
+Borrado | Tiempo:      84690
+
+TEST SPLAY | Tamaño:      10000, Búsquedas:      10000, Borrados:      10000
+Inserción | Tiempo:     157024
+Búsqueda | Tiempo:     138771
+Borrado | Tiempo:     149681
+
+TEST SPLAY | Tamaño:     100000, Búsquedas:      10000, Borrados:      10000
+Inserción | Tiempo:     935562
+Búsqueda | Tiempo:     197152
+Borrado | Tiempo:     184073
+

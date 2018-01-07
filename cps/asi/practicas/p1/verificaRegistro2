@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# Indentificamos el shell con el que sera interpretado el script que vamos a escribir
+# Vamos a utilizar funciones !!
+#
+# Objetivo: tenemos que analizar un fichero log de un servidor ftp y que produzca una serie de estadisticas
+# de uso que incluyan:
+# 	Numero de accesos por usuario
+#	Numero de bytes transferidos
+#	Cantidad de maquinas que han usado el acceso ftp 
+#
+
+
+#
+# El script tendra que aceptar parametros estos deberan ser:
+# 	el subdirectorio
+#	USUARIOS
+#	BYTES
+#	MAQUINAS
+#
+
+
+#
+# La estructura del fichero de registro de conexiones FTP sera la siguiente: 
+# (Esta es la informacion que contiene el fichero en cada linea)
+# 	nombre de la maquina remota
+#	tamaño del fichero transferido en bytes
+#	nombre del fichero
+#	nombre o direccion e-mail (contraseña del FTP anonimo) del usuario que se conectado
+
+
+# Esta es la linea en el case: 
+#	grep /pub/${1} /var/log/ftp.log | cut -d ' ' -f 4 | uniq -c;;
+#
+# Esta es la segunda linea del case BYTES):
+#  bytes=`cut -d ' ' -f 2 $param2`
+#  num2="0"
+#  for num in $bytes; do
+#	num2=`expr $num2 \+ $num`
+#  done
+#  echo $num2;;
+# 
+# Esta es la tercera linea del case MAQUINAS):
+#
+# 	sort $param2 | uniq -W 1 | wc -l;; 
+
+
+
+# Funciones:
+# Cuando utilizamos funciones debemos recordar que las variables shell normales $1, $2, ... ya no contienen
+# el contenido pasado al script por la linea de comandos sino que dentro de la funcion son los parametros 
+# pasados a la funcion!!
+
+usuarios(){
+	grep /pub/${1} /var/log/ftp.log | cut -d ' ' -f 4 | uniq -c
+}
+
+bytes(){
+	bytes=`cut -d ' ' -f 2 $param2`
+	num2="0"
+	for num in $bytes; do
+		num2=`expr $num2 \+ $num`
+	done
+	echo $num2
+}
+
+maquinas(){
+	sort $param2 | uniq -W 1 | wc -l 
+}
+
+
+if [ $# -eq 0 ]; then
+	echo 'Formato: verificaRegistro ruta_directorio [USUARIOS | MAQUINAS | BYTES]...'
+else
+	param2="/tmp/${1}.dat"
+	
+	grep /pub/${1} /var/log/ftp.log > $param2
+	
+	for param in $*; do
+		
+		case $param in
+			USUARIOS) usuarios $1;; 
+			BYTES) bytes;;
+			MAQUINAS) maquinas;;
+		esac
+	done
+	# Borramos el fichero temporal que hemos creado
+	rm $param2
+fi

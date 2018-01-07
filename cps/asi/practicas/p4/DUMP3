@@ -1,0 +1,28 @@
+#!/bin/sh
+# Supondremos q no esta creada la jerarquia de directorios
+fd=""
+fecha=`date +%Y_%j_%k_%M`
+
+if [ $# -ne 1 ]; then
+	echo Formato: dump2 nivel
+else
+	# Comprobamos el punto de montaje!!
+	fd=`grep fd0 /etc/mtab | cut -d ' ' -f 2`
+	
+	if [ ! $fd ]; then
+		fd="/floppy"
+		sudo mount -t auto /dev/fd0 $fd 
+	fi
+
+	if [ ! -d ${fd}/${1} ]; then
+		sudo mkdir ${fd}/${1}
+	fi
+
+	if [ $1 -eq 0 ]; then
+		# Tenemos q ejecutar copias de nivel 0 cada 5 min.
+		sudo tar cf ${fd}/${1}/${fecha}.tar /home/sutra/tmp/* 
+	else
+		find /home/sutra/tmp/* -mmin -2 -exec sudo tar cf ${fd}/${1}/${fecha}.tar '{}' ';'
+	fi
+
+fi	

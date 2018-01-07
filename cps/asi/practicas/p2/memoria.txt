@@ -1,0 +1,149 @@
+		PRACTICA NUMERO 2 DE ADMINISTRACION DE SISTEMAS INFORMATICOS
+
+
+	El objetivo de la práctica número 2 de ASI es el de comenzar la utilización de la programación shell.
+
+	La primera parte de la práctica trata de reparar lso fallos existentes en un script proporcionado por el 
+profesor para que funcione adecuadamente, el script inicialmente es el siguiente:
+
+	!#/bin/sh
+	#Objetivo: aceptar una lista de nombres de usuario y mirar si están en /etc/passwd
+
+	if [ $# == 0 ]
+	then
+		echo Se debe introducir al menos un parámetro
+	fi
+
+	for nombre in $* do
+		grep "^nombre:" /etc/passwd < /dev/null
+	if [ $* -eq 0 ]
+	then
+		echo nombre usuario es válido
+	else 
+		echo nombre usuario no es válido
+	done
+
+
+	Como se puede apreciar a simple vista hay bastantes fallos de sintaxis como por ejemplo en la primera línea,
+donde tenemos escrito, !#/bin/sh, el orden de los dos primeros caracteres deberá de ser invertido para que el script
+sea reconocido satisfactoriamente, con lo cual la primera línea quedará de la siguiente manera, #!/bin/sh.
+
+	Ahora vamos a presentar el script tal y como nosotros lo hemos modificado para que funcione de acuerdo a los 
+objetivos marcados al inicio, el script arreglado será pues:
+
+	#!/bin/sh
+	#Objetivo: aceptar una lista de nombres de usuario y mirar si están en /etc/passwd
+
+	# $# esta varible contiene el número de parametros que le hemos pasado al script
+	# Comparamos el contenido de la variable con cero para ver si le hemos pasado algún parámetro.
+	# Si no le hemos pasado ningún parámetro sacamos un mensaje por la salida estandar.
+
+	if [ $# -eq 0 ]
+	then
+		echo Se debe introducir al menos un parámetro
+	fi
+
+	# En la variable de entorno $* tendremos todos los parámetros introducidos al script
+	# Y la variable nombre irá tomando en cada iteracción el valor de cada uno de los parámetros pasados
+
+	for nombre in $*; do 
+		grep "^$nombre:" /etc/passwd > /dev/null
+
+		if [ $? -eq 0 ]; then
+			echo Usuario $nombre valido
+		else
+			echo Usuario $nombre NO valido
+		fi
+	done
+
+	# Dentro del bucle for lo que hacemos será buscar en cada una de las líneas del fichero /etc/passwd
+	# si en su comienzo se encuentra cada uno de los parámetros introducidos por el usuario seguido por
+	# los dos puntos, y despues comprobamos si el comando tuvo éxito y si lo tuvo significará que el parámetro
+	# coincide con un nombre de usuario y si no es que no coincide con nimgún nombre de usuario.
+
+	# La variable de entorno $? nos indicará si el último comando ejecutado tuvo una ejecución correcta, lo que
+	# implicará que $? valga 0, o por el contrario que el comando se ejecutó sin éxito $? distinto de 0.
+
+	
+	Por la interpretación del script se puede ver que tiene fallos debidos a la eficiencia como por ejemplo
+el hecho de que aunque no hayamos introducido ningún parámetro no impide el hecho de que se llegue al código del for, 
+hecho que un programa normal no tendría ningún sentido.
+
+
+	PARTE 2
+
+
+	La segunda parte de la práctica dos tendremos que implementar un script que analice un fichero de registro 
+de conexiones a través de ftp (/var/log/ftp.log) y produzca una serie de estadísticas de uso que incluyan:
+
+	Número de accesos por usuario
+	Número de bytes transferidos
+	Cantidad de máquinas que han usado el acceso ftp
+
+	El formato del fichero de registro de conexiones de ftp tendrá el siguiente formato:
+
+	Nombre de la máquina remota
+	Tamaño del fichero transferido en bytes
+	Nombre del fichero
+	Nombre o dirección e-mail (contraseña de ftp anónimo) del usuario conectado
+
+	Con toda esta información nosotros hemos realizado el siguiente script para cumplir los objetivos propuestos:
+
+
+	#!/bin/sh
+
+	# Indentificamos el shell con el que sera interpretado el script que vamos a escribir
+
+	#
+	# Objetivo: tenemos que analizar un fichero log de un servidor ftp y que produzca una serie de estadisticas
+	# de uso que incluyan:
+	# 	Numero de accesos por usuario
+	#	Numero de bytes transferidos
+	#	Cantidad de maquinas que han usado el acceso ftp 
+	#
+
+
+	#
+	# El script tendra que aceptar parametros estos deberan ser:
+	# 	el subdirectorio
+	#	USUARIOS
+	#	BYTES
+	#	MAQUINAS
+	#
+
+
+	#
+	# La estructura del fichero de registro de conexiones FTP sera la siguiente: 
+	# (Esta es la informacion que contiene el fichero en cada linea)
+	# 	nombre de la maquina remota
+	#	tamaño del fichero transferido en bytes
+	#	nombre del fichero
+	#	nombre o direccion e-mail (contraseña del FTP anonimo) del usuario que se conectado
+
+
+	# Comprobamos que introducimos al menos el parámetro con el subdirectorio y al menos uno de los parámetros
+	# USUARIOS, BYTES, MAQUINAS.
+	if [ $# -lt 0 ]; then
+		echo 'Formato: verificaRegistro ruta_directorio [USUARIOS | MAQUINAS | BYTES]...'
+	else
+		# Aqui definiremos un fichero temporal para realizar operaciones con los datos del fichero de registro
+		param2="/tmp/${1}.dat"
+		
+		grep /pub/${1} /var/log/ftp.log > $param2
+		
+		for param in $*; do
+			
+			case $param in
+				USUARIOS) grep /pub/${1} /var/log/ftp.log | cut -d ' ' -f 4 | uniq -c;;
+				BYTES)  bytes=`cut -d ' ' -f 2 $param2`
+					num2="0"
+					for num in $bytes; do
+						num2=`expr $num2 + $num`
+					done
+					echo $num2;;
+				MAQUINAS) sort $param2 | uniq -W 1 | wc -l;; 
+			esac
+		done
+		# Borramos el fichero temporal que hemos creado
+		rm $param2
+	fi

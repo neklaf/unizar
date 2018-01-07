@@ -1,0 +1,8 @@
+# Borrado de ficheros que lleven mas de X min en el directorio /tmp
+# 7 * * * * find /tmp/* -amin +3 -exec rm '{}'';'
+# 10 * * * * /home/sutra/scriptsCron/sumary
+# Este 'sumary' genera un fichero en /var/log/personalizado/sumary
+# 10 * * * * /home/sutra/scriptsCron/notify
+# Este 'notify' genera un fichero en /var/log/personalizado/notify
+# 5 * * * * /home/sutra/scripsCron/dump3 0
+# 2 * * * * /home/sutra/scriptsCron/dump3 1

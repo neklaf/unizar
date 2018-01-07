@@ -1,0 +1,55 @@
+V "GNAT Lib v3.14 "
+M P W=b
+P
+R nnvnnnnvnnnnvvvvvvvvnnnnnnnnnnvnnnnnnnnnnnn
+
+U ej4%b			ej4.adb			3B8E0821 NE SU IL
+W ada%s			ada.ads			ada.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+
+D ada.ads		19941113020443 2359F9ED
+D a-except.ads		20001220181314 18895590
+D a-finali.ads		19971119133819 3F32DEEF
+D a-filico.ads		19970305005844 1DECB9AC
+D a-inteio.ads		19941113020258 767F630A
+D a-ioexce.ads		19941113052010 175CB67B
+D a-stream.ads		19971119133847 5F7C277B
+D a-tags.ads		19980810213501 45EF7E4E
+D a-textio.ads		20000826115840 2D24B708
+D a-tiinio.ads		19971119133950 284C234E
+D ej4.adb		20040118190344 60D5DC23
+D interfac.ads		19990427033020 0357E00A
+D i-cstrea.ads		20000730230359 7FB66A6A
+D system.ads		20000818213617 22B6217D
+D s-exctab.ads		19990919095915 7A25F5F9
+D s-ficobl.ads		20001027210341 0C03FD47
+D s-finimp.ads		19980220234008 1C201C0F
+D s-finroo.ads		20001114112810 7F5B7F76
+D s-parame.ads		20000730230401 204FFF40
+D s-secsta.ads		19990723142132 60A2A5CD
+D s-soflin.ads		20001025172806 41BCF13E
+D s-stache.ads		19990409121031 42B57F2A
+D s-stalib.ads		20000818213539 4F0050D6
+D s-stoele.ads		19980907140905 131D4539
+D s-stratt.ads		20001228160445 1761725B
+D s-unstyp.ads		19990701235613 78AFB91D
+D unchconv.ads		19960730024842 72DC4539
+X 1 ada.ads
+18K9*Ada 11|2r6 2r19 3r5 3r18
+X 5 a-inteio.ads
+20K13*Integer_Text_IO 11|2r23 3r22
+X 9 a-textio.ads
+51K13*Text_IO 11|2r10 3r9
+245U14*Put 11|39r25
+260U14*Put_Line 11|40r25 42r25 45r17
+X 10 a-tiinio.ads
+69U14*Put 11|39r61
+X 11 ej4.adb
+6U11*ej4 47r5 47t8
+8N9 NUM 10r25 10r35 19r19 21r27 24r25 24r38 35r27 38r23
+10a9 mc 21r42 35r42
+14i9 fila 19r34 25m25 34r12
+15i9 i 19r17 21r45 24r35 26r30 27m25 29m25 35r25 35r45 36m25 36r30 38r20
+16i9 j 21r25 21r47 22m25 22r30 24r22 26m25 29r30 30m25 30r30 35r47 39r65
+

@@ -1,0 +1,61 @@
+--****************************************************************************--
+--ESQUEMAS ALGORITMICOS
+--
+--Fichero:     	LEEME 
+--Fecha:        Noviembre 2003
+--Version:      1.0
+--Autores:      
+--	Acedo Legarre, Aitor	460829@celes.unizar.es	A5189044
+--	Morata Miguel, Carolina	cmmzarag@yahoo.es	M7757179
+--
+--Descripc:     Contiene la descripcion general de la practica primera.
+--****************************************************************************--
+
+
+La practica 1 de esquemas algoritmicos del curso 2003-2004 consta de los siguientes ficheros:
+
+
+	LEEME		documentacion referente a la practica
+	calculo.ads	modulo que encapsula las operaciones de calculo sobre datos de
+			tipo tpDato.
+	calculo.adb	modulo de implementacion de las funciones declaradas en el modulo
+			de interface calculo.ads.
+	mh.adb		modulo principal de la practica encargado de llamar al calculo 
+			cuando sea preciso y de verificar la correccion de la entrada.
+	ejecutar1.sh	script para la rapida compilacion de los fuentes.
+	mensaje		fichero de texto en el que se encontrara el texto que se cifrara.
+
+
+Conforme a las peticiones realizadas en el guion de la practica se ha realizado una implementacion
+modular de la practica, dividiendo las operaciones realizadas sobre un tipo de dato en un modulo aparte.
+Lo cual confirma que la modulararizacion se ha basado en el uso de tipos abstractos de dato, en nuestro
+caso el tipo abstracto de dato lo hemos denomindo tpDato.
+
+El criptosistema realizado cumple con el interface definido en el guion de la practica, incluyendo algunas
+opciones adicionales que favorecen la ejecucion de los ejemplos implementados. Vamos a recordar brevemente
+las opciones que se ofrecen desde el programa principal:
+
+	Parametro 'c'	Cifrado	
+	Parametro 'd'	Descifrado
+	Parametro 'g'	Inicializacion de los argumentos de nuestro criptosistema
+	Parametro 'p'	Ejecucion de los ejemplos implementados
+
+
+No hay mejor manera de ver el uso de los parametros citados anteriormente que un ejemplo de cada uno:
+
+	$ merklehelman -c mensaje --Cifra el texto contenido en el fichero llamado mensaje
+
+	$ merklehelman -d mensaje --Descifra el texto cifrado por nuestro sistema con el comando anterior
+
+	$ merklehelman -g	--Nos aparecera en el terminal unas opciones para rellenar los argumentos necesarios 
+
+	$ merklehelman -p 1	--Ejecuta la ejemplo identificado por el numero 1
+
+
+Por comodidad en la lectura de los ejemplos el script redirecciona la salida de los ejemplos a dos ficheros
+diferentes, uno denominado ejemplo1 y otro denominado ejemplo2 que inmediatamente son sacados por la salida estandar.
+
+
+Nota: Las tildes has sido omitidas ya que el editor utilizado, vim, no esta configurado para soportarlas.
+Y la utilizacion de otros editores ha sido imposible ya que se ha efectuado la creacion del presente
+fichero desde casa.

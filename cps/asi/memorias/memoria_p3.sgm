@@ -1,0 +1,487 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN">
+
+<book lang="es">
+
+<title>Práctica 3ª de Administración de Sistemas Informáticos</title>
+
+	<bookinfo>
+		<date>10 de Diciembre de 2002</date>
+	<authorgroup>
+		<author>
+			<firstname>Aitor</firstname>
+			<surname>Acedo Legarre</surname>
+		</author>
+
+		<author>
+			<firstname>Cristina</firstname>
+			<surname>Puertolas Rebollar</surname>
+		</author>
+	</authorgroup>
+	</bookinfo>
+
+<chapter>
+
+	<title>Conocimiento y personalización del arranque</title>
+	
+	<para>
+	El objetivo de esta práctica es ampliar el conocimiento y realizar la personalización del arranque del sistema operativo Debian GNU/Linux
+	y trabajar mediante shell scripting con la creación de cuentas de usuarios.
+	</para>
+
+	<para>
+	Una vez realizados los pasos previos que abarcan la instalación del paquete sash y haber procedido a la lectura de las páginas del manual,
+	tanto de sash como de sulogin, iremos familiarizándonos con el arranque en modo mono-usuario.
+	</para>
+	
+	<para>
+	Realizar el arranque en modo mono-usuario puede realizarse de muy diversas maneras, la primera y más sencilla de todas es teclear 'linux single'
+	en la línea boot: antes de arrancar el sistema. Otra manera de arrancar el sistema con un único usuario en el sistema es tecleando 'linux -b rw sushell=/bin/sash',
+	esta línea tiene una mayor complejidad que la de 'linux single' ya que pasamos al sistema una serie de parámetros, por ejemplo el parámetro '-b' hará
+	que el sistema se arranque en modo mono-usuario, arrancando el programa sulogin. El siguiente parámetro es 'rw' esto le indicará al sistema que monte el sistema
+	de ficheros de root con permisos de lectura y escritura, y por último queda 'sushell=/bin/sash' que lo único que hace es indicarle al programa sulogin que
+	programa shell va a ser el utilizado como intérprete para el usuario root, en esta caso como se puede observar hemos elegido en programa shell un tanto peculiar,
+	el sash, ya que se utiliza cuando el sistema tiene algunos problemas y la reparación no es del todo inmediata. Estos problemas suelen estar relacionados con 
+	la pérdida de ejecutables y problemas con los ficheros de arranque del sistema.	
+	</para>
+	
+	<para>
+	La utilización del programa shell sash es bastante clara, ya que este shell implementa internamente comandos externos a los shell que normalmente utilizamos, por lo
+	que cuando se producen fallos en el sistema de ficheros y se han producido daños en los ejecutables de los comandos externos del shell podemos recurrir al sash para
+	poder ejecutar el comando que se ha visto dañado. El problema de esto es que las implementaciones internas de los comandos externos no tiene el mismo número de 
+	opciones que los comandos tradicionales por lo que su manejo se hace más complicado que el de los comandos normales, aunque en según que situaciones puede sacarnos de
+	bastantes apuros.
+	</para>
+	
+	<para>
+	El sulogin es el programa que ejecuta el sistema cuando nos queremos conectar en modo mono-usuario y se conectará al terminal que le digamos y arrancando el shell 
+	que creamos más conveniente según la situación en la cual nos encontremos. Además este programa nos permite la opción de presionar 'Control + D' para realizar un
+	arranque completamente normal.
+	</para>
+
+	<para>
+	Para continuar con nuestro revisión del arranque de Debian no podía faltar el fichero /etc/inittab en el que nos encontramos ordenadas por niveles de ejecución
+	las tareas que el sistema va a arrancar cuando iniciamos el sistema. En el caso de nuestra Debian el contenido del fichero /etc/fstab será el siguente:
+	</para>
+	
+	<para>
+	<informalexample>
+	<programlisting>
+
+		# /etc/inittab: init(8) configuration.
+		# $Id: inittab,v 1.91 2002/01/25 13:35:21 miquels Exp $
+
+		# The default runlevel.
+		id:2:initdefault:
+
+		# Boot-time system configuration/initialization script.
+		# This is run first except when booting in emergency (-b) mode.
+		si::sysinit:/etc/init.d/rcS
+
+		# What to do in single-user mode.
+		~~:S:wait:/sbin/sulogin
+
+		# /etc/init.d executes the S and K scripts upon change
+		# of runlevel.
+		#
+		# Runlevel 0 is halt.
+		# Runlevel 1 is single-user.
+		# Runlevels 2-5 are multi-user.
+		# Runlevel 6 is reboot.
+
+		l0:0:wait:/etc/init.d/rc 0
+		l1:1:wait:/etc/init.d/rc 1
+		l2:2:wait:/etc/init.d/rc 2
+		l3:3:wait:/etc/init.d/rc 3
+		l4:4:wait:/etc/init.d/rc 4
+		l5:5:wait:/etc/init.d/rc 5
+		l6:6:wait:/etc/init.d/rc 6
+		# Normally not reached, but fallthrough in case of emergency.
+		z6:6:respawn:/sbin/sulogin
+
+		# What to do when CTRL-ALT-DEL is pressed.
+		ca:12345:ctrlaltdel:/sbin/shutdown -t1 -a -r now
+
+		# Action on special keypress (ALT-UpArrow).
+		#kb::kbrequest:/bin/echo "Keyboard Request--edit /etc/inittab to let this work."
+
+		# What to do when the power fails/returns.
+		pf::powerwait:/etc/init.d/powerfail start
+		pn::powerfailnow:/etc/init.d/powerfail now
+		po::powerokwait:/etc/init.d/powerfail stop
+
+		# /sbin/getty invocations for the runlevels.
+		#
+		# The "id" field MUST be the same as the last
+		# characters of the device (after "tty").
+		#
+		# Format:
+		#  &lt;id>:&lt;unlevels>:&lt;action>:&lt;process>
+		#
+		# Note that on most Debian systems tty7 is used by the X Window System,
+		# so if you want to add more getty's go ahead but skip tty7 if you run X.
+		#
+		1:2345:respawn:/sbin/getty 38400 tty1
+		2:23:respawn:/sbin/getty 38400 tty2
+		3:23:respawn:/sbin/getty 38400 tty3
+		4:23:respawn:/sbin/getty 38400 tty4
+		5:23:respawn:/sbin/getty 38400 tty5
+		6:23:respawn:/sbin/getty 38400 tty6
+
+
+		# Example how to put a getty on a serial line (for a terminal)
+		#
+		#T0:23:respawn:/sbin/getty -L ttyS0 9600 vt100
+		#T1:23:respawn:/sbin/getty -L ttyS1 9600 vt100
+
+		# Example how to put a getty on a modem line.
+		#
+		#T3:23:respawn:/sbin/mgetty -x0 -s 57600 ttyS3
+
+	</programlisting>
+	</informalexample>
+	</para>
+
+	<para>
+	En este fichero se indica el nivel por defecto que en nuestro caso es el 2, que servicio o tarea ejecutará cuando arrancamos en modo mono-usuario, 
+	como hemos visto anteriormente ejecutará el sulogin, 
+	también definirá el comportamiento al teclear Ctrl + Alt + Supr, al teclear esto el sistema se apagará de una manera segura, genera las seis terminales que tendrá el
+	sistema cuando se carga, se le podrían añadir más terminales en tanto en cuanto no utilicemos la terminal número 7 que es utilizada por el servidor X.
+	</para>
+
+	<para>
+	Si por ejemplo quisieramos invalidar las estaciones 4, 5 y 6 sin eliminar n comentar la línea deberíamos editar el fichero /etc/inittab y modificar las siguientes
+	líneas de la manera que se indica:
+	</para>
+
+	<para>
+	<informalexample>
+	<programlisting>
+	
+		4:23:off:/sbin/getty 38400 tty4
+		5:23:off:/sbin/getty 38400 tty5
+		6:23:off:/sbin/getty 38400 tty6
+
+	</programlisting>
+	</informalexample>
+	</para>
+
+	<para>
+	Lo que hemos hecho ha sido decirle al inittab que en vez de volver a ejecutar el comando /sbin/getty cuando se termine, que no haga nada, este es el significado del 
+	valor 'off' colocado en el campo tercero. De esta manera dicha entrada no tiene ningún efecto en el proceso del arranque y no la hemos eliminado del inittab. Para
+	que este cambio en las líneas fuera cogido hemos ejecutado el comando 'telinit q' para que el sistema vuelva a leer el fichero /etc/inittab y los cambios se hagan
+	efectivos.
+	</para>
+
+	<para>
+	Antes de ejecutar rc 2, todas las tareas rc 0, y rc 1 se deberán ejecutar, cuando miramos el código del script /etc/init.d/rc vemos que lo que realmente hace
+	es llamar todas las tareas que hay en directorio /etc/rc0.d y /etc/rc1.d respectivamente. Otro punto a tener en cuenta es que cuando arranca lo primero que hará
+	la maquina es ejecutar rc S, siempre y cuando no hayamos indicado el modo de emergencia como parámetro, -b, las tareas que ejecutadas en el rc S serán las siguientes:
+	</para>
+
+	<para>
+	<informalexample>
+	<programlisting>
+
+		S05keymap.sh
+		S10checkroot.sh
+		S18hwclockfirst.sh
+		S20modutils
+		S30checkfs.sh
+		S30procps.sh
+		S30setserial
+		S35devpts.sh
+		S35mountall.sh
+		S39dns-clean
+		S39ifupdown
+		S40hostname.sh
+		S40networking
+		S45mountnfs.sh
+		S48console-screen.sh
+		S50hwclock.sh
+		S55bootmisc.sh
+		S55urandom
+		S70nviboot
+		S75sudo
+	</programlisting>
+	</informalexample>
+	</para>
+
+	<para>
+	Los servicios con el sufijo .sh indican que son scripts del shell bourne. La 'S' delante del identificador indica que les pasarán el parámetro 'start' para comenzar el 
+	servicio, y la 'K' que les pasarán el parámetro 'stop' para parar los servicios.
+	</para>
+	
+	<para>
+	Las tareas para el script rc 0 serán las siguientes: 
+	</para>
+
+	<para>
+	<informalexample>
+	<programlisting>
+		K01xdm
+		K11cron
+		K14ppp
+		K20exim
+		K20inetd
+		K20makedev
+		K20ssh
+		K20xfs
+		K25hwclock.sh
+		K30setserial
+		K89atd
+		K89klogd
+		K90sysklogd
+		S20sendsigs
+		S30urandom
+		S31umountnfs.sh
+		S35networking
+		S40umountfs
+		S90halt
+	</programlisting>
+	</informalexample>
+	</para>
+	
+	<para>
+	Las tareas para el script rc 0 serán las siguientes: 
+	</para>
+
+	<para>
+	<informalexample>
+	<programlisting>
+
+		K01xdm
+		K11cron
+		K14ppp
+		K20exim
+		K20inetd
+		K20makedev
+		K20ssh
+		K20xfs
+		K89atd
+		K89klogd
+		K90sysklogd
+		S20single
+	</programlisting>
+	</informalexample>
+	</para>
+
+	<para>
+	Ahora también podríamos ver que subsistemas serían activados a nivel 2 y el orden en que se ejecutan, estos subsistemas son los siguientes:
+	</para>
+	
+	<para>
+	<informalexample>
+	<programlisting>
+
+		S10sysklogd
+		S11klogd
+		S14ppp
+		S20exim
+		S20inetd
+		S20makedev
+		S20ssh
+		S20xfs
+		S89atd
+		S89cron
+		S99rmnologin
+		S99xdm
+	</programlisting>
+	</informalexample>
+	</para>
+
+	<para>
+	Para poder reejecutar los programas del arranque sin tener que cambiar de nivel podríamos ejecutar el siguiente comando, /etc/init.d/ifupdown restart, si lo que quisieramos 
+	era reinicializar los valores de los interfaces de red, cambio de IP's ... El fichero que realiza dicha inicialización es /etc/init.d/ifupdown, el fichero donde se
+	guardan las configuraciones de los interfaces es /etc/network/interfaces.
+	</para>
+	
+	<para>
+	Otra utilidad que nos podría resultar útil sería realizar la parada de alguno de los subsistemas cuya parada y arranque este definido en /etc/init.d, imaginemos que 
+	quisieramos parar el demonio de ssh de una manera limpia, entonces deberíamos ejecutar /etc/init.d/ssh stop.
+	</para>
+</chapter>
+
+<chapter>
+
+	<title>Trabajo con cuentas de usuario</title>
+	
+	<para>
+	</para>
+
+	<para>
+	</para>
+	
+	<para>
+	El script 'crearcuenta' que hemos implementado es el siguiente:
+	</para>
+
+	<para>
+	<informalexample>
+	<programlisting>
+
+		#!/bin/sh
+
+		if [ $# -ne 0 ]
+		then
+			# Esto se puede hacer con un campo de adduser.conf el DIR_MODE=0700
+			# Pero cambiaria los permisos de todos los creados posteriormente
+			sudo adduser --gecos "" --quiet $1
+			# Añadir la linea al sudoers para el nuevo usuario
+			sudo cat /etc/sudoers > /tmp/sudores.tmp
+			
+
+			# Ahora tienen los permisos justos para poder ejecutar los programas
+			 
+			echo $1	$HOSTNAME=NOPASSWD: /sbin/mkfs /dev/fd0 >> /tmp/sudores.tmp
+			echo $1	$HOSTNAME=NOPASSWD: /bin/mount /dev/fd0 >> /tmp/sudores.tmp
+			echo $1	$HOSTNAME=NOPASSWD: /bin/umount /dev/fd0 >> /tmp/sudores.tmp
+
+			sudo chmod 440 /tmp/sudores.tmp
+			sudo chown root.root /tmp/sudores.tmp
+			sudo mv /tmp/sudores.tmp /etc/sudoers
+			 
+			echo Usuario $1 creado con exito
+		else
+			#echo Introduzca nombre de usuario
+			echo Formato: ./creacuenta nombre_usuario
+		fi
+	</programlisting>
+	</informalexample>
+	</para>
+	
+	<para>
+	Ahora vamos a ver el script que hemos implementado para ayudar a los usuarios novatos en el manejo de los disquetes:
+	</para>
+	
+	<para>
+	<informalexample>
+	<programlisting>
+
+		# Funciones implementadas para comodidad del usuario novato:
+		
+		# Formatea un disco al sistema de fichero de linux
+		formatear(){
+			# Tenemos que desmontar todos los puntos en los que esta montado
+			if [ `grep -c fd0 /etc/mtab` -ne 0 ]; then
+				pm=`grep fd0 /etc/mtab | cut -d' ' -f 1`
+				for nombre in $pm; do
+					echo "Desmontando $nombre"
+					sudo umount $nombre
+				done
+			fi
+			sudo /sbin/mkfs /dev/fd0
+			echo Disquete formateado.
+		}
+
+		# Desmonta el disco indenpendientemente de las veces que se haya montado
+		desconexion(){
+			if [ `grep -c fd0 /etc/mtab` -ne 0 ]; then
+				pm=`grep fd0 /etc/mtab | cut -d' ' -f 1`
+				for nombre in $pm; do
+					sudo umount $nombre
+				done
+			fi
+			echo Disquete desmontado.
+		}
+
+		# Monta el disco
+		conexion(){
+		# Hemos utilizado el tipo de sistema de ficheros 'auto' pq no tenemos pq 
+		# saber que tipo de sistema de ficheros estan soportados por el kernel, en 
+		# nuestro caso por ejemplo el sistema de ficheros 'vfat' no esta soportado.
+			
+			# En nuestro caso si hubiera un 
+			sudo mount -t auto /dev/fd0 /mnt
+			echo Disquete montado.
+		}
+
+
+		# Realiza todas las operaciones posibles de copia que se pueden realizar 
+		# con un disco.
+		copy(){
+		# Se ha contemplado la posibilidad de que se realice la copia de disquete 
+		# a disquete.
+		# Tambien se ha verificado si los permisos del punto de destino son adecuados
+
+		if [ `grep fd0 /etc/mtab | grep /mnt` ]; then
+			# tenemos el dispositivo montado en el punto de montaje /mnt
+			if [ $# -eq 2 ]; then
+				# comprobamos que tenemos todos los parametros requeridos!!
+				
+				# comprobar si tenemos que escribir en el disquete!!
+				# tenemos q comprobar los parametros!!
+					
+				if [ `echo $1 | grep /mnt/` ]; then
+					# aqui tendremos q leer solamente
+					if [ ! -r /mnt ]; then
+						sudo umount /mnt
+						
+						# tendremos que comprobar si el destino tb es el disquete
+						if [ `echo $2 | grep /mnt/` ]; then
+							sudo mount -t auto -o rw /dev/fd0 /mnt 
+						else
+							sudo mount -t auto -o ro /dev/fd0 /mnt
+						fi
+					fi
+
+					# comprobamos el directorio destino
+					if [ ! -w $2 ]; then
+						echo No hay permiso de escritura en el destino
+					else
+						cp $1 $2
+					fi
+				else
+					# aqui tendremos que es escritura
+					if [ `echo $2 | grep /mnt/` ]; then
+						if [ ! -w /mnt ]; then
+							sudo umount /mnt
+							sudo mount -t auto -o rw /dev/fd0 /mnt
+						fi
+
+						if [ ! -r $1 ]; then
+							echo Debemos tener permisos de lectura en el directorio origen.
+						else
+							cp $1 $2
+						fi
+					elsne
+			echo Formato: copy camino_origen camino_destino
+			echo Nota: Uno de los dos caminos o ambos tienen que referenciar al disquete!!
+					fi
+				fi
+			else
+				echo Formato: copy camino_origen camino_destino
+			fi
+		else
+				# tenemos el dispositivo sin montar!!
+				if [ `echo $1 | grep /mnt/` ]; then
+					if [ `echo $2 | grep /mnt/` ]; then
+						# copia de disquete a disquete
+						sudo mount -t auto -o rw /dev/fd0 /mnt
+						cp $1 $2
+					else
+						# copia de disquete a disco rigido
+						sudo mount -t auto -o ro /dev/fd0 /mnt
+						if [ ! -w $2 ]; then
+							echo No hay permiso de escritura en el destino
+						else
+							cp $1 $2
+						fi
+					fi
+				else
+					# aqui tendremos que es escritura
+					if [ `echo $2 | grep /mnt/` ]; then
+						sudo mount -t auto -o rw /dev/fd0 /mnt
+						cp $1 $2
+					else
+						echo Formato: copy camino_origen camino_destino
+						echo Nota: Uno de los dos caminos tiene que referenciar al disquete!!
+					fi
+				fi
+		fi
+		}
+	</programlisting>
+	</informalexample>
+	</para>
+
+</chapter>
+</book>

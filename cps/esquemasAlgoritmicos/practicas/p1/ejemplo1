@@ -1,0 +1,25 @@
+
+
+
+ *************************
+ ** PROGRAMA DE CIFRADO **
+ *************************
+
+
+EJECUCION DEL EJEMPLO NUMERO 1:
+
+Este es el valor de la mochila:
+{ 1,2,4,8,16,32,64,128, }
+Este es el valor de la tupla:
+{ 3,6,12,24,48,96,192,127, }
+El valor de la N: 257
+El valor de la W: 3
+El valor de la Winv: 86
+
+MENSAJE CIFRADO:
+En un lugar de la Macha de cuyo nombre no quiero acordarme ,,;;..::||@@##$$%%&&//(())==??^^**}}{{--__!!""\\++
+Mensaje codificado con exito
+
+MENSAJE DESCIFRADO:
+En un lugar de la Macha de cuyo nombre no quiero acordarme ,,;;..::||@@##$$%%&&//(())==??^^**}}{{--__!!""\\++
+

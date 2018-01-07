@@ -1,0 +1,36 @@
+Solución del Ejercicio 4 de los problemas del tema de Introducción de Esquemas Algorítmicos
+-------------------------------------------------------------------------------------------
+
+El ejercicio número 4 consiste en la localización de una persona, denominada 'celebridad',
+dentro de un grupo de n personas. La celebridad tiene la característica de que es conocida
+por el resto de personas y además no conoce a las demás personas que forman parte del 
+problema.
+
+El objetivo de este problema es diseñar un algoritmo con el que seamos capaces de encontrar
+a la celebridad si es que existe dentro del grupo de n personas, realizando el mínimo número
+de preguntas posibles, como es lógico la pregunta a realizar será si una persona conoce a 
+otra.
+
+Para llegar a la mejor solución tenemos que representar el grupo de n personas en una matriz
+que denominaremos matriz de conocidos en la que el elementeo de la matriz ij, podrá tener un
+valor 0 o 1, si vale 0 significará que la persona i no conocerá a la persona j y por el 
+contrario, si vale 1 significará que i conoce a j.
+
+Por lo que la persona buscada tendrá que tener su fila llena de ceros y su columna llena de unos.
+
+El algortimo que se ha diseñado aprovecha la estructuración de los datos en una matriz, por lo 
+que al preguntar al la persona i si conoce a j, es decir, al comprobar el contenido del 
+elemento de la matriz ij, podremos tener a la vez dos informaciones una relacionada con el 
+conocimiento que tiene i sobre j y otro sobre el conocimiento que tiene j sobre i.
+
+Por lo tanto el número de preoguntas para descubrir a la celebridad se hace mínimo gracias
+a la utilización de la matriz para la representación de la información.
+
+Para ilustrar más claramente el algoritmo diseñado se adjuntan dos ficheros en los que se
+implementan el algoritmo explicado anteriormente, los lenguajes en los que se han 
+implementado el algoritmo es C y Ada95.
+
+
+Acedo Legarre, Aitor
+14 de Octubre de 2003
+Esquemas Algorítmicos

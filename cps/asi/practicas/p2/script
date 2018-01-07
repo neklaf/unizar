@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if [ $# -eq 0 ]
+then
+	echo Se debe introducir al menos un parámetro
+fi
+
+# Entre estas dos sentencias no hay ninguna diferencia!!
+#echo $*
+#echo $@
+# No he encontrado diferencias entre $* y $@
+
+for nombre in $*; do 
+	grep "^$nombre:" /etc/passwd > /dev/null
+	if [ $? -eq 0 ]; then
+		echo Usuario $nombre valido
+	else
+		echo Usuario $nombre NO valido
+	fi
+done
+
+
+# for nombre in $*
+#do
+
+#done
