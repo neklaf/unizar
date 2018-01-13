@@ -20,7 +20,7 @@ I use pdflatex tool to generate PDF files from .tex sources on Debian GNU/Linux.
 
 2003 -> ADMINISTRACION DE SISTEMAS INFORMATICOS (ASI)
 
-2003 -> STD
+2003 -> SISTEMAS DE TRANSMISION DE DATOS (STD)
 
 2003 -> ESQUEMAS ALGORITMICOS
 
@@ -29,6 +29,8 @@ I use pdflatex tool to generate PDF files from .tex sources on Debian GNU/Linux.
 2003 -> DISEÑO DE ARQUITECTURAS
 
 2003 -> SISTEMAS DE ALTO NIVEL DE REDES INFORMATICAS (SANRI)
+
+2004 -> MEPSI
 
 2004 -> TECNICAS AVANZADAS DE PROGRAMACION (TAP)
 
