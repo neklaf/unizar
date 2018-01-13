@@ -1,0 +1,43 @@
+\chapter{Evaluación de prestaciones}
+%En este capítulo tendremos que explicar brevemente el SPT
+
+Las herramientas que realizan este tipo de análisis sobre los modelos proporcionan 2 funciones:
+\begin{enumerate}
+	\item Calcular las prestaciones para una instancia del sistema.
+	\item Orientarnos sobre las mejoras del sistema, identificando \emph{cuellos de botella} o recursos críticos.
+\end{enumerate}
+
+Aquí explicaremos un conjunto de conceptos para soportar las ideas centrales del análisis de prestaciones.
+
+\section{Conceptos y técnicas del análisis de prestaciones}
+
+\emph{Scenarios:} caminos de respuesta de nuestro sistema con unos límites claramente visibles.
+Cada \emph{scenario} es ejecutado por una \emph{clase trabajadora} o una \emph{clase usuario} con una determinada intensidad de carga. A partir de ahora llamaremos a estas clases \emph{workload's}.
+
+\emph{Workload:} son los elementos que definen la ejecución de un \emph{scenario}. Pueden ser de 2 tipos, abiertas y cerradas.
+\begin{itemize}
+	\item \emph{Open workload:} modelan un flujo de peticiones que llegan con una tasa dada y con unos patrones predeterminados, por ejemplo Poisson.
+	\item \emph{Closed workload:} modela un número fijo de potenciales usuarios o trabajos, los cuales realizan un ciclo ejecutando el scenario y consumiendo un retraso externo fuera del sistema.
+\end{itemize}
+
+\emph{Scenario steps:} (actividades o pasos del scenario) son los elementos que constituyen un scenario y están unidos para formar una secuencia. Es la operación más elemental en el nivel de granularidad más fino.
+
+\emph{Demandas de recursos:} (para un scenario-step) son sus también llamadas \emph{host execution demand} y las demandas de todos sus \emph{substeps}.
+
+\emph{Host execution demand:} (para su host device, o dispositivo anfitrión) es el tiempo de ejecución tomado en su \emph{host device}.
+
+\emph{Recursos:} son modelados como servidores. Los recursos activos son los servidores habituales en modelos de prestaciones y tienen tiempos de servicio.
+Los recursos pasivos son asignados y liberados durante la ejecución y tienen tiempos de asignación.
+
+\emph{Tiempo de servicio:} (de un recurso activo) es definido como el \emph{host execution demand} de los pasos que están hospedados por el recurso.
+
+Las medidas de prestaciones para un sistema incluyen la utilización de recursos, tiempos de espera, demandas de ejecución (bien sea en ciclos de CPU o en segundos) y tiempo de respuesta (el actual o el tiempo de reloj para ejecutar un paso del scenario).
+
+\section{Tipos de métodos de análisis de prestacines}
+
+\begin{itemize}
+	\item Modelos de colas
+	\item Modelos de simulación
+	\item Modelos discretos como redes de Petri: definen \emph{tokens} que ejecutan el software, siguiendo la estructura de un scenario detallado.
+	Con este método calculamos medidas medias pero puede proporcionar detalladas medidas como los momentos más altos y distribuciones.
+\end{itemize}

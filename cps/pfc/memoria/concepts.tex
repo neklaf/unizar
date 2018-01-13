@@ -1,0 +1,203 @@
+\chapter{Conceptos Previos}
+\label{chap:concepts}
+En el capítulo que nos ocupa vamos a poner de manifiesto algunos de los aspectos más relevantes dentro de cada una de las áreas que han sido objetivo de mi proyecto fin de carrera.
+
+El objetivo del presente capítulo es poner en contexto al lector en las diferentes teorías y herramientas utilizadas en nuestro trabajo con el fin de que se pueda entender el resto de los capítulos. Obviamente estas pequeñas introducciones a cada una de las teorías no ponen de manifiesto la profundidad que el proyectando ha adquirido en cada una de ellas.
+ 
+\section{Estado del Arte}
+Hoy en día el número de usuarios de herramientas informáticas ha crecido enormemente con respecto a épocas pasadas, este fenómeno es debido fundamentalmente al gran auge de Internet, que ha abierto las puertas de la informática a un cuantioso colectivo de personas. 
+
+Por otro lado las empresas que desarrollan software sacan al mercado aplicaciones cada vez más complejas, con un número mayor de funcionalidades que intentan mejorar las ya existentes, y las cuales se desarrollan a una velocidad vertiginosa.
+
+La alta exigencia de calidad, robustez, eficiencia y funcionalidad por parte de todos esos usuarios que hemos comentado, hace que la industria del software tenga que recurrir a disciplinas que ayuden a conseguir todos estos propósitos. 
+
+Este es el caso de la {\bf Ingeniería del software} \cite{Pressman} que se encarga de optimizar el proceso de desarrollo de un producto software, con el fin de hacer cumplir los requisitos impuestos evitando prácticas que puedan retrasar la finalización del producto.
+
+El problema existente es que esta disciplina no está enfocada a asegurar las características del software relacionadas con su rendimiento, lo que obliga contínuamente a valorar las prestaciones de un sistema en sus fases finales de desarrollo, con una versión funcional.
+
+Esta práctica conlleva riesgos inevitables, por ejemplo, podría darse el caso de que una vez conseguida un versión funcional, y tras realizar una serie de pruebas llegaramos a la conclusión de que no podemos alcanzar los niveles de prestaciones esperados, con lo que habríamos desaprovechado una gran cantidad de tiempo que no podríamos recuperar.
+
+Una solución diferente sería el adelantar el análisis del rendimiento de este tipo de productos a las etapas iniciales de sus ciclos de vida, con el consiguiente ahorro del tiempo invertido en desarrollar un producto, que no va a cumplir con las prestaciones requeridas. Este concepto es la piedra angular de un campo de investigación conocido como {\bf Ingeniería de Prestaciones del Software} o {\bf SPE} \cite{Connie90}.
+
+En este punto aparece el problema de cómo incluir este nuevo enfoque al proceso de desarrollo del software actual. UML es, hoy en día, el estándar de facto en la ingeniería del software y es utilizado por la gran mayoría de personas dedicadas al mundo del desarrollo, lo cual lo convierte en el candidato idóneo para incluirle las prestaciones de los sistemas. 
+
+Ésta es a grandes rasgos la idea que han seguido los trabajos de investigación realizados en el GISED comentados anteriormente, y que mencionaremos más adelante.
+
+Todavía quedan en el aire preguntas importantes como por ejemplo, ¿{\bf cómo} incluiremos las medidas de prestaciones en UML?, ¿{\bf qué modelo} utilizaremos para analizar las {\bf prestaciones} que nos van a interesar?, todas estas cuestiones quedarán respondidas en las secciones siguientes.
+
+\section{UML}
+%Se puede eliminar y reescribir lo siguiente
+El  Object  Management  Group  ({\bf OMG}) \cite{OMG-org}  es  un consorcio a  nivel  internacional  que  integra a los principales representantes de la industria de la tecnología de información Orientada a Objetos ({\bf OO}). El OMG tiene como objetivo central la promoción, y el impulso de la industria OO. Éste propone y adopta por consenso especificaciones en torno a la tecnología OO, especificaciones que se convierten en estándar {\bf ISO} por defecto. 
+
+Una de las especificaciones más importantes es la adopción en 1998 de UML como un estándar.  Éste se integra dentro de Model Driven Architecture ({\bf MDA}) de OMG, que es a la  postre un conjunto de estándares que sirven para planificar y controlar el ciclo completo  de vida del software, independientemente de la plataforma para la que se desarrolla ese  software. Y es aquí donde queda clara su relación con lo que conocemos como Ingeniería  del Software.
+ 
+UML es pues una especificación semi-formal que define un lenguaje gráfico que nos sirve para  visualizar,  especificar,  construir  y  documentar  los  artefactos  o  elementos  de  nuestro  sistema.
+En él también se definen reglas semánticas y de corrección de modelos lo que lo convierten en algo más que un lenguaje gráfico.
+
+UML define {\bf doce} tipos distintos de diagramas gráficos, que sirven para  describir todas las vistas que un modelo pueda necesitar para ser caracterizado, vistas que se  ajusten al paradigma OO.  
+
+Estos doce diagramas se agrupan a su vez en tres categorías: la que incluye diagramas  que  definen  estructuras  o  elementos  estáticos,  la  compuesta por diagramas  que  definen  diferentes aspectos del comportamiento dinámico y la que engloba diagramas que definen  como organizar los módulos de una aplicación. Éstas son las tres categorías respectivas, junto con los nombres de los diagramas que forman parte de ellas: 
+
+\begin{itemize}
+\item {\bf Diagramas  estructurales}:  diagrama  de  clases,  diagrama  de  objetos,  diagrama de componentes y diagrama de despliegue.
+\item {\bf Diagramas de comportamiento}: diagrama de casos de uso, diagrama de  secuencia, diagrama de actividad, diagrama de colaboración y diagrama (o máquinas) de estados.
+\item {\bf Diagramas  de  organización  del  modelo}:  diagramas  de  paquetes,  subsistemas y de modelos.  
+\end{itemize}
+
+Es momento de realizar una breve presentación de los dos tipos de diagramas que participan más activamente en mi proyecto: Máquina de Estados y Diagrama de Colaboración.
+
+\subsection{Máquina de estados}
+Una {\bf máquina de estados} se utiliza para modelar los aspectos dinámicos de un sistema. La mayoría de las veces esto supone el modelado del comportamiento de objetos  que reaccionan ante los eventos lanzados desde fuera de su contexto.
+
+Los estados son los elementos primordiales de este tipo de diagramas. Un estado es  una  condición  o  situación  en  la  vida  de  un  objeto  durante  la  cual  satisface  alguna  condición, realiza alguna actividad o espera algún evento. En esta figura se muestra un diagrama de estados genérico:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75]{SM.pdf}
+	\end{center}
+	\caption{Ejemplo de Máquina de Estados.}
+	\label{fig:sm}
+\end{figure}
+
+\subsection{Diagrama de colaboración}
+\label{subsec:colaboracion}
+Un {\bf diagrama de colaboración} es un diagrama de interacción que destaca la organización estructural de los objetos que se comunican entre sí. Los diagramas de interacción muestran las relaciones existentes entre un grupo de objetos, incluyendo los mensajes que se pueden enviar entre ellos.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75]{collaboration.pdf}
+	\end{center}
+	\caption{Ejemplo de Diagrama de Colaboración.}
+	\label{fig:collaboration}
+\end{figure}
+
+Uno de los elementos más importantes dentro del diagrama de colaboración será el {\em número de secuencia}, éste indicará la ordenación temporal del mensaje, este número se forma con un dígito que se irá incrementando secuencialmente por cada nuevo mensaje en el flujo de control. Para soportar el anidamiento, se utiliza la {\em numeración decimal de Dewey} \cite{DDC} en la que, el 1 representa al primer mensaje, el 1.1 será el primer mensaje dentro del mensaje 1, el 1.2 será el segundo mensaje dentro del mensaje 1, soportando cualquier nivel de profundidad.
+
+%Buscar información sobre Dewey para la presentación del pfc
+
+Por último decir que los diagramas de colaboración y los diagramas de secuencia son semánticamente equivalentes, debido a que derivan de la misma información del metamodelo de UML, lo cual hace que presenten unas capacidades similares de expresividad.
+
+\subsection{Mecanismos de extensión}
+\label{subsec:extension}
+Estos mecanismos son proporcionados para posibilitar la expresión de todos los matices posibles de todos los modelos en cualquier dominio, en nuestro caso en el dominio de las prestaciones. Los mecanismos con los que contamos en este lenguaje son:
+
+\begin{itemize}
+\item {\bf Estereotipos}: permite la creación de nuevos bloques de construcción que deriven de los existentes pero que sean específicos del sistema.
+\item {\bf Valores etiquetados}: extiende las propiedades de un bloque de construcción de UML, para añadir nueva información en la especificación de ese elemento.
+\item {\bf Restricciones}: extiende la semántica de un bloque de construcción.
+\end{itemize}
+
+Los elementos que utilizaremos para ser capaces de anotar los modelos de UML con características de prestaciones serán los estereotipos y los valores etiquetados.
+
+\section{UML-SPT}
+Desde su nacimiento UML ha sido utilizado en el desarrollo de multitud de sistemas con restricciones como tiempo, recursos, prestaciones, o seguridad. Con el paso del tiempo se comprobó que este lenguaje carecía de la expresividad suficiente como para poder modelar estas características, lo cual limitaba su expansión a campos como sistemas de tiempo real o sistemas empotrados.
+
+A pesar de esto se vio que era posible utilizar los mecanismos de extensión (ver \ref{subsec:extension}) que facilita con el fin de introducir este tipo de características dentro de nuestros modelos.
+
+El OMG elaboró un documento denominado, {\bf UML} Profile for {\bf S}chedulability, {\bf P}erformance and {\bf T}ime Specification ({\bf UML-SPT}) \cite{UML-SPT}, en el cual se recogen los métodos comúnes para enriquecer un modelo de UML con información para su posterior análisis de prestaciones. Estos métodos son los que ha seguido ArgoSPE en su implementación.
+
+La organización de este documento sigue un esquema lógico, cada capítulo nos instruye en un dominio concreto, por ejemplo el modelado general del tiempo, o el de la concurrencia. Todos los capítulos constan de dos partes, la primera introduce los conceptos teóricos del dominio al que nos estamos referiendo y la segunda explica como modelarlos con los elementos que nos proporciona UML, esta estructura queda reflejada en el siguiente esquema:
+
+%\begin{figure}[hbt]
+\begin{figure}[H]
+	\begin{center}
+		%\includegraphics[height=2cm]{UML-SPT.pdf}
+		%\includegraphics[width=\textwidth]{UML-SPT.pdf}
+		\includegraphics[scale=0.75]{UML-SPT.pdf}
+	\end{center}
+	\caption{Relaciones entre el punto de vista del dominio y el de UML.}
+	\label{fig:UML-SPT}
+\end{figure}
+
+La figura \ref{fig:UML-SPT} ilustra uno de estos conceptos del dominio en cuestión, el cual será representado por un par, estereotipo-valor etiquetado en UML. Los términos más interesantes desde el punto de vista del modelado de prestaciones según el UML-SPT son los siguientes:
+
+\begin{itemize}
+\item {\bf Contexto}: representa una situación relevante para el diseñador, dentro de nuestro sistema. Está constituído por varios escenarios.
+\item {\bf Escenario}: es una secuencia de 1 o más pasos, los cuales están ordenados de forma que podremos establecer relaciones de predecesores y sucesores entre los mismos.
+Se utilizan para explorar varias situaciones dinámicas que envuelven a un conjunto de recursos.
+\item {\bf Paso}: incremento en la ejecución de un escenario particular utilizando ciertos recursos.
+\item {\bf Recurso}: es visto como un servidor que posee un tiempo de servicio, podemos ver a los pasos como clientes de estos servidores.
+\item {\bf Carga de trabajo}: indica la intensidad de la demanda para la ejecución de un escenario específico. Existen dos tipos: las {\em abiertas} que modelan un flujo de peticiones, y las {\em cerradas} que caracterizan un número constante de usuarios.
+\end{itemize}
+
+Dentro de la evaluación de prestaciones los escenarios juegan un papel importante puesto que las prestaciones son propiedades dinámicas de los  sistemas, para modelarlos utilizando UML tendremos que utilizar algún elemento que represente también propiedades dinámicas, en nuestro caso, los {\bf diagramas de colaboración} (ver \ref{subsec:colaboracion}). La representación concreta de los conceptos mencionados con anterioridad quedará expuesta en el anexo \ref{chap:case}.
+
+\section{Redes de Petri}
+
+En la investigación previa a mi trabajo se decantaron por las redes de Petri como formalismo para la evaluación de prestaciones. Después de una comparativa entre diferentes formalismos como por ejemplo las redes de colas \cite{MolloyBook} o las álgebras de procesos \cite{HR-98}, se llegó a la conclusión de que las redes de Petri proporcionaban un nivel de detalle mayor para modelar los sistemas que cualquiera de las anteriores. Ahora vamos a proceder a una breve explicación.
+
+Las redes de Petri \cite{Silva-85} ({\bf RdP}) son una herramienta gráfica para la descripción formal de sistemas cuyos comportamientos dinámicos están caracterizados por la concurrencia, sincronización, exclusión mutua y conflictos. 
+
+La RdP está representada por un grafo dirigido bipartito en el cual los lugares se representan como círculos y las transiciones son dibujadas como barras o como cajas. Los lugares suelen describir estados locales del sistema, mientras que las transiciones representarían los eventos que modifican el estado del sistema.
+
+El comportamiento dinámico de las RdP está dirigido por la {\em regla de disparo}, una transición puede dispararse si todos sus {\em lugares de entrada} contienen al menos una marca, entonces decimos que la transición está sensibilizada, tras dispararse la transición eliminamos una marca de cada uno de los lugares de entrada y generamos una marca en sus {\em lugares de salida}.
+
+Una de las evoluciones que se han producido de las RdP es la introducción del concepto del tiempo, por ejemplo a través de transiciones con tiempo, es decir, que ahora tenemos dos tipos de transiciones las inmediatas y las temporizadas. Una RdP con estas características la denominaremos estocástica o {\bf SPN}.
+
+Al introducir transiciones con tiempo también será necesario añadir prioridades a las transiciones, esto evita situaciones conflictivas dentro de la red \cite{GSPN-book}, aquí sólo comentaremos que las prioridades serán números naturales asociados a las transiciones y que la transición con mayor prioridad se disparará primero si hay posibilidad de que otra también se pueda disparar.
+
+Las {\bf GSPN}'s serán SPN's (con prioridades) en las cuales las transiciones con tiempo tienen definido el retraso de su disparo como una variable aleatoria exponencialmente distribuída.
+
+\subsection{Operador composición}
+Para realizar la traducción automática de UML a GSPN's será necesario un operador que una varias GSPN's en una única red, para ello necesitaremos añadir etiquetas tanto a las transiciones como a los lugares de cada una de las redes que queremos fusionar, este nuevo tipo de redes las llamaremos GSPN etiquetadas o bien {\bf LGSPN}'s.
+
+El resultado de componer lugares y transiciones de dos LGSPN's será algo como lo siguiente:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{compose.pdf}
+	\end{center}
+	\caption{Funcionamiento del operador composición.}
+	\label{fig:compose}
+\end{figure}
+
+%En la figura anterior es preciso comentar que los lugares de la red han sido etiquetados con {\em px}, %las transiciones están denotadas como {\em tx}, las etiquetas ({\bf útiles para la composición}) serán %{\em lx}, y hemos utilizado una {\em tubería} como delimitador entre el nombre y las etiquetas.
+
+A continuación vamos a explicar con un poco más en detalle una de las etiquetas que forman parte de la figura \ref{fig:compose},  en concreto, \verb!t2|l1,l2!, ésta consta de varias partes, la primera constituye el nombre de la transición,  \verb!t2! en este caso, lo siguiente es el separador, \verb! | !, y tras éste nos encontraremos con una secuencia de etiquetas que utilizaremos para la {\bf composición}, \verb!l1! y \verb!l2!.
+
+\section{ArgoSPE}
+
+ArgoSPE es una herramienta fruto de varios proyectos fin de carrera, que ya han sido comentados con anterioridad, además de varias becas de colaboración. Ha sido desarrollada bajo la licencia pública de GNU \cite{GNU} (anexo \ref{chap:gpl}).
+
+Esta aplicación tiene como fin poder evaluar las prestaciones de un sistema modelado con ArgoUML (por ahora\footnote{Futuras implementaciones de nuestro módulo podrán utilizar cualquier herramienta CASE (Computer Assisted Software Engineering) como Editor del Modelo, dado que lo permite esta arquitectura flexible.}), implementa muchas de las características ofrecidas en los trabajos \cite{BCDM-TSE,LGMC-WOSP04,MBCD-WODES02} y sigue la arquitectura sugerida en el UML-SPT, representada en la figura \ref{fig:arquitectura}.
+%ver figura \ref{fig:arquitectura}.
+
+\begin{figure}[H]
+	\begin{center}
+		%\includegraphics[scale=0.7]{arquitectura.pdf}
+		\includegraphics[scale=0.6]{arquitecture.pdf}
+	\end{center}
+	\caption{Arquitectura sugerida por el UML-SPT.}
+	\label{fig:arquitectura}
+\end{figure}
+
+Para finalizar comentar que está diseñada como un conjunto de paquetes de Java  y es implementada como un plug-in (o módulo) de ArgoUML,  para la versión {\bf 0.18.1}.
+
+Como queda reflejado en la figura \ref{fig:arquitectura} las principales partes de la arquitectura son el {\bf editor}, el {\bf configurador} y el {\bf procesador del modelo}, este último está dividido en {\bf conversor} y {\bf analizador del modelo} y en el {\bf conversor de resultados}.
+
+Esta separación funcional de la arquitectura provoca que se pueda utilizar cualquier herramienta para que aporte la funcionalidad concreta, por ejemplo, se podrían utilizar diversos programas como analizadores del modelo, aunque para ello deberíamos tener que representar el modelo a analizar en un formato estándar y comprensible por dichas herramientas. 
+
+Incluso podríamos considerar el cambio de formalismo utilizado para el análisis, lo que da idea de la potencia de la arquitectura de ArgoSPE.
+
+En la siguiente figura podemos observar cómo, la estructura de paquetes que constituyen parte de los fuentes de nuestro módulo, representa la arquitectura propuesta en el UML-SPT.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{packages.pdf}
+	\end{center}
+	\caption{Distribución en paquetes de la arquitectura de ArgoSPE.}
+	\label{fig:paquetes}
+\end{figure}
+
+Las funcionalidades de los principales componentes que conforman la arquitectura son \cite{QEST05-GMM}: 
+
+\begin{itemize}
+\item {\bf Editor del Modelo}: este módulo debe ofrecer la posibilidad de crear, editar y anotar, usando el {\bf T}agged {\bf V}alue {\bf L}anguage ({\bf TVL} o Lenguaje de Valores Etiquetados), modelos software en UML.
+\item {\bf Configurador del Modelo}: su funcionalidad consiste en sustituir los valores etiquetados que poseen expresiones en TVL, por el resultado de evaluar las expresiones, gracias a un fichero de configuración. Pasando a tener un modelo con el XMI configurado.
+\item El {\bf Procesador del Modelo} como vemos en la figura \ref{fig:paquetes} está dividido en:
+	\begin{itemize}
+		\item {\bf Conversor del Modelo}: es la parte encargada de pasar de un modelo en formato XMI al mismo modelo representado con GSPN's.
+		\item {\bf Analizador del Modelo}: este componente ejecuta las consultas realizadas por el usuario utilizando para ello la aplicación GreatSPN.
+		\item {\bf Conversor de resultados}: su objetivo es hacer regresar los valores obtenidos por el analizador, al editor del modelo, para que puedan ser recibidos por el usuario.
+	\end{itemize}
+\end{itemize}

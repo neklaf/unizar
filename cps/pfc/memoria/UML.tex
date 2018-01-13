@@ -1,0 +1,169 @@
+\chapter{Análisis de UML}
+\label{chap:uml}
+\section{Diagramas de estados}
+Un {\bf diagrama de estados} se utiliza para modelar aspectos dinámicos de un sistema. La mayoría de las veces esto supone el modelado del comportamiento de objetos reactivos. Un {\bf objeto reactivo} es aquél para el que la mejor forma de caracterizar su comportamiento es señalar cuál es su respuesta a los eventos lanzados desde fuera de su contexto.
+
+Los diagramas de estados pueden asociarse a las clases, los casos de uso, o a sistemas completos para visualizar, especificar, construir y documentar la dinámica de un objeto individual.  
+
+Supongamos que hemos modelado una clase que representa un sistema de registro (login) de usuarios. El comportamiento dinámico de cada objeto que instancia dicha  clase se modela con el ejemplo de la figura \ref{fig:SC}, que además nos sirve como ejemplo de la  notación gráfica empleada en un diagrama de estados:    
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.6]{SC.pdf}
+	\end{center}
+	\caption{Ejemplo de diagrama de estados.}
+	\label{fig:SC}
+\end{figure}
+
+También en este ejemplo vemos algunos de los elementos más representativos, las  relaciones que se establecen entre ellos y varios adornos. Los elementos más comunes dentro de un diagrama de estados son los estados y las  transiciones.
+
+Un {\bf estado} es una condición o situación en la vida de un objeto durante la cual  satisface alguna condición, realiza alguna actividad o espera algún evento. Cuando la  máquina de estados de un objeto se encuentra en un estado dado, se dice que el objeto está  en ese estado y que ese estado está {\bf activo}. 
+
+Un estado tiene varias partes: un nombre (cadena de texto que distingue al estado de  otros  estados),  {\bf acciones  de  entrada}  (acciones  ejecutadas  al  entrar  en  el  estado  e  identificadas con la palabra clave {\em entry}), {\bf acciones de salida} (acciones ejecutadas al salir de  un estado e identificadas con la palabra clave {\em exit}), {\bf transiciones internas} (transiciones que  se manejan sin causar un cambio en el estado), {\bf actividades} (actividades que son ejecutadas  mientras se encuentra activo el estado que las contiene y que se identifican con la palabra  clave {\em do}) y {\bf eventos diferidos} (lista de eventos que no se manejan en este estado sino que se  posponen y se añaden a una cola para ser manejados por el objeto en otro estado).
+
+Además de los estados simples podemos encontrar otros tipos de estados como los  estados  compuestos,  los  estados {\bf de sincronización},  los  estados  de  submáquina,  los  pseudoestados, etc.
+
+En la figura del ejemplo vemos dos tipos de estado más muy comunes que son el {\bf estado inicial}, que indica el punto de comienzo por defecto para una máquina de estados o  el subestado, y el {\bf estado final}, que indica que la ejecución de la máquina de estados o del  estado que lo contiene ha finalizado.
+
+Los estados {\bf compuestos} son también elementos comunes de los diagramas de estados. Mientras que un estado simple no tiene una subestructura, un estado compuesto es  capaz de contener a otros estados. Los estados anidados dentro de un estado compuesto  reciben el nombre de subestados. Cuando un subestado está activo,  también lo está el  estado compuesto que lo contiene. Además, los subestados se pueden anidar a cualquier  nivel.    
+
+Una {\bf transición} es una relación entre dos estados que indica que un objeto que esté en  el primer estado realizará ciertas acciones y entrará en el segundo estado cuando ocurra un  evento especificado y se satisfagan unas condiciones específicas. Cuando se produce ese  cambio de estado se dice que la transición se ha disparado.  Una transición tiene cinco partes:
+
+\begin{itemize}
+\item {\bf Estado origen}: El estado afectado por la transición; si un objeto está en el  estado origen,  una transición de salida puede dispararse cuando el objeto  reciba el evento de disparo de la transición, y si la condición de guarda,  si  la hay,  se satisface.
+\item {\bf Evento de disparo}: el evento cuya recepción por el objeto que está en el  estado  origen  provoca  el  disparo  de  la  transición  si  se  satisface  su  condición de guarda.
+\item {\bf Condición de guarda}: Una expresión booleana que se evalúa cuando la  transición se activa por la recepción del evento de disparo; si la expresión  toma el valor cierto, la transición se puede disparar; si la expresión toma el valor falso,  la transición no se dispara y si no hay otra transición que  pueda ser disparada por el mismo evento, éste se pierde.
+\item {\bf Acción}:  Una  computación  atómica  ejecutable  que  puede  actuar  directamente  sobre  el  objeto  asociado  a  la  máquina  de  estados,  e  indirectamente sobre otros objetos visibles al objeto.
+\item {\bf Estado destino}: El estado activo tras completarse la transición.
+\end{itemize} 
+
+%\colorbox{red}{Añadir las partes que tiene Jose Luis Sánchez en el Anexo C}
+
+\section{Diagramas de colaboración}
+%\section{Semántica de los diagramas de colaboración}
+Un {\bf diagrama de colaboración} es uno de los dos tipos de diagrama de interacción que podemos encontrar, éstos últimos están dedicados a describir cómo colaboran un grupo de objetos para conseguir la realización de una tarea. En ellos se muestra los mensajes intercambiados entre los objetos dentro de un caso de uso, recogiendo de esta manera el comportamiento del mismo, o de un diagrama de clases.
+
+Los dos tipos de diagramas de interacción muestran la colaboración entre los objetos aunque cada uno  hace énfasis en una cualidad diferente de esta relación, así por ejemplo los {\bf diagramas de secuencia}, que son los otros diagramas pertenecientes a este grupo, remarcan la ordenación temporal de los mensajes, mostrando la secuencia de mensajes intercambiados a lo largo de la línea de vida de cada uno de los objetos participantes.
+
+Por el contrario los diagramas de colaboración enfatizan la organización estructural de los objetos que componen la interacción, en detrimento de la representación del orden temporal de los mensajes, no obstante, se puede conocer la ordenación de éstos simplemente fijándose en los números de secuencia que aparecen representados en el diagrama. A partir de este punto vamos a centrarnos en el diagrama de colaboración, ya que es el diagrama de interacción que es relevante para nuestro trabajo.
+
+En el metamodelo de UML el paquete que define los elementos que utilizaremos en los diagramas de colaboración, es el Collaborations package (o paquete de Colaboraciones), éste se relaciona con otros paquetes que forman parte del metamodelo, siguiendo la estructura representada en la figura:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.6]{UMLpackages.pdf}
+	\end{center}
+	\caption{Paquetes del metamodelo de UML.}
+	\label{fig:metapackages}
+\end{figure} 
+
+El paquete {\bf Behavioral\_Elements} (Elementos de comportamiento) es una estructura que especifica el comportamiento dinámico. El paquete Collaborations, como vemos, forma parte de este super-paquete, y está dividido en dos partes: la {\bf colaboración} y la {\bf interacción}.
+
+\begin{description}
+\item[Colaboración] define los roles que juegan (o los papeles representados por) un conjunto de instancias cuando realizan una tarea en particular, como una operación o un caso de uso. 
+\item[Interacción]  Es una colección de comunicaciones producidas entre instancias, en las que se incluyen todos los tipos de formas en las cuales podemos afectar en una instancia, como la invocación de una operación, o la creación y destrucción de éstas. Las comunicaciones están parcialemente ordenadas (en tiempo). Una interacción expresa un patrón de comunicación modelado por las instancias que representan los roles de una colaboración.
+\end{description}
+
+%Si consigo hacer el glosario lo podremos quitar de aqui
+
+\subsection{Interacciones}
+Los elementos que forman parte de una interacción son los siguientes:
+\begin{itemize}
+\item {\bf Instancia} (objeto, valor de datos, instancia de un componente): es una entidad con una única identidad y para la cual tenemos un conjunto de operaciones que pueden ser aplicadas (o señales ser enviadas) y que tiene un estado que almacena los efectos de las operaciones.
+\item {\bf Acción}: una especificación de una sentencia ejecutable. Existen diferentes tipos de acciones que están predefinidas, por ejemplo acción de creación, de llamada, de destrucción, y la acción no interpretada.
+\item {\bf Estímulo}: representa una comunicación entre dos instancias. La notación utilizada para definir un estímulo es una flecha.
+\item  {\bf Operación}: una declaración de un servicio que puede ser consultado desde una instancia para conseguir un comportamiento.
+\item {\bf Señal}: una especificación de un estímulo asíncrono comunicado entre instancias.
+\item {\bf Enlace}: una conexión entre instancias.
+\end{itemize}
+
+\subsection{Colaboración}
+Una colaboración, a su vez, también está constituída por un conjunto de artefactos que le proporcionan toda la expresividad que necesitamos:
+
+\begin{itemize}
+\item {\bf Colaboración}: describe un clasificador como, una operación, una clase, o un caso de uso, es realizado por un conjunto de clasificadores y asociaciones utilizados de una determinada manera. Se representa con esta sintaxis:
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{colaboracion.pdf}
+	\end{center}
+	\caption{Representación de una colaboración.}
+	\label{fig:colaboracion}
+\end{figure}
+\item {\bf ClassifierRole} (papel representado por el clasificador): es un rol específico que juega un participante en una colaboración. Especifica un {\em punto de vista restringido} de un clasificador, definido por lo que es requerido en la colaboración.
+\item {\bf Mensaje}: expresa una comunicación entre instancias. Es una parte del patrón de comunicación representado por una interacción. La notación utilizada para definir un mensaje es una flecha.
+\item {\bf AssociationRole} (asociación de un rol): una {\em association role} es un uso específico de una asociación necesaria en una colaboración. Concreta un punto de vista limitado de una asociación entre clasificadores.
+\item {\bf Generalización}: es una relación taxonómica\footnote{Taxonomía: Ciencia que trata de los principios, métodos y fines de la clasificación.} entre un elemento general y otro elemento más específico. Se representa de esta manera:
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{generalizacion.pdf}
+	\end{center}
+	\caption{Representación de una generalización.}
+	\label{fig:generalizacion}
+\end{figure}
+\end{itemize}
+
+A la hora de representar tanto los mensajes como los estímulos existen diferentes tipos de flechas, las cuales describen diferentes tipos de flujo de control, entre éstas las más conocidas son:
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{arrows.pdf}
+	\end{center}
+	\caption{Tipos de flechas.}
+	\label{fig:arrows}
+\end{figure}
+
+La primera flecha, empezando por la izquierda, representa una llamada a un procedimiento, aunque también puede ser utilizada para denotar que existen instancias activas y una de ellas envía una señal , esperando una secuencia de llamadas que complete el comportamiento antes de continuar, se distingue perfectamente porque tiene la punta rellena. La siguiente flecha denota una comunicación asíncrona, es decir, el emisor dispara el estímulo e inmediatamente continúa con el siguiente paso de la ejecución.
+
+Y por último la flecha discontínua que refleja el hecho de regresar de la llamada a un procedimiento, como es lógico estará emparejada con una flecha del primer tipo, la flecha de retorno sería obviada cuando estemos al final de la activación de un objeto.
+
+Las {\bf etiquetas} que acompañan a las {\bf flechas} que representan tanto los mensajes como los estímulos tienen un formato determinado: \\
+%\begin{center}
+%\vspace*{1pt}
+\hspace*{1cm}\verb!predecesor '/' guarda nº_de_secuencia valor ':=' nombre_msj argumentos!
+%\end{center}
+
+Para que veamos con un poco más de claridad los diferentes tipos de comunicación que podemos tener utilizando este tipo de flechas vamos a representar unos diagramas de secuencia:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{communications.pdf}
+	\end{center}
+	\caption{Tipos de comunicación.}
+	\label{fig:communications}
+\end{figure}
+
+\subsection{Tricotomía Clasificador-Instancia-Rol}
+Una de las cosas que se puede hacer más complicado a la hora de la comprensión de los diagramas de interacción, en general, es diferenciar entre los conceptos de instancia, clasificador y papel que juega un clasificador dentro de la colaboración, lo que denominamos {\em rol}.
+
+Una {\bf instancia} es una entidad con comportamiento y un estado, y además tiene un identidad única.
+Un {\bf clasificador} es una descripción de una instancia.
+Un {\bf rol del clasificador} define un uso (una abstracción) de una instancia.
+La relación existente entre estos elementos queda patente en la figura \ref{fig:trychotomy}.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{trichotomy.pdf}
+	\end{center}
+	\caption{Tricotomía Clasificador-Instancia-Rol.}
+	\label{fig:trychotomy}
+\end{figure}
+
+Los atributos de una instancia corresponden a los atributos que posee su clasificador. Todos los atributos requeridos por el {\em rol del clasificador} tienen su atributo correspondiente en la instancia. Todas las operaciones definidas en el clasificador de la instancia pueden ser aplicadas a la instancia.
+Todas las operaciones requeridas por el rol del clasificador, son aplicables a la instancia.
+
+Otra situación un tanto confusa que podemos encontrarnos es la diferencia existente entre la asociación de un rol y la asociación que relaciona los clasificadores, como se puede observar en el siguiente modelo existen sutiles diferencias entre ambas:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{associationRole.pdf}
+	\end{center}
+	\caption{Asociación y asociación de los roles.}
+	\label{fig:associationRole}
+\end{figure}
+
+%\subsection{Tipos de colaboración}
+%Debemos diferenciar entre dos tipos de colaboración: por un lado tenemos la colaboración a nivel de %especificación, lo que se conoce en la especificación del lenguaje como {\em Collaboration}, y la %colaboración a nivel de instancia, también denominada {\em CollaborationInstanceSet}.
+
+%\subsubsection{Colaboración a nivel de especificación}
+%Una colaboración a nivel de especificación puede estar asociada a un tipo, una operación o a un %caso de uso. Este tipo de colaboración estará constituído por una serie de elementos que son los %clasificadores (ClassifierRoles), las asociaciones entre los clasificadores, denominadas %AssociationRole, interacciones y mensajes.
+
+%\subsubsection{Colaboración a nivel de instancia}
+%Una colaboración puede estar asociada a una clase, a un método (implementación de la operación), %o a la realización de un caso de uso

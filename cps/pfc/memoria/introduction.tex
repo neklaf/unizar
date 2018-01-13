@@ -1,0 +1,91 @@
+\chapter{Introducción}
+En este capítulo se van a explicar los aspectos que hemos considerado más generales relacionados con nuestro proyecto fin carrera, dentro de estos aspectos nos encontramos con la motivación que me ha llevado a la realización de este trabajo, el ámbito en el que se enmarca, los conceptos que serán utilizados en el proceso de su elaboración, los objetivos que se definieron en la propuesta, las fases en las que hemos organizado nuestro trabajo y por último una breve explicación de la estructura del presente documento.
+
+\section{Motivación}
+Cuando se comenzó con este proyecto no dejaba de resultarme atractiva la idea de que estaba contribuyendo, de alguna manera, al crecimiento de herramientas de software libre (ArgoUML \cite{Argo} y ArgoSPE \cite{ArgoSPE}), lo cual fue una de mis principales motivaciones.
+
+Unido a esto estaba también el hecho de que podría adquirir gran cantidad de conocimientos sobre temas tan interesantes como la ingeniería y la arquitectura del software. Sin olvidar, por su puesto, la puesta en práctica de muchos de los conceptos adquiridos durante la carrera.
+
+\section{Ámbito}
+Este proyecto nace como resultado del trabajo de investigación efectuado por el profesor del Grupo de Ingeniería de Sistemas de Eventos Discretos ({\bf GISED}), Dr. José Javier Merseguer en colaboración con otros doctores, como Simona Bernardi, y doctorandos, en especial María Elena Gómez, en relación con la traducción de diagramas de {\bf UML} a modelos formales de redes de Petri, motivada por el análisis de las prestaciones de un sistema software.
+
+Este trabajo de investigación se materializó en una serie de publicaciones, que posteriormente citaremos, y en la tesis doctoral de dicho profesor.
+
+Toda esta labor también ha traído consigo la elaboración de varios proyectos fin de carrera, entre los más destacados se encuentran, {\em Evaluación del rendimiento del software: Traducción de UML (máquinas de estado + diagramas de actividad  a GSPN)}, por Borja Fernández Bacarizo, {\em Análisis automático de prestaciones de sistemas a partir de modelos en UML, mediante traducción a redes de Petri generalizadas}, por Isaac Trigo, y éste que nos ocupa, que es extensión de los dos anteriores.
+
+\section{Contexto del proyecto}
+El presente proyecto queda ubicado en diferentes áreas de la informática que serán detalladas ampliamente en el transcurso de las secciones posteriores. Dentro de estas áreas podemos destacar, la Ingeniería del Software, la Ingeniería de Prestaciones del Software ({\bf SPE}), las redes de Petri estocásticas generalizadas ({\bf GSPN}) y el estándar de modelado UML.
+
+Aparte también lo ubicaremos en el contexto de ArgoUML, herramienta CASE de código libre, y uno de sus módulos, ArgoSPE, que apareció fruto de los proyectos previamente mencionados. Ambas herramientas, programadas en Java, residen como proyectos en la comunidad de desarrollo de software libre, relacionada con la Ingeniería, \textbf{Tigris} \cite{Tigris}.
+
+\section{Objetivos}
+\label{sec:objetivos}
+Este proyecto fin de carrera consiste fundamentalmente en desarrollar una plataforma software que permita {\bf la definición del comportamiento de un sistema informático}, y su correspondiente {\bf evaluación de prestaciones.} Dicho comportamiento se concreta en el modelado de escenarios que definan diferentes usos del sistema para su posterior evaluación cuantitativa y/o cualitativa. Los escenarios serán descritos por medio de diagramas de colaboración.
+
+Para la consecución de este objetivo es preciso completar varios objetivos previos. Lo primero será la {\bf traducción} de los diagramas de colaboración a modelos de redes  de Petri estocásticas que sean capaces de ser analizadas con {\bf GreatSPN} \cite{GreatSPN}, herramienta que utilizaremos en etapas posteriores para la evaluación cuantitativa propuesta. El resultado de la composición será una red de Petri que representa el comportamiento de los escenarios propuestos en el contexto del sistema modelado.
+
+El siguiente paso consistirá en {\bf componer} las redes resultantes de la fase anterior con las redes de Petri que ya generaba ArgoSPE al traducir las máquinas de estados y los diagramas de actividades, esto se realizará en parte con la ayuda de un programa denominado {\em algebra} el cual acompaña a GreatSPN y su funcionamiento quedará detallado en capítulos posteriores.
+
+Y por último tendremos que implementar alguna {\bf consulta} que sea interesante desde el punto de vista del analista que modela el sistema informático. Dicha consulta  se refiere a interrogar el modelo de red de Petri resultante de la composición anterior. La consulta tendrá que proporcionar información útil que ayude a detectar problemas en el modelo para su posterior corrección.
+
+\section{Herramientas utilizadas}
+Para realizar el desarrollo software simplemente se ha necesitado un editor de texto y el entorno de desarrollo implementado por Sun, que nos proporcione la máquina virtual de Java. Además también se han utilizado otras herramientas que han proporcionado una serie de considerables beneficios, ésta es la lista de todas ellas:
+
+\begin{itemize}
+\item {\bf Java 2 SDK (J2SE)}: Como es lógico necesitaremos el entorno de desarrollo en Java, en nuestro caso la versión 1.5.0\_02.
+\item {\bf JBuilder}: Éste es el entorno de desarrollo para Java que se comenzó a utilizar, aunque tras un cierto tiempo usándose se decidió utilizar un editor menos {\em pesado}.
+\item {\bf Vim}: Éste es el editor de textos que ha sido utilizado para modificar los ficheros fuente que hemos requerido, se ha utilizado a modo de entorno de desarrollo {\em ligero}, gracias a muchas opciones que posee, como por ejempo grep interno y ctags entre otros.
+\item {\bf Ant}: Es una herramienta, de código libre, basada en las tecnologías Java y XML; empleada en la compilación y creación de programas Java. Es muy similar a la utilidad \emph{make}. Tanto ArgoUML como ArgoSPE la utilizan en su proceso de desarrollo y construcción. Su manejo es muy sencillo aunque se le encontraron algunos posibles problemas\footnote{La limitación de visibilidad en métodos llamados por otras clases, son fuente de ejecuciones no deseadas.}.
+\item {\bf Issuezilla}: Es básicamente una base de datos para errores de programación empleada en la gestión de proyectos. La comunidad Tigris la emplea para sus proyectos y es accesible vía Web. Esta aplicación nos permite registrar, informar y discrepar sobre problemas o asuntos del código, además de asignar desarrolladores a cada asunto.
+\item {\bf CVS}: Es el sistema de versiones concurrentes utilizado tanto por nuestro módulo como por la herramienta CASE. Este programa gestiona los repositorios donde se almacenan los fuentes de las anteriores aplicaciones. Permite a varios desarrolladores trabajar paralelamente sobre el mismo código. Esta muy arraigado dentro de la comunidad Tigris ya que facilita el control en proyectos grandes.
+\item {\bf GreatSPN 2.0.2}: Es un paquete software que permite el modelado, la validación y la evaluación de prestaciones de sistemas distribuídos usando redes de Petri estocásticas generalizadas y su extensión coloreada. Esta herramienta ha sido desarrollada en la Universidad de Turín.
+\end{itemize}
+
+Junto con estas herramientas, cabe destacar dos de los estándares que ArgoUML soporta y que han resultado indispensables a la hora del desarrollo de este trabajo:
+\begin{itemize}
+\item \textbf{UML}\footnote{ArgoUML está basado en la versión 1.3 de este estándar.}: Lenguaje Unificado de Modelado (\textbf{U}nified \textbf{M}odeling \textbf{L}anguage). Utilizado para especificar, visualizar y documentar modelos de sistemas de software.
+\item \textbf{XMI}: Siglas de \textbf{X}ML \textbf{M}etadata \textbf{I}nterchange. Se basa en XML y es utilizado para almacenar e intercambiar datos entre herramientas de modelado.
+\end{itemize}
+
+\section{Fases del trabajo}
+\label{sec:fases}
+Tras conocer los objetivos que engloban a este proyecto, lo más sensato fue organizar nuestro esfuerzo de una manera lógica, es decir, las primeras fases consistirían en la adquisición de los conceptos teóricos que se iban a utilizar en el transcurso del proyecto, para posteriormente dedicarnos a su implementación. Con todo esto las principales etapas de nuestra labor, fueron las siguientes:
+
+\begin{enumerate}
+\item {\bf Estudio del estándar UML}: con el fin de conocer la semántica inherente a los diagramas de colaboración, así como los elementos que podían llegar a formar parte de ellos. Tenemos que destacar que los documentos utilizados se referían a la versión 1.4.2 de UML\footnote{Los cambios entre esta versión y la 1.5 son mínimos, con lo cual podremos hablar indistintamente de las dos.}. Además se estudiarán los diagramas de máquinas de estados y de actividades, pues será necesario componerlos con los de colaboración.
+
+\item {\bf Utilización de la herramienta ArgoUML}: lo cual nos proporcionará un conocimiento del nivel de implementación de los elementos en los que estamos interesados para nuestro trabajo, éstos serán tanto los diagramas de colaboración como los diagramas de máquinas de estados.
+
+\item {\bf Comprensión del proceso teórico de traducción y composición}: Básicamente consistía en el estudio de una parte de la tesis doctoral \cite{Merse-PhD}, así como diferentes artículos relacionados \cite{BCDM-TSE,TSE,LGMC-WOSP04,MBCD-WODES02}. Este punto es fundamental para evitar en la medida de lo posible, problemas a la hora de la implementación del módulo. Hay que destacar la dificultad de esta fase, por la complejidad de estas cuestiones.
+
+\item {\bf Estudio del módulo ArgoSPE}: cuyo objetivo será el familiarizarse con el manejo de esta aplicación y con su diseño, ya que todo este trabajo nos facilitará bastante la fase de implementación de nuestro trabajo. Este estudio consistió básicamente en entender el código desarrollado en los proyectos \cite{PFC-Borja,PFC-Isaac}.
+
+\item {\bf Estudio de la aplicación GreatSPN, de algebra y de las redes de Petri estocásticas}: en esta etapa nos familiarizamos con el formato de los ficheros manejados por GreatSPN, estudiamos la teoría de las GSPN's, y comprobamos el funcionamiento de {\em algebra} para su posterior uso.
+
+\item {\bf Fase de implementación} de la traducción, composición y posterior consulta de prestaciones de los diagramas de colaboración.
+
+\end{enumerate}
+
+\section{Organización del documento}
+Dejando a un lado este capítulo introductorio, el presente documento se encuentra estructurado en dos partes, la primera engloba la memoria de este trabajo y la segunda parte la constituyen los anexos, la parte inicial está estructurada como sigue:
+
+\begin{itemize}
+\item \textbf{Capítulo \ref{chap:concepts}. Conceptos Previos}: a lo largo de este capítulo intentaremos ofrecer una explicación de las ideas y teorías que han sido utilizadas para la realización de este proyecto.
+\item \textbf{Capítulo \ref{chap:schedule}. Planificación del trabajo}: aquí describimos cómo se ha organizado el trabajo a lo largo del tiempo y mis conclusiones al respecto. 
+\item \textbf{Capítulo \ref{chap:res}. Resultados y conclusiones}: este capítulo es uno de los más importantes de la memoria.  En él se explican las dificultades encontradas, se resume el trabajo realizado y se presentan  diversas conclusiones.
+\end{itemize}
+
+La parte de los anexos está constituída por:
+
+\begin{itemize}
+\item {\bf Anexo \ref{chap:uml}. Análisis de UML}: en este apéndice realizamos una explicación detallada de UML con  objeto de profundizar en los diagramas de Estados y de Colaboración y  en  los  elementos  que  en  ellos  se  definen  así  como  su  semántica,  su  notación y otros aspectos reseñables.
+\item {\bf Anexo \ref{chap:argo}. ArgoUML}: durante este anexo queremos presentar las carencias que se han detectado en la implementación de los diagramas de colaboración de la herramienta ArgoUML. La segunda parte de este apéndice explica la representación realizada por ArgoUML, en su versión 0.18.1, de los modelos UML en formato XMI (ver \ref{sec:xmi}).
+
+\item {\bf Anexo \ref{chap:impl}. Implementación de soluciones}: ofrece una explicación detallada de los aspectos que he considerado más relevantes en la implementación llevada a cabo en este trabajo, los puntos más destacados son los errores subsanados, el proceso de traducción y la implementación de la composición.
+
+\item {\bf Anexo \ref{chap:case}. Caso práctico}: intenta ser una referencia para aquellas personas cuyo trabajo tenga relación con la herramienta ArgoSPE, para evitar en la medida de lo posible los problemas iniciales que puedan surgir con el manejo de esta aplicación.
+
+\item {\bf Anexo \ref{chap:gpl}. The GNU General Public License}: como su nombre indica es la Licencia Pública General de GNU, bajo la que se ha desarrollado nuestra aplicación.
+
+\item {\bf Anexo \ref{chap:glos}. Glosario}: este último apéndice intenta reunir todos aquellos conceptos que han resultado especialmente útiles para la lectura y comprensión de la documentación bibliográfica recogida en este proyecto.
+\end{itemize}

@@ -1,0 +1,278 @@
+\chapter{Caso práctico}
+\label{chap:case}
+
+A lo largo de este anexo vamos a reunir todos los conocimientos que he ido adquiriendo a lo largo del desarrollo de nuestro proyeto, sobre el funcionamiento de la herramienta ArgoSPE, (modelado de diagramas, ejecución de consultas) para ello vamos a explicar cómo se utilizaría ArgoSPE con un ejemplo de un sistema software concreto. 
+
+\section{Modelado}
+
+Si pensamos un poco en ello, es importante elegir bien el ejemplo que vamos a utilizar dentro de este capítulo ya que tiene que ser lo suficientemente amplio como para abarcar el mayor número de características de la aplicación, pero también ha de ser conciso para no perdernos en detalles que no nos aporten nada.
+
+Una muestra del tipo de ejemplos que serían útiles en este punto sería el {\em WatchDog Timer} \footnote{Se va a mantener el nombre en inglés puesto que la traducción resulta un tanto extensa.} del proyecto DepAuDE ({\bf Dep}endability for embedded {\bf Au}tomation systems in {\bf D}ynamic {\bf E}nvironments with intra-site and inter-site distribution aspects) \cite{Depaude}.
+
+\subsection{Funcionamiento del WatchDog Timer}
+
+El WatchDog Timer, {\bf WT} a partir de ahora, es un mecanismo de tolerancia a fallos ({\bf FT}) que ha sido diseñado e implementado dentro del proyecto europeo DepAuDE. El principal objetivo de este proyecto es proporcionar una {\em framework} (o marco de trabajo) que incremente la fiabilidad de la automatización de los sistemas software embebidos distribuídos.
+
+El WT es un componente configurable por el usuario, los parámetros regulables son la duración de la alarma y su localización espacial, éste detecta violaciones en tiempo de ejecución del proceso de una aplicación. Este sistema se basa en un {\em timer} (temporizador) que es inicializado por la aplicación que estamos monitorizando antes de que finalice su cuenta atrás.
+
+La ejecución de la inicialización del {\em timer} es realizada por el envío de un mensaje \verb!"I'm alive"! (\verb!"Estoy vivo"!), destinado al WT. Si por cualquier motivo la aplicación no es capaz de enviar este mensaje al WT automáticamente se generará un error que será transmitido a un componente del {\em Backbone} ({\bf BB}).
+
+\subsection{Diagramas UML}
+
+Para conseguir representar con UML el comportamiento que hemos expuesto en la subsección anterior tenemos que utilizar diversos diagramas, el diagrama de clases, diagrama de colaboración, diagramas de estados, y el diagrama de despliegue.
+
+Los diagramas correspondientes a nuestro sistema son los siguientes:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.6]{dClassWT.pdf}
+	\end{center}
+	\caption{Diagrama de clases de WT.}
+	\label{fig:sClassWT}
+\end{figure}
+
+Normalmente cuando modelamos un sistema software suele ser recomendable empezar por el diagrama de clases, ya que será el que defina los componentes estructurales (clases) de nuestro diseño. 
+
+En nuestro caso contaremos con cuatro clases, {\em WT}, la cual representa al {\em WatchDog}, {\em APP} será la aplicación de usuario que observaremos, {\em BB} describirá el {\em Backbone} y por último {\em FT} modelará un fallo de la aplicación. En el diagrama de clases (ver figura \ref{fig:sClassWT}) podremos observar qué asociaciones tiene cada una de las clases.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{appSC.pdf}
+	\end{center}
+	\caption{Diagrama de estados de APP.}
+	\label{fig:appSC}
+\end{figure}
+
+La actuación de los objetos de la clase APP vendrá definida por el diagrama \ref{fig:appSC}, una de estas instancias inicializará el WT con la ayuda de la acción {\em initiate}, los parámetros con los que configuraremos a WT serán pasados a través de la acción {\em continue}. Una vez inicializado el WT la aplicación empezará su labor ejecutando {\em activity}, durante este trabajo el BB podrá solicitar información de actualización a la APP enviándole un evento del tipo {\em BBcheck}. Después de completar su cometido el objeto enviará un {\em Iamalive} al WT para que reinicie su cuenta atrás para posteriormente decidir si termina o continua con su trabajo.
+
+Durante la ejecución de la {\em do/activity} un evento {\em fault} puede ser recogido provocando que cambiemos de estado, pasando a encontrarnos en el estado {\em faulty}. De este estado sólo podremos salir si el BB ejecuta un {\em reset}, produciéndose una recuperación de la aplicación, o si la actividad {\em err\_latency} finaliza provocando que el presente objeto finalice su vida.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{wtSC.pdf}
+	\end{center}
+	\caption{Diagrama de estados de WT.}
+	\label{fig:wtSC}
+\end{figure}
+
+Esta máquina de estados modela el comportamiento de WT (figura \ref{fig:wtSC}), el cual una vez inicializado, gracias al evento {\em setup}, es activado por la aplicación del usuario a través del evento {\em start}, en ese momento WT comienza la actividad {\em countdown}. Durante el proceso de cuenta atrás el WT puede recibir eventos {\em heartbeat} que inicializarán el contador.
+
+Si WT no recibe ninguna señal de la aplicación de usuario se producirá un {\em timeout} y se enviará un mensaje notificando lo sucedido al BB. El WT podría recibir señales de que la aplicación de usuario se mantiene activa también en el estado {\em paused}, pero serán eventos diferidos.  
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{bbSC.pdf}
+	\end{center}
+	\caption{Diagrama de estados de BB.}
+	\label{fig:bbSC}
+\end{figure}
+
+La clase BB, descrita en la figura \ref{fig:bbSC}, se ocupará de emprender acciones de recuperación del sistema si en algún momento se produce una excepción, como resultado de la recepción de un evento {\em exception} generado por WT , en este caso BB ejecuta la acción {\em endWT} y también reinicia la aplicación con {\em end\_rec}.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{ftSC.pdf}
+	\end{center}
+	\caption{Diagrama de estados de FT.}
+	\label{fig:ftSC}
+\end{figure}
+
+En el momento en el que ocurre un fallo de este tipo (FT) pasa a estar en el estado {\em latent} y empieza su período de latencia, en el instante en que éste termina ejecuta la acción {\em affect} dirigida a APP.
+
+Después de haber descrito el comportamiento global de nuestro sistema gracias a las máquinas de estados de cada una de las clases modeladas, tenemos que representar un escenario en el cual colaboren dichas clases. Como es lógico esto será modelado gracias a un diagrama de colaboración.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{faultCol.pdf}
+	\end{center}
+	\caption{Diagrama de Colaboración de una situación de fallo.}
+	\label{fig:faultCol}
+\end{figure}
+
+Podemos observar como en este escenario se produce un fallo representado por la señal {\em ft} en la APP mientras está trabajando. En cuanto el {\em timer} de la WT finaliza es generada una excepción recogida por el BB que obligará a terminar a WT enviándole una acción {\em terminate} y hará un {\em reset} de la aplicación de usuario, gracias a la operación {\em recovery}.
+
+Lamentablemente como se ha comentado en algún capítulo anterior ArgoUML no implementa todos los elementos que son proporcionados por UML, por lo que tendremos que encontrar la manera de expresar esos elementos para que nuestro modelo sea correcto.
+
+Este es el caso de los {\bf eventos diferidos}, este tipo de eventos no pueden ser modelados directamente con ArgoUML por lo que nos veremos obligados a modificar el fichero XMI, a mano, que representa nuestro modelo, para hacer creer a nuestro módulo que en realidad habíamos modelado un evento diferido. Tras abrir el fichero XMI tendremos que buscar el elemento que representa al estado al que queremos añadirle el evento, y dentro de él, le añadiremos el siguiente elemento:
+
+\begin{center}
+\verb!<Behavioral_Elements.State_Machines.State.deferrableEvent>!
+\end{center}
+
+Posteriormente tenemos que incluir dentro de este elemento referencias a todos los eventos que queramos que sean diferidos. Esto se hará con el subelemento siguiente:
+
+\begin{center}
+\verb!<Behavioral_Elements.State_Machines.State.DeferrableEvent xmi.idref="xxx">!
+\end{center}
+
+Siendo \verb!xxx! el número que identifica a un evento dentro del fichero XMI.
+
+Un proceso análogo tendremos que realizar para poder modelar los mensajes asíncronos del diagrama de colaboración, en este caso tendremos que encontrar la acción asociada al mensaje y modificarle el valor del atributo que la identifica como una acción síncrona.
+
+En metamodelo de UML los eventos, las acciones, las operaciones y las señales están relacionadas a través de diversas asociaciones, por simplificar la implementación los desarrolladores de ArgoUML han eliminado gran parte de esta relación, lo que ha hecho que tengamos que utilizar los mismos nombres para relacionar los eventos que existen en una máquina de estados con las acciones realizadas por otros diagramas de estados  diferentes. Debido a este motivo nosotros solamente utilizaremos la última columna de la tabla \ref{tab:relacion} para modelar la interacción entre máquinas de estados.
+
+\begin{table}[H]
+	\begin{center}
+		%\begin{tabular}{|p{3cm}|c|c|p{2cm}|p{3cm}|}
+		\begin{tabular}{|c|c|c|}
+		\hline
+		{\bf Acción} & {\bf Operación/Señal} & {\bf Evento} \\
+		\hline
+		initiate & init & setup \\
+		\hline
+		continue & cont & start \\
+		\hline
+		Iamalive & kick & heartbeat \\
+		\hline
+		notify & alarm & exception \\
+		\hline
+		check & control & BBcheck \\
+		\hline
+		endWT & terminate & termination \\
+		\hline
+		end\_rec & restart & reset \\
+		\hline
+		affect & ft & fault \\
+		\hline
+		\end{tabular}
+		\caption{Relación entre acciones, operaciones/señales y eventos.}
+		\label{tab:relacion}
+	\end{center}
+\end{table}
+
+Así por ejemplo en la máquina de estados de la aplicación de usuario tenía, en el estado {\em wait}, la acción de salida {\em continue} que en ArgoUML pasará a ser {\em WT.start}, como se puede apreciar las acciones se formarán con el nombre de la clase a la que pertenece el evento, seguida de un punto y el nombre del evento que queremos generar.
+
+\section{Anotación}	
+	Cuando modelamos un sistema software necesitaremos una serie de elementos para poder anotar las características que cuantifican las prestaciones de ciertas partes de nuestro sistema, para poder obtener resultados que nos ayuden a estudiar el rendimiento de nuestro diseño.
+	
+	El conjunto de posibles anotaciones que podemos utilizar con ArgoSPE está descrito en la siguiente tabla, cabe destacar que dichas anotaciones se realizarán siguiendo el UML-SPT, que propone la utilización del lenguaje TVL:
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|p{3cm}|c|c|p{2cm}|p{3cm}|}
+		\hline
+		{\bf Anotación} & {\bf Estereotipo} & {\bf Tag} & {\bf Elemento} & {\bf Unidades} \\
+		\hline
+		{\bf Duración} & PAstep & PArespTime & Estado* & ms, s, m, h \\
+		\hline
+		{\bf Probabilidad} & PAstep & PAprob & Transición & - \\
+		\hline
+		{\bf Tamaño} & PAstep & PAsize & Mensaje, Trigger o Effect & b, B, Kb, KB, Mb, MB \\
+		\hline
+		\bf{Velocidad} & PAcommunication & PAspeed & Nodo & bps, Bps, Kbps, KBps, Mbps, MBps \\
+		\hline
+		{\bf Número inicial de objetos} & PAclosedLoad & PApopulation & Clase & - \\
+		\hline
+		{\bf Estado inicial} & PAinitialCondition & PAinitialState & Estado & \$true, \$false \\
+		\hline
+		{\bf Clases residentes} & GRMcode & GRMmapping & Nodo & Identificadores \\
+		\hline
+		\end{tabular}
+		\caption{Tabla con las anotaciones implementadas por ArgoSPE.}
+		\label{tab:anotaciones}
+	\end{center}
+\end{table}
+
+Podemos apreciar que en la tabla existen algunos detalles que no quedan suficientemente claros, por lo que vamos a proceder a realizar una breve explicación de cada una de las anotaciones, que figuran en el cuadro.
+
+Es importante señalar antes de empezar con las aclaraciones de la tabla, que cualquiera de las anotaciones que está presente en la tabla debe ser representada por su estereotipo {\bf y} por su valor etiquetado, de lo contrario nuestra herramienta no detectará adecuadamente la anotación a la cual queremos hacer referencia.
+
+La primera anotación del cuadro \ref{tab:anotaciones} es {\em duración}, ésta representa la prolongación en el tiempo de la {\em do/activity} que {\bf debe aparecer}\footnote{El asterisco representado junto a la palabra Estado indica que la anotación, aunque se realice en el estado, está referida a la actividad, por lo que el estado tendrá que modelar una do/activity, sino la anotación no tiene sentido.} en el estado en el cual se ha realizado la anotación. Las unidades que podemos utilizar para expresar el intervalo de tiempo son milisegundos, segundos, minutos y horas.
+
+La {\em probabilidad} va asociada a las transiciones de salida de un pseudoestado de elección, una muestra de cómo anotar estas transiciones aparecería en el diagrama \ref{fig:choice}.
+
+El {\em tamaño} de un evento viene descrito por el par {\em PAstep-PAsize}, para poder representar adecuadamente el valor de {\em PAsize} tenemos que seguir el siguiente ejemplo:
+
+\begin{center}
+\verb!PAsize=(8,'B')!
+\end{center}
+
+Vemos que el valor asignado consta de dos partes, la cantidad y la unidad expresada entre comillas simples, esto también ocurre para el caso de la etiqueta {\em PArespTime},  aunque aquí tendremos otro tipo de medidas. La anotación del tamaño puede darse tanto en los diagramas de estados como en los diagramas de colaboración, aunque tenemos que tener presente que siempre que exista un diagrama de colaboración en el modelo y exista un evento anotado tanto en el diagrama de estados como en el de colaboración, la anotación que será tenida en cuenta para la traducción a GSPN's será la del diagrama de colaboración.
+
+La {\em velocidad} de transmisión de los nodos de comunicación modelados en los diagramas de despliegue, es importante para determinar los retrasos en los mensajes existentes intercambiados  entre los diferentes objetos que forman parte de nuestra aplicación. 
+
+En los diagramas de despliegue también modelaremos los nodos en los que ubicaremos las clases de nuestro sistema, gracias a esto podremos hacer pruebas de rendimiento distribuyendo las clases de diferentes formas. La localización de cada clase vendrá determinada por el par {\em GRMcode-GRMmapping}, el valor asignado a {\em GRMmapping} será el identificador de una clase. 
+
+La anotación de las {\em clases residentes} es la {\bf única}, en ArgoSPE, que se realiza por medio de 
+comentarios asociados a los elementos que queremos anotar, como en el diagrama \ref{fig:deployWT}. 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{deployWT.pdf}
+	\end{center}
+	\caption{Diagrama de Despliegue posible para WatchDog Timer.}
+	\label{fig:deployWT}
+\end{figure}
+
+El resto de elementos se anotarán utilizando el panel de propiedades del elemento que nos interesa y utilizando el botón para crear un estereotipo, representado en la figura.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{estereotipo.pdf}
+	\end{center}
+	\caption{Botón para crear un estereotipo de un elemento en ArgoUML.}
+	\label{fig:estereotipo}
+\end{figure}
+
+La anotación {\em número inicial de objetos} indicará el número de objetos vivos que tendremos al principio de la ejecución de nuestro sistema, de una clase determinada. Es obvio que el valor de la etiqueta {\em PApopulation} tendrá que ser un número entero.
+
+Por último podremos indicar en cada máquina de estados cúal es el estado que inicia el comportamiento de una instancia, para esto utilizaremos el par {\em PAinitialCondition-PAinitialState}, el valor será \verb!true! o \verb!false!, precedidos del símbolo de dolar (\verb!$!).
+	
+%\section{Procesado}
+\section{Interrogar el modelo}
+
+Dentro de nuestro módulo existen diversas consultas que podemos realizar sobre un modelo UML de las características de nuestro ejemplo, las que aparecen a continuación están implementadas en estos momentos en ArgoSPE.
+
+\begin{itemize}
+\item {\bf Time in state}: nos indica el porcentaje de objetos en un cierto estado. Esto puede ser útil para detectar la saturación de un proceso software, el porcentaje que pasa un recurso sin estar ocupado, o cómo un agente comparte su ejecución entre diferentes tareas. El resultado de esta consulta será obtenido al dividir el número de objetos en el estado seleccionado, entre el número medio que pobla la clase. Si por ejemplo quisieramos calcular esta medida para el estado {\em count} del diagrama de estados de WT, el estado nos tendría que aparecer de la siguiente manera en ArgoUML:
+
+%tiempo medio consumido por un objeto en un estado que habremos seleccionado previamente de la %máquina de estados que modela su comportamiento. Esto puede ser útil para calcular el tiempo medio %que es invertido en completarse una actividad compleja.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{estadoSelect.pdf}
+	\end{center}
+	\caption{Representación de un estado seleccionado.}
+	\label{fig:estadoSelect}
+\end{figure}
+
+\item {\bf Stay time}: mide el tiempo medio que los objetos de una clase específica invierten en cada uno de los estados. Podemos llegar a calcular el tiempo medio de ejecución de una acción compleja. Los cálculos son realizados aplicando la Ley de Little, por lo que es necesario dividir el número medio de objetos que están en media en el estado, entre el total de la tasa (throughput) de salida de ese estado. La consulta {\em Stay time} también necesita de la selección de un estado.
+
+
+%mide el porcentaje de tiempo que los objetos de una clase específica consumen en cada uno de sus %estados. Podríamos utilizar esta consulta para estudiar cuánto tiempo está libre un recurso, o cómo %reparte un agente su tiempo de ejecución entre diferentes tareas. 
+
+\item {\bf Response Time}: con esta consulta nos aparece el tiempo medio de respuesta de un escenario particular, es decir, la duración de una ejecución específica de nuestro sistema. El escenario será representado por un diagrama de colaboración, por lo tanto el resultado de esta consulta será el tiempo de respuesta del diagrama de colaboración. 
+
+Antes de ejecutar la consulta deberá estar seleccionado en el panel del explorador de ArgoUML el diagrama de colaboración para el cual deseemos realizar los cálculos. La selección quedaría como se muestra en la figura:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{collabSelec.pdf}
+	\end{center}
+	\caption{Representación de la selección de un diagrama de colaboración.}
+	\label{fig:collabSelec}
+\end{figure}
+
+\item {\bf Transmission speed}: es el retraso de la conexión de red entre dos elementos del modelo (nodos físicos, componentes o clases). Puede detectar cuellos de botella en los sistemas que estamos modelando. El cálculo de esta consulta se obtiene utilizando el algoritmo de Floyd, el cual encuentra el camino más corto entre dos vértices de un grafo. En nuestro caso, las distancias son interpretadas como velocidades y los vértices del grafo corresponden con los nodos del diagrama de despliegue.
+
+Para poder seleccionar dos de estos elementos (bien sean nodos o clases) tenemos que presionar el botón izquierdo del ratón mientras arrastramos el puntero, encerrando a los elementos en el rectángulo de selección que nos aparece. El resultado de la acción descrita aparece en la siguiente pantalla.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{nodosSelect.pdf}
+	\end{center}
+	\caption{Representación de dos nodos físicos seleccionados.}
+	\label{fig:nodosSelect}
+\end{figure}
+
+\item {\bf Message Delay}: esta consulta nos proporciona el retraso desde que un evento es llamado hasta que es recibido por la clase que lo estaba esperando. El emisor y el receptor tienen que residir en diferentes nodos físicos. La correcta ejecución de esta consulta implica la selección de un transición de una máquina de estados que posea un {\bf disparador con un tamaño anotado}. En nuestro caso si desearamos calcular el retraso del evento {\em fault} de la máquina de estados de la aplicación de usuario, tendríamos que seleccionar la transición quedando algo como esto:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{transitionSelect.pdf}
+	\end{center}
+	\caption{Representación de una transición seleccionada con un disparador anotado.}
+	\label{fig:transitionSelect}
+\end{figure}
+
+\end{itemize}

@@ -1,0 +1,37 @@
+%\chapter*{Glosario}
+\chapter{Glosario}
+\label{chap:glos}
+
+%\markboth{{\sc Glosario}}{}
+
+Este capítulo es un compendio de algunos de los términos más relevantes que han aparecido durante el transcurso de nuestro proyecto, no todos aparecen explícitamente en este documento, pero sí forman parte de los documentos expuestos en las referencias bibliográficas y sin duda, ayuda a la mejor comprensión de ciertos aspectos. 
+
+\begin{description}
+\item[Asociación] es la relación semántica entre dos o más clasificadores que especifica conexiones entre sus instancias.
+\item[Enlace] una conexión semántica entre una tupla de objetos; una instancia de una asociación.
+\item[Metamodelo] Un modelo que define el lenguaje para expresar un modelo. Una instancia de un metametamodelo.
+\item[Metamodelo de UML] define un número de elementos tales como Clases, Operación, Atributo, Asociación, etc. Estos elementos se llaman metaclases. 	
+\item[DTD] un Document Type Definition define elementos de metadatos, su orden, estructura, reglas, y relaciones. Un DTD permite procesar automáticamente en una forma uniforme diferentes instancias de documentos del mismo tipo.
+\item[IDL] Interface Definition Language. En CORBA la interfaz de un objeto es definida en IDL. Dicha definición especifica los métodos que el objeto está preparado para realizar, sus parámetros de entrada, su resultado y cualquier excepción que pueda generarse durante la ejecución. Toda la información necesaria para construir un cliente del objeto es proporcionada por la interfaz. 
+\item[Modelo]Una abstracción semánticamente consistente de un sistema.
+\item[Sistema] Una colección de unidades conectadas entre sí, que están organizadas para llevar a cabo un propósito específico. Un sistema puede describirse mediante uno o más modelos, posiblemente desde puntos de vista distintos. 
+\item[MOF] Meta Object Facility es una especificación de la OMG para estandarizar la representación de repositorios de metadatos. Define como representar y manipular metadatos. 
+\item[CORBA]Common Object Request Broker Architecture es la especificación de la OMG para la interoperabilidad de objetos distribuidos.
+\item[CWM] Common Warehouse Metamodel es un estándar para la representación de metadatos. 
+\item[XMI] XML Metadata Interchange. Es una especificación de la OMG basada en XML para el intercambio de metadatos . Permite el intercambio fácil de metadatos entre herramientas de modelado (basadas en UML) y repositorios de metadatos (basados en MOF) en ambientes heterogéneos distribuidos. XMI integra tres estándares XML, UML y MOF. 
+\item[XML] Extensible Markup Language es una especificación que define una forma  estándar  de agregar marcas a un documento es, en definitiva, un lenguaje para documentos que contienen información estructurada.
+\item[UML] Unified Modeling Language es un lenguaje estándar definido por la OMG para análisis y diseño orientado a objetos.
+\item[Ciclo de vida] (lifecycle) Período de tiempo que comienza con la concepción del producto de software y termina cuando el producto está disponible para su uso. Normalmente, el ciclo de vida del software incluye las fases de concepto, requisitos, diseño, implementación, prueba, instalación, verificación, validación, operación y mantenimiento, y, en ocasiones, retirada. Nota: Esta fases pueden superponerse o realizarse iterativamente.
+\item[Requisito] (requirement) (1) Condición o facultad que necesita un usuario para resolver un problema. (2) Condición o facultad que debe poseer un sistema o un componente de un sistema para satisfacer una especificación, estándar, condición de contrato u otra formalidad impuesta documentalmente. (3) Documento que recoge (1) o (2).
+\item[OO] (Orientación a Objetos) Enfoque para el desarrollo de sistemas de software que representa el dominio de aplicación de forma natural y directa basándose en los objetos que se implican en dicho dominio. Emplea diversos métodos para representar de forma abstracta los objetos, definiendo su estructura, comportamiento, agrupaciones, estados, etc.
+Las estrategias de orientación por objetos han desarrollado metodologías tanto para requisitos, como para análisis, diseño y programación.
+\item[Implementación] (1) Proceso de transformación de un diseño en componentes de hardware, software o de ambos. (2) El resultado del proceso (1).
+\item[Diseño] Proceso de definición de la arquitectura, componentes, interfaces y otras características de un sistema o de un componente.
+\item[Ingeniería del software] (1) Aplicación de procesos sistemáticos y disciplinados para el  desarrollo, operación y mantenimiento de software.  (2) El estudio de la aplicación (1).
+\item[Red de Petri] es una clase particular de grafo dirigido, junto con un estado inicial llamado marcado inicial $M_{0}$. El grafo subyacente N de una red de Petri es bipartito, dirigido y con pesos, y consta de dos clases de nodos, llamados lugares y transiciones, de tal forma que los arcos van de un lugar a una transición (lugar de entrada), o de una transición a un lugar (lugar de salida).
+\item[Bloqueo] ({\em Deadlock})  Un conjunto de objetos está en {\em deadlock} si cada objeto del conjunto está con la obligacion de esperar la ocurrencia de una accion, cuyo cliente es otro objeto que también pertenece a dicho conjunto.
+\item[Alcanzabilidad] Es una base fundamental para el estudio de las propiedades dinámicas de cualquier sistema. Una secuencia de disparos da lugar a una secuencia de marcados. Un marcado $M_{n}$ se dice que es alcanzable desde un marcado $M_{0}$ si existe una secuencia de disparos que transforma $M_{0}$ en $M_{n}$. Al conjunto de todos los posibles marcados alcanzables desde $M_{0}$ en una red (N; $M_{0}$) se denota por R(N; $M_{0}$). El problema de la alcanzabilidad para las RdP es el problema de encontrar si ocurre $M_{n}$ $\rightarrow$ R(N; $M_{0}$) para un marcado dado $M_{n}$ en una red (N; $M_{0}$). Aunque el estudio de la alcanzabilidad es un problema decidible la complejidad de dicho cálculo es, en términos generales, muy elevada.
+\item[Acotamiento] Una red (N; $M_{0}$) se dice que está k-acotada o simplemente acotada si el número de marcas en cada lugar no excede un número finito $k$ para ningún marcado alcanzable desde $M_{0}$. Una red de Petri se dice que es segura si es 1-acotada.
+\item[Vivacidad] Una RdP (N; $M_{0}$) se dice que está viva (o que $M_{0}$ es un marcado vivo para N) si sea cual sea el marcado alcanzado desde $M_{0}$, es posible disparar alguna transición desde él. La vivacidad es una propiedad ideal de muchos sistemas pero es impracticable su verificación. Por esta razón, se han definido diferentes niveles de vivacidad relajando esta condición. Este concepto está íntimamente relacionado con la ausencia completa de bloqueos en los sistemas operativos.
+\item[Persistencia] Una RdP (N; $M_{0}$) es persistente si, para dos transiciones habilitadas cualquiera, el disparo de una de ellas no deshabilita a la otra. En una red persistente, una vez una transición está habilitada, se mantiene habilitada hasta que se dispara.
+\end{description}

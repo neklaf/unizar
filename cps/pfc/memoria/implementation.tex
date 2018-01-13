@@ -1,0 +1,277 @@
+\chapter{Implementación de soluciones}
+\label{chap:impl}
+
+A lo largo de este anexo vamos a exponer los detalles más importantes de la implementación de ArgoSPE que han estado directamente relacionados con mi proyecto, los cuales fueron estudiados para poder extender adecuadamente la herramienta, sin provocar ninguna modificación no deseada dentro del comportamiento de la aplicación.
+
+En este apéndice comentaremos los fallos más relevantes que hemos encontrado, fundamentalmente en el proceso de traducción de máquinas de estados a LGSPN's. Para finalizar dejaremos constancia de cúal ha sido el resultado final tanto de los procesos de traducción de los diagramas de colaboración, como del mecanismo de composición con las LGSPN's de las máquinas de estado.
+
+\section{Errores}
+
+%Como ya se ha mencionado con anterioridad nuestro trabajo está fuertemente ligado al proceso de %traducción de las máquinas de estado.
+\subsection{Modificación caso A}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75]{casoAB.pdf}
+	\end{center}
+	\caption{Representación de la traducción original del estado N.}
+	\label{fig:casoAB}
+\end{figure}
+
+La figura anterior \ref{fig:casoAB} muestra la traducción propuesta en \cite{Merse-PhD} para un estado que posee una {\em do/activity}\footnote{Acción que deberá realizar un objeto de esa clase cuando permanezca en el estado representado en el esquema.}, un evento diferido y una transición interna\footnote{La diferencia entre una transición interna y una autotransición es que cuando se produce una transición interna no se ejecuta ni la acción de entrada ni la acción de salida.}.
+
+En el trabajo \cite{PFC-Borja} su autor consideró oportuno realizar una serie de modificaciones con el fin de evitar la duplicidad de etiquetas que se producían con la transformación anterior, por ejemplo, en las transiciones que representan la transición interna del estado, etiquetadas con \verb!| int!. Como resultado de estas transformaciones la red de Petri resultante del estado mencionado anteriormente quedaría algo como esto:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{modifiedCaseA.pdf}
+	\end{center}
+	\caption{Representación de la traducción modificada del estado N.}
+	\label{fig:modifCasoA}
+\end{figure}
+
+Se puede apreciar claramente en la figura que uno de los arcos dirigidos que hemos representado, tiene un color diferente del resto de los elementos que constituyen el esquema, en este caso el {\bf azul}, gracias a las revisiones realizadas de nuestro módulo se advirtió la ausencia de esa transición que implicaba una modificación en el comportamiento que debía modelar la RdP.
+
+También cabe destacar el hecho de la aparición de un {\em estado} al que hemos denominado {\em Basura}, la representación de este estado en elementos del dominio de las RdP viene reflejada en la parte derecha, la figura {\em b}, el lugar Basura recibe las marcas que representan los objetos que han terminado la ejecución de la acción del estado y que deben ser eliminados de la red para conseguir un funcionamiento correcto de la misma, ya que sino podría impedirse el disparo de la transición temporizada que describe la acción del estado.
+
+En el esquema \ref{fig:modifCasoA} podemos comprobar que existen dos arcos con un círculo en uno de los extremos, estos arcos se denominan {\bf arcos inhibidores}, estos arcos hacen que la transición que los contiene {\bf no} pueda dispararse si en el lugar enlazado por cada uno de los arcos existen al menos tantas marcas como indica el peso del arco. Estos arcos son una extensión de las RdP para implementar la lógica negativa.
+
+Después de presentar la modificación hemos considerado adecuado explicar brevemente el comportamiento dinámico modelado por la RdP para que el lector se pueda hacer una idea más clara de los pasos que realiza una instancia cuando se encuentra en un estado, vamos a representar este recorrido a través de la figura \ref{fig:exeCasoA}.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{executionCaseA.pdf}
+	\end{center}
+	\caption{Ejecución de la red de Petri modificada del estado N.}
+	\label{fig:exeCasoA}
+\end{figure}
+
+Lo primero que tenemos que comentar es que se ha comprobado que el comportamiento descrito por la  RdP original y la modificada es el mismo, por lo que no perdemos nada de semántica con la transformación, así que consideraremos la modificación como {\bf correcta}.
+
+Dicho esto es preciso aclarar la existencia de dos nubes en cada una de las RdP que componen el esquema, la primera indica que esas RdP son parte de la RdP que representa la máquina de estados en la que se encuentra el estado N, pero que no hemos querido reflejar para evitar la complejidad que supone la representación de la RdP completa del diagrama de estados.
+
+La otra nube tiene un propósito similar aunque esta vez, intentamos reflejar que existen otros elementos pertenecientes a esa red que modelan tanto, la transición interna, como la transición de salida del estado, como el evento diferido.
+
+La figura \ref{fig:exeCasoA} 1), representa la situación en la que una instancia de la clase representada por la máquina de estados en la que se encuentra el estado N, ha entrado en ese estado. Lo primero que tiene que hacer nada más entrar será ejecutar la acción de entrada ({\em entry action}) asociada al estado, como nos podemos imaginar si nos fijamos en las etiquetas la {\em entry action} está modelada como una transición inmediata.
+
+La ejecución de esta acción es recogida en la red de Petri con el disparo de la transición etiquetada como \verb!| entry!, se puede observar que se cumplen todos los requisitos para el disparo de la misma, ya que todos los lugares de entrada, en este caso el etiquetado con \verb!| ini_N!, tienen como mínimo el número de marcas que indica el peso del arco que lo enlaza con la transición, es decir, uno.
+
+Como resultado del disparo de la transición (o ejecución de la acción de entrada), la marca pasa a  estar situada en su lugar de salida, \verb!| end_entry_N!, (ver \ref{fig:exeCasoA} figura 2)). Si nos fijamos con atención vemos que la transición temporizada tiene {\bf dos} lugares de entrada, el lugar de la salida de la transición anterior y el lugar \verb!| compl_N!, el primero contiene una marca, pero el segundo no contiene ninguna aunque esto es exactamente lo que necesitamos para que la transición se encuentre sensibilizada, ya que este lugar lo enlaza un arco inhibidor a la transición.
+
+Por tanto el disparo de la transición se efectuará una vez se haya producido el retraso indicado por la anotación asociada a dicho estado dentro del modelo UML. El resultado de este disparo hace que el marcado de la red sea el presentado en la figura 3 del esquema \ref{fig:exeCasoA}.
+
+En este momento vemos que ha aparecido una marca en el lugar \verb!| compl_N! y otra en \verb!| end_entry_N!, lo cual produce que {\bf ninguna} de las transiciones de la RdP, que estamos contemplando, esté sensibilizada, esto es debido a la acción de los arcos inhibidores.
+
+La única manera que tenemos para que la red modifique su marcado será que se produzcan algunas de las opciones que han sido encerradas en la nube, es decir, que se produzca el evento que dispare o la transición interna, o la de salida, o bien sea un evento diferido. 
+
+Vamos a suponer que el evento que dispara la transición de salida ha sido generado desde el exterior de la máquina de estados, esto hará que la marca del lugar \verb!| end_entry_N! desaparezca y se dispare la transición que introduzca la marca de \verb!| compl_N! dentro del estado Basura. Con lo que obtendremos el marcado expuesto en la figura \ref{fig:exeCasoA} 4), de esta manera la red queda lista para otra instancia de la clase.
+
+\subsection{Traducción del pseudoestado elección}
+
+Al comienzo de nuestro proyecto fueron notificadas dos situaciones que podrían producir un error en la traducción, la primera ha sido comentada en la subsección anterior y la segunda se refiere a la traducción que se realizaba de los pseudoestados elección (o {\em choice pseudostates}), elementos pertenecientes a las máquinas de estados.
+
+Los {\bf pseudoestados de elección} resultan de la evaluación dinámica de las guardas de  sus transiciones de salida, por lo cual definen una ramificación condicional dinámica. Esto significa que la  transición de salida a tomar depende de una función o resultado previamente calculado. Las guardas tienen un valor booleano, son exclusivas y al menos una de ellas debe devolver el valor cierto para que el modelo esté bien formado.
+
+Una de las cosas más importantes para poder analizar si la traducción a RdP es correcta es comprender qué se está modelando desde el nivel de UML, para ello vamos a ver un sencillo ejemplo para explicar el significado de lo que modelamos.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.65]{choice.pdf}
+	\end{center}
+	\caption{Diagrama de estados con un pseudoestado choice.}
+	\label{fig:choice}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{translationChoice.pdf}
+	\end{center}
+	\caption{Traducción del diagrama de estados de la figura \ref{fig:choice}.}
+	\label{fig:translationChoice}
+\end{figure}
+
+Podemos obsevar en la figura \ref{fig:choice} que es una de las máquinas de estados más simple que se puede modelar conteniendo un pseudoestado de elección. Cuando sea recogido un evento de tipo {\em ev1} por esta máquina de estados la transición de salida del {\em estado A} será disparada, entonces entraremos en el pseudoestado de elección, para representar la verificación de una guarda hemos colocado unas anotaciones en cada una de las transiciones de salida de la elección, esto indica la probabilidad con la que nos decantaremos por una de las transiciones de salida del {\em branch}, nombre por el que también es conocido el estado de elección.
+
+Al utilizar este pseudo estado hemos variado el comportamiento normal de las transiciones de las máquinas de estados, puesto que ahora al dispararse la transición de salida no ejecutaremos la acción que hemos modelado como efecto de la misma, sino que se ejecutará el efecto (o acción) de la rama que se escoja en el {\em choice}. 
+
+Los eventos desencadenantes de las transiciones de salida del {\em branch}, también son inocuos debido a que una instancia no permanecerá en el pseudoestado elección como podría hacerlo en un estado normal, por lo que el único evento que se tendrá en cuenta a la hora de cambiar de estado es el modelado en la transición de salida de {\em A}.
+
+%La traducción realizada por ArgoSPE para la máquina de estados está representada en la figura %\ref{fig:choice} será la siguiente:
+
+Debemos comentar que la RdP representada en la figura \ref{fig:translationChoice} no es exactamente idéntica a la que aparece en la traducción de nuestra aplicación, ya que faltan algunas partes como la traducción de los estados {\em B} y {\em C}, pero en lo referente al pseudoestado de elección, que hemos denominado {\em choice}, es su representación {\bf exacta}. 
+
+Como apreciamos en la figura \ref{fig:translationChoice} la LGSPN resultante representa perfectamente lo que queríamos modelar con la máquina de estados inicial, con lo cual tenemos que concluir que la traducción realizada por nuestra aplicación es la adecuada.
+
+\newpage
+
+\section{Traducción}
+
+Este es uno de los puntos más importantes de nuestro trabajo, debido a que es la base de una correcta composición con las máquinas de estado, y guarda además una estrecha relación con la consulta que hemos implementado.
+
+Antes de comenzar con la traducción de los diagramas de colaboración debemos dejar constancia de la representación de los diagramas de estados en el dominio de las GSPN's.
+ 
+\subsection{Máquinas de estado}
+
+Cada máquina de estados que compone el modelo UML que hemos diseñado será representada por una única RdP, el proceso de obtención de esta red está basado en la composición de pequeñas subredes que son obtenidas tanto de la traducción de los estados que componen la máquina como de las transiciones que unen a dichos estados.
+
+La subred generada de la traducción de un estado UML dependerá de los elementos que presente dicho estado, como por ejemplo, la existencia de una {\em entry action}, de una {\em do activity} o de transiciones internas pueden hacer variar de una manera significativa la red obtenida.
+
+Lo mismo ocurre en el caso de las transiciones, aunque esta vez tendremos que fijarnos en si la transición cuenta con un disparador ({\em trigger}) y un efecto ({\em effect}). Estos dos elementos son los que utilizaremos como puntos de conexión con otros elementos del modelo.
+
+Para nuestro trabajo ha resultado muy práctico conocer al detalle la implementación de cómo estaban traducidos los diagramas de estados dentro de la herramienta, en primer lugar para poder reparar los defectos que habían sido encontrados y posteriormente para realizar unas cuantas modificaciones, que nos facilitarían más tarde la tarea de la composición.
+
+Lo anteriormente dicho pone de manifiesto la importancia de conocer al detalle la traducción de este tipo de diagramas, motivo por el cual intentaremos dar la mayor precisión posible a esta sección. Para ello creemos necesario modelar una máquina de estados con la gran parte de los elementos que podemos encontrar en ella, para posteriormente ir asociando estos elementos con su traducción. El modelo de UML utilizado será:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{classModelSM.pdf}
+	\end{center}
+	\caption{Diagrama de Clases a traducir.}
+	\label{fig:classModelSM}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{modelSM.pdf}
+	\end{center}
+	\caption{Máquina de estados a traducir.}
+	\label{fig:modeloSM}
+\end{figure}
+
+Con el fin de representar lo más claramente posible la RdP resultante de la traducción del diagrama de estados vamos a representar por separado cada una de las RdP de cada estado.
+
+%	\begin{flushleft}
+%	\end{flushleft}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.63]{translationInicio.pdf}
+	\end{center}
+	\caption{GSPN obtenida del estado inicio.}
+	\label{fig:translationInicio}
+\end{figure}
+
+En esta primera red \ref{fig:translationInicio} queda representado como es traducido el estado {\em inicio} en el que únicamente contamos con un elemento relevante, la transición de salida, esta transición posee un evento disparador y un efecto, la parte {\bf verde} de la red representa los elementos de la RdP asociados a la transición de salida, y los elementos de color {\bf naranja} serán los de la acción de entrada. 
+
+En la siguiente red también hemos utilizado otros colores con el fin de distinguir qué partes están relacionadas con ciertos elementos de UML, como por ejemplo el {\bf morado} con la {\em do activity} y el {\bf azul} con la transición interna.
+
+También podemos encontrar elementos en un color {\bf negro}, estos elementos no están relacionados con  ningún componente concreto de UML sino que forman parte de la RdP, por ejemplo, los lugares cuyas etiquetas empiezan por \verb!| e_!, o \verb!| ack_!, son lugares de enlace con otras máquinas de estado. Cabe destacar la etiqueta \verb!lambda! que será utilizada cuando no exista el elemento que representa el lugar o la transición en la cual se coloque.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{translationMedio.pdf}
+	\end{center}
+	\caption{GSPN resultante del estado medio.}
+	\label{fig:translationMedio}
+\end{figure}
+
+Se puede apreciar claramente cómo dependiendo de los elementos que aparecen en UML la RdP cambia sustancialmente, este hecho queda reflejado en las diferencias entre la traducción del estado {\em inicio} y la del estado {\em medio}, este último posee acción de entrada, {\em do/activity}, transición de salida y transición interna, se puede decir que modela prácticamente todos los elementos que puede albergar un estado.  
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{translationFin.pdf}
+	\end{center}
+	\caption{GSPN representante del estado fin.}
+	\label{fig:translationFin}
+\end{figure}
+
+A simple vista vemos que la RdP del pseudoestado final de la máquina de estados es la más sencilla de todas las que hemos presentado, esto se debe a la propia naturaleza de este elemento que simplemente expresa el fin de la vida de la instancia, su último lugar el etiquetado con \verb!| p_elements_class_ClassA! posee tantas marcas como población tenga la clase cuya máquina de estados estamos contemplando.
+
+%\newpage
+
+\subsection{Diagramas de colaboración}
+
+En algunas secciones anteriores de este documento (ver \ref{subsec:traduccion}) hemos mostrado con algún ejemplo simple cómo se traducían los diagramas de colaboración al dominio de las GSPN's. En esta sección queremos mostrar los cuatro tipo de traducciones posibles que podemos encontrar para los mensajes que seríamos capaces de modelar en un diagrama de colaboración de ArgoUML.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{translationMsjs.pdf}
+	\end{center}
+	\caption{GSPN's representantes de todos los tipos de mensajes.}
+	\label{fig:translationMsjs}
+\end{figure}
+
+Tenemos que puntualizar una serie de detalles sobre esta traducción, la estructura de las RdP está seguida exactamente como queda representada en la figura \ref{fig:translationMsjs}, aunque existen unas pequeñas variaciones en cuanto a dos etiquetas de dos lugares.
+
+Cuando estamos traduciendo el primer mensaje de una interacción el primer lugar de éste también será el primer lugar del diagrama de colaboración con lo que la etiqueta de este será \verb!| startCoD!, y no \verb!| _msj! como cabría esperar, lo mismo ocurre cuando estamos traduciendo el último mensaje de la interacción reflejada en el diagrama de colaboración, su último lugar también será el último lugar del diagrama de colaboración por lo que quedará etiquetado como \verb!| endCoD!. 
+
+Para que la traducción de un diagrama de colaboración puede llevarse a cabo se tienen que cumplir una serie de condiciones en el modelo que queremos analizar, la primera de ellas indica que cada una de las clases que participa en la interacción descrita por el diagrama de colaboración deberá describir su comportamiento por medio de un diagrama de estados. La segunda es referente a los mensajes y expresa que todos los mensajes que están recogidos dentro de un diagrama de colaboración, tienen en la máquina de estados del emisor una acción que causa el envío del mismo, y en el diagrama de estados del receptor existirá al menos una transición que modele la respuesta a ese evento.
+
+Esta segunda hipótesis hace que debamos modificar el algoritmo de traducción que utilizaba la herramienta ArgoSPE antes de soportar la traducción de los diagramas de secuencia, está claro que tenemos que poseer toda la información de todas máquinas de estados que existen en el modelo para poder asegurar el cumplimiento de la segunda hipótesis, de otra manera sería imposible.
+
+Para representar el algoritmo de traducción antiguo y el modificado vamos a utilizar unos diagramas de actividades:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{algTraduccion.pdf}
+	\end{center}
+	\caption{Diagramas de actividades de los algoritmos de traducción de ArgoSPE.}
+	\label{fig:algTraduccion}
+\end{figure}
+
+Como es evidente el algoritmo antiguo será el representado por el diagrama de actividades de la parte izquierda y el más reciente estará reflejado en la parte derecha de la figura. Vemos que simplemente hemos tenido que sacar del bucle principal el recorrido de los diagramas de colaboración que poseen cada una de las clases que constituyen el modelo.
+
+\section{Composición}
+
+El proceso de composición envuelve a la RdP resultante de la composición de las RdP de las máquinas de estados y de los diagramas de actividad, con la RdP de uno de los diagramas de colaboración que han sido modelados por el diseñador del sistema software.
+
+Esto quiere decir que realmente se tienen que realizar dos composiciones para poder conseguir la representación, en el dominio de las RdP, de la situación descrita por el diagrama de colaboración seleccionado del sistema.
+
+Lo lógico será pues comenzar por representar cómo se realiza la primera de las composiciones, principalmente nos interesará conocer cómo se fusionan las máquinas de estados para poder obtener una representación del sistema completo.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{mergeSM.pdf}
+	\end{center}
+	\caption{Esquema de la composición de dos máquinas de estados.}
+	\label{fig:mergeSM}
+\end{figure}
+
+Al observar con un poco de detenimiento la figura \ref{fig:mergeSM} vemos representado en la RdP cómo, la clase {\em Emisor} ha modelado en la transición de salida inmediata del estado {\em iniS} el lanzamiento de un evento que será recogido por la máquina de estados de la clase {\em Receptor}. 
+
+Dicho de otra manera en la máquina de estados de la clase Emisor existe una transición que tiene como efecto la ejecución de la operación \verb!Receptor.getConnection!, método de la clase {\em Receptor}, que generará un evento que podrá ser recibido por la máquina de estados para que ésta modifique su estado. Esto produce que exista el efecto \verb!Receptor.getConnection! en la transición de salida del estado {\em iniS} y que a su vez tengamos un evento disparador en la transición de salida del estado {\em iniR}.
+
+Una vez explicada de forma breve la composición entre máquinas de estado vamos a suponer que tenemos un diagrama de colaboración como este:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.6]{simpleColaboracion.pdf}
+	\end{center}
+	\caption{Diagrama de colaboración con un mensaje.}
+	\label{fig:simpleColaboracion}
+\end{figure}
+
+Para poder observar más claramente la composición entre las RdP de las máquinas de estados y la del diagrama de colaboración hemos optado por un diagrama con un solo mensaje, ya que si se entiende el mecanismo con un solo mensaje extender la idea a diagramas de colaboración más complicado se hará mucho más sencillo. Por tanto la composición final quedará de la siguiente manera:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{mergeColaboracion.pdf}
+	\end{center}
+	\caption{GSPN representante del escenario modelado con \ref{fig:simpleColaboracion}.}
+	\label{fig:mergeColaboracion}
+\end{figure}
+
+Éste es el resultado que muestra GreatSPN (después de unos cuantos retoques) cuando abrimos la RdP generada con ArgoSPE tras las implementaciones que hemos ido explicando.
+
+Nos queda un detalle que no ha sido explicado y es el hecho de que con la traducción original de las máquinas de estados no se podía realizar adecuadamente la composición con el diagrama de colaboración, esto era debido al formato utilizado en la construcción de las etiquetas de las transiciones que representaban los eventos, por ejemplo, un evento que desencadenaba una transición de salida era etiquetado así: 
+
+\begin{center}
+\verb!| out_e_0_1!
+\end{center}
+
+El formato utilizado refleja que estamos en el caso de un {\em trigger event} de una transición de salida, por, \verb! out!, que pertenece a la clase cuyo identificador interno es el \verb! 0!. El identificador interno del evento en cuestión será el \verb! 1!.
+
+El problema de esta etiqueta era que para poder componerla con su semejante del diagrama de colaboración deberíamos tener exactamente la misma etiqueta en las dos transiciones, pero desde el diagrama de colaboración desconocíamos si un evento venía de una transición de salida, o desde una interna, o de cualquier otra fuente, solamente conocíamos el nombre de la clase destino y el nombre del evento.
+
+La solución adoptada fue la de modificar la etiqueta generada desde el traductor de las máquinas de estados para que encapsulara la misma información que tenía antes pero con un formato tal que pudiera ser reproducido desde el traductor de los diagramas de colaboración.
+
+El formato que implementamos era el siguiente:
+
+\begin{center}
+\verb!| e_0_1 | out!
+\end{center}
+
+Esto hace que tengamos dos etiquetas dentro de una transición, pero simplemente tenemos que hacer que la etiqueta con la que queramos componer se encuentre en el fichero de etiquetas de su correspondiente red de Petri. Por supuesto nos aseguramos de que la modificación del formato de esas etiquetas no interfería ni en el proceso de traducción ni en el de composición de las máquinas de estado. 
+%\section{Consulta}
+
+%¿Qué podríamos comentar de la consulta?
+
+%El trabajo que hemos tenido que realizar para poder conocer si estaba o no un diagrama de %colaboración seleccionado

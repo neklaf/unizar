@@ -1,0 +1,158 @@
+\chapter{Resultados y conclusiones}
+\label{chap:res}
+\section{Dificultades encontradas}
+
+Cumplir los objetivos marcados al inicio de este trabajo no ha sido un tarea precisamente sencilla. En esta sección se hará una breve descripción de las dificultades y problemas que nos hemos encontrado y que han sido superados.
+
+Este proyecto utiliza y amplía una herramienta ya implementada, ArgoSPE. Durante mi período de formación en la carrera se nos ha inculcado la creencia de que la {\bf comprensión de código ajeno}, es una de las tareas más complicadas con las que nos podemos enfrentar, de ahí que ayude enormemente una buena documentación del mismo. En nuestro caso nos hemos encontrado con partes que no han sido adecuadamente documentadas, lo que ha llevado a realizar una gran inversión de tiempo para comprender dicha implementación.
+
+El primer obstáculo que hemos tenido que salvar fue la comprensión de una {\bf parte teórica realmente compleja}. Para empezar tuvimos que estudiar el estándar UML 1.4.2\footnote{El documento de sus especificaciones técnicas cuenta con 736 páginas de extensión.} que nos ayudaría a poder modelar los ejemplos que más tarde utilizaríamos para la comprobación del funcionamiento de nuestra aportación. 
+
+Más adelante adquirimos los conceptos necesarios para modelar las prestaciones que deberíamos anotar en nuestros modelos, gracias al UML-SPT\footnote{Este documento abarca un total de 232 páginas.}, documento que encierra cantidad de conceptos con un alto grado de abstracción.
+
+Por último, y no por ello lo más simple, entender la teoría que rige la traducción de diagramas UML al dominio de las LGSPN's conlleva un gran esfuerzo, basta decir que es el trabajo investigado en la tesis de mi director \cite{Merse-PhD}, y que además ha suscitado numerosos artículos de investigación.
+
+Aprender a utilizar la herramienta ArgoSPE no ha resultado algo trivial, el motivo principal es la falta de documentación en relación a su uso, principalmente en el apartado de la anotación de los diagramas UML, tema indispensable cuando tratamos de comprobar el funcionamiento del programa.
+
+La naturaleza de las ampliaciones que he tenido que realizar dentro de ArgoSPE me han obligado a meterme de lleno con cada una de las partes de la arquitectura que compone la aplicación, lo cual me ha supuesto observar con detalle la mayoría del código implementado en cada uno de los {\bf 167 ficheros fuente} que constituyen nuestra herramienta.
+
+Unido a esto ha sido necesario realizar modificaciones sobre partes del código que ya estaban implementadas, estas modificaciones han sido motivadas fundamentalmente por dos razones, la primera ha sido la corrección de algunos errores en la traducción de las máquinas de estado, errores que serán explicados en los anexos con detalle. Y la segunda fue la transformación de la traducción de los diagramas de estado para posibilitar la composición entre las RdP's resultantes. Como es comprensible esto ha llevado al estudio tanto teórico como práctico del proceso de traducción de estos diagramas.
+
+\section{Trabajo realizado}
+\label{sec:trabajo}
+Para lograr alcanzar los objetivos marcados al principio de este trabajo (sección \ref{sec:objetivos}) hemos tenido que realizar una dura labor implementando tanto la traducción, como la composición, sin olvidarnos de la consulta a nivel UML. Los resultados obtenidos son explicados a continuación.
+
+\subsection{Traducción}
+\label{subsec:traduccion}
+
+Como hemos comentado con anterioridad la traducción consiste en el paso de un modelo en UML, en este caso, de los diagramas de colaboración, al dominio de las LGSPN's. Vamos a representar en un dibujo la relación que existe entre los dos modelos:
+%\begin{figure}[H]
+\begin{figure}[hbt]
+	\begin{center}
+		%\includegraphics[scale=0.75]{translation.pdf}
+		\includegraphics[scale=0.77]{translationColored.pdf}
+	\end{center}
+	\caption{Representación del resultado del proceso de traducción.}
+	\label{fig:traduccion}
+\end{figure}
+
+El proceso de traducción de un diagrama de colaboración, se basa en la traducción por separado de cada uno de los mensajes que componen la colaboración. 
+
+Esta traducción será diferente dependiendo de los elementos que caractericen a ese mensaje, cada mensaje generará una pequeña red que deberá ser fusionada con la RdP generada por el mensaje anterior, una vez finalizada la composición de las RdP's asociadas a los mensajes habremos obtenido como resultado una RdP que representará el comportamiento modelado por nuestro diagrama. 
+
+La información necesaria para determinar la traducción de un mensaje será recibida a través de un fichero XMI, que es el formato en el que se almacenará la información de nuestro modelo, de aquí tomaremos si el mensaje es síncrono o asíncrono, si ha sido anotado especificando su tamaño o no, así como otras cuestiones de menor importancia.
+
+En la figura \ref{fig:traduccion} observamos que el mensaje {\em m1} (coloreado en {\bf rojo}) tiene una traducción diferente (RdP {\bf roja}) al mensaje {\em m2} (en {\bf azul}, como su RdP), el primero es síncrono, (lo cual viene reflejado por la representación de su flecha, los mensajes síncronos se representan por una flecha con la punta rellena) y está etiquetado con un tamaño, el segundo es asíncrono, (por lo que está representado por una flecha con punta sin rellenar).
+
+Este esquema representa la salida del traductor que he implementado ante ese diagrama de colaboración,  además tenemos que señalar que el traductor soporta cualquier elemento que pueda ser modelado dentro de un diagrama de colaboración por ArgoUML, y ha sido integrado con éxito formando ya parte de ArgoSPE. Con lo que consideramos como cumplido el objetivo de conseguir la traducción de estos diagramas.
+
+\subsection{Composición}
+
+El proceso de composición es difícil de explicar sin ayudarnos de complicadas fórmulas, por lo que vamos a mostrar a continuación un esquema que muestra el resultado final para intentar facilitar la comprensión del mismo:
+
+\begin{figure}[H]
+%\begin{figure}[hbt]
+	\begin{center}
+		%\includegraphics[scale=0.72]{merge.pdf}
+		%\includegraphics[scale=0.72]{merge2.pdf}
+		\includegraphics[scale=0.72]{mergeColored.pdf}
+	\end{center}
+	\caption{Composición entre máquinas de estado y diagramas de colaboración.}
+	\label{fig:merge}
+\end{figure}
+
+Al observar el gráfico anterior con atención tenemos que fijarnos que existen varios elementos diferenciados, en la parte izquierda tenemos la RdP obtenida de la traducción de la máquina de estados de la clase que ha generado el mensaje, el cual deberá estar representado en el diagrama de colaboración, en la parte derecha estará la RdP de la máquina de estados de la clase que recibe el mensaje. Por último en la parte central aparece un fragmento de la RdP generada al traducir el diagrama de colaboración.
+
+En relación con el dibujo tenemos que destacar que se ha considerado oportuno resaltar, coloreándola de {\bf azul}, la RdP generada por el mensaje (del diagrama de colaboración), con el fin de facilitar la comprensión del esquema por parte del lector. Con esta medida también conseguimos aislar el resultado producido por la composición de las RdP de las máquinas de estado, las cuales, como se puede observar tienen en los eventos de igual nombre su nexo de unión. Este es el mismo mecanismo utilizado en el gráfico de la traducción para diferenciar la RdP generada por cada uno de los mensajes.
+
+Para entender el porqué de este proceso, tenemos que explicar una serie de cuestiones, lo primero de todo es que las clases son los elementos que definen la estructura de nuestro diseño, la máquina de estados de cada una de ellas modela la dinámica seguida por una instancia suya, por lo tanto el comportamiento del sistema queda descrito gracias a todas las máquinas de estados de las clases que participan en nuestro modelo.
+
+Hasta ahora nuestra herramienta lo que hacía era traducir las máquinas de estados de un sistema y fusionarlas, con lo cual se obtenía un RdP gigantesca que caracterizaba el comportamiento global de nuestro sistema.
+
+Los diagramas de colaboración reflejan las interacciones que realizan unas determinadas clases con otras definiendo un escenario concreto para nuestro diseño, es como si sacaramos una foto de como trabajan las clases para llevar a cabo una tarea.
+
+Entonces al traducir el diagrama de colaboración a RdP y fusionar esta red con la RdP completa de nuestro sistema, obtenemos una red que describirá el comportamiento del sistema completo en una determinada situación (o escenario), que viene a ser la definida por nuestro diagrama.
+
+Para lograr una perfecta composición entre las RdP anteriores, se tuvieron que realizar una serie de modificaciones en la traducción de las máquinas de estados, debido a que las etiquetas generadas por las RdP, tanto de las referidas a los diagramas de estados como de las del diagrama de colaboración, no eran iguales, condición sin la cual no se puede realizar la composición. Además contábamos con problema añadido de que GreatSPN tiene una longitud relativamente pequeña para almacenar las etiquetas, lo que nos obligó a definir un formato que fuera lo suficientemente pequeño y que además fuera único para cada uno de los elementos que representara.
+
+Una vez subsanados todos los problemas simplemente tenemos que pasar las RdP generadas a {\bf algebra}, (paquete que acompaña al programa GreatSPN y aporta la composición de GSPN's y la elminación de etiquetas dentro de las redes), el cual será el encargado final de realizar la composición. Este programa funciona en línea comandos y la llamada sería algo parecido a esto:
+
+\begin{center}
+\verb	! rdp99:~/ algebra -no_ba net1 net2 t eti_file net12 1 !
+\end{center}
+
+El primer parámetro {\em --no\_ba} evita que los arcos sin destino o sin origen (en definitiva, rotos) sean dibujados en la red final. El fichero de etiquetas almacenará todas las etiquetas de los elementos que tendrán que fusionarse. Debemos mencionar además que la {\em {\bf t}} que aparece como parámetro, se refiere a que la composición será meramente de transiciones ya que es lo único que se precisa en nuestro caso.
+
+El último parámetro que acompaña a la herramienta es un número, en nuestro caso el 1, que será utilizado para indicar la colocación final de las RdP dentro del fichero resultado, el 1 significa que se colocarán horizontalmente, de izquierda a derecha, y si hubiéramos utilizado el 2 la ordenación hubiera sido vertical.
+
+Como es lógico {\em net1} y {\em net2} representarán los ficheros en los que se encuentran las RdP's que queremos fusionar, y {\em net12} será el nombre del fichero en el que queremos que se almacene el resultado de la composición.
+
+Una última cuestión que no se ha mencionado anteriormente es el hecho de que ha resultado especialmente difícil la implementación, tanto de la traducción como de la composición, ya que debíamos de mantener intacta la funcionalidad que ya era proporcionada por la herrramienta, así que las modificaciones requiridas en el código existente se han realizado como comúnmente se suele decir, {\em con pies de plomo}.
+
+\subsection{Consulta}
+
+Todo lo implementado anteriormente quedaría sin sentido si no proporcionásemos algún modo de sacar partido de ello.
+
+Pensando detenidamente, vemos que el objetivo de anotar nuestro modelo con características que definan las prestaciones de ciertos elementos, es el obtener una información que sea útil durante la fase de modelado a la persona que está realizando el diseño del sistema.
+
+Una de las cuestiones más interesantes que podemos preguntarnos cuando estamos diseñando un sistema sería, ¿cuánto tiempo nos cuesta ejecutar una determinada tarea? Pues bien esa es la pregunta que podemos responder gracias al proceso de traducción y composición.
+
+En nuestro caso vamos a denominar a la consulta que añadimos a ArgoSPE, {\bf Response Time} y vendrá definida como el tiempo medio de respuesta de un escenario concreto, la consulta se podría decir que calcula el tiempo de respuesta del diagrama de colaboración que define dicho escenario.
+
+Para poder calcular esta característica en nuestro sistema fue preciso realizar unas pequeñas transformaciones a la RdP que generábamos en el proceso de traducción, éstas implican crear una transición etiquetada como {\em close}, que hará de puente entre el lugar final de la RdP del diagrama de colaboración y su lugar inicial, obteniendo de esta manera una red cerrada necesaria para el análisis en el estado estacionario.
+
+\subsection{Pruebas}
+
+Al finalizar cada una de las etapas de implementación se pasaba a un período de comprobación, este proceso era de una gran importancia debido a que todas las partes dependían las unas de las otras para su correcto funcionamiento.
+
+Para comprobar el buen comportamiento del código creado para realizar la traducción se tenía que modelar ejemplos de sistemas, en ArgoUML, que cumplieran los requisitos necesarios para poder generar una RdP.
+
+Estos requisitos pasaban por diseñar, al menos dos clases, cada una con sus respectivos diagramas de estados, y en las que teníamos que enviar y recibir al menos un evento, lo que quiere decir que, en una de las máquinas de estados una acción sería la llamada de uno de los métodos de la otra clase y en la máquina de estados de la clase llamada recogeríamos la llamada, gracias al modelado del evento disparador (o trigger). Esta misma interacción era representada a su vez con un diagrama de colaboración. Una vez ideado el sistema teníamos que anotar el diseño con las anotaciones conforme a la tabla \ref{tab:anotaciones}.
+
+Con todo esto ya podríamos generar una RdP para nuestro diagrama de colaboración con nuestro traductor, la cual debería ser comparada con una RdP que habíamos elaborado a mano previamente, con la estructura correcta.
+
+Este mismo proceso también es seguido para la comprobación del adecuado funcionamiento del código de la composición, aunque en este caso se hace mucho más complicada la verificación debido al gran número de lugares y transiciones existentes en la red, recordemos que estamos formando una única red a partir de todas las RdP de las máquinas de estado y de la del diagrama de colaboración seleccionado.
+ 
+ Con todo lo dicho queda claro que la realización de pruebas es una tarea bastante complicada.
+ 
+\section{Valoración del trabajo}
+
+\subsection{Aplicación del trabajo desarrollado}
+
+Uno de los logros más significativos de este proyecto es la contribución realizada a una aplicación, ArgoSPE, que tiene como objetivo mejorar el proceso de desarrollo del software, introduciendo los criterios de prestaciones desde la fases iniciales del ciclo de vida del sistema, con el fin de ahorrar tiempo evitando diseños que no cumplirán los requisitos que nos hemos marcado.
+
+No nos podemos olvidar que al mejorar ArgoSPE, también estamos posibilitando el aumento las características ofrecidas por ArgoUML, cuya versión 0.18.1 fue bajada 98.143 veces (datos hasta Agosto de 2005), todos estos usuarios al fin y al cabo son usuarios potenciales de nuestro módulo.
+
+Es más, a pesar de sus deficiencias y de que aún no existe una versión totalmente estable, ArgoUML es la herramienta CASE, gratuita y de código libre, más utilizada en todo  el mundo.
+
+\subsection{Trabajo futuro}
+
+Una de las ventajas de haber trabajado en la mayoría de las componentes que constituyen la aplicación es que se tiene una visión global de la funcionalidad que ofrece y de las posibles mejoras que podrían llegar a realizarse.
+
+En mi opinión sugerir nuevas funcionalidades para una aplicación sin conocer, de una manera precisa, el estado de las funcionalidades que ahora mismo aporta no es algo razonable. Por este motivo la primera ampliación que propondría sería la realización de un estudio del proceso de traducción, que refleje las situaciones que son tenidas en cuenta y las que no soporta.
+
+Una vez realizado ese estudio, enfocaría los esfuerzos en subsanar todos los defectos encontrados en la traducción, así como la implementación de cada nuevo aspecto que se han tenido en cuenta en el trabajo \cite{TSE}, ya que la considero un punto clave sobre el que se fundamenta el buen funcionamiento de nuestra herramienta.
+
+Basándonos ahora en el enfoque de ampliar la funcionalidad de ArgoSPE, cabe señalar la realización de un estudio de herramientas CASE que puedan ser utilizadas con nuestro módulo. El objeto de cambiar ArgoUML por otra aplicación no es otro que proporcionar un mayor abanico de diagramas con los que pueda trabajar nuestra herramienta, a la vez que contar con un mayor número de elementos implementados dentro de cada tipo de diagrama.
+
+Otra ampliación que resultaría de gran utilidad sería sustituir el formato de las RdP que genera el traductor, ya que actualmente las RdP se generan con formato GreatSPN, formato que no es estándar, por lo que limita la herramienta con la que podemos analizar las redes obtenidas. El mejor candidato como formato estándar de RdP es {\bf PNML} ({\bf P}etri {\bf N}et {\bf M}arkup {\bf L}anguage) \cite{PNML}.
+
+Por supuesto la funcionalidad que ArgoSPE ofrece, viene dada por las consultas que proporcione sobre los modelos de nuestros sistemas, por eso consideramos una buena opción añadir más consultas a las ya implementadas por nuestra aplicación.
+
+Para finalizar me gustaría proponer la investigación de las características menos documentadas de esta aplicación, lo cual implicaría la lectura detallada de todos los documentos relacionados con ella que existen, como artículos memorias de proyectos fin de carrera y demás y tratar de aclarar todo aquello que sea susceptible de ser necesitado por futuros desarrolladores. 
+
+\section{Conclusiones personales}
+
+Como resultado de este proyecto la principal conclusión que se puede extraer es lo valioso que resultan  la  experiencia y los conocimientos adquiridos a lo largo de su desarrollo.  
+
+Por un lado he conseguido incrementar ampliamente mis conocimientos de Java, uno de los  lenguajes más extendidos en la actualidad. Además he asentado y aumentado mi entendimiento sobre un estándar tan extendido e importante como es UML. Por otra parte también he sido capaz poner en práctica algunos de los conocimientos adquiridos a lo largo de mi período de formación.
+
+Por otro lado he aprendido a utilizar con soltura herramientas básicas en el desarrollo  de proyectos como CVS, Ant (para desarrollo de Java) y otras herramientas proporcionadas por el sistema operativo GNU/Linux, además del perfeccionamiento en el manejo del editor de textos Vim.
+
+La envergadura de este tipo de trabajos me ha aportado también soltura a la hora de planificar, documentar  y gestionar las diferentes etapas que lo componían.
+
+Un concepto importante que he aprendido es que una adecuada organización inicial,  una  correcta  planificación  y  unos  conocimientos  previos  bien asentados (no necesarios pero desde luego deseables) son elementos muy a tener en cuenta ya que facilitan en gran medida el trabajo desarrollado a posteriori y ahorran gran cantidad de tiempo y esfuerzo.
+
+Gracias a la observación de otros proyectos como ArgoUML se han adquirido nociones de cómo se organiza y planifica un proyecto software, en el cual colaboran decenas de personas (siempre dentro del marco de un proyecto de código libre). El hecho de que toda la gestión del proyecto se realice vía web le da aún más  valor a este asunto. 
+
+En último  lugar me gustaría  expresar  que  estoy  profundamente  satisfecho  con  el  resultado de este proyecto y espero que los conocimientos y mecanismos aprendidos durante su desarrollo me resulten muy útiles en un, esperemos próximo, entorno laboral.

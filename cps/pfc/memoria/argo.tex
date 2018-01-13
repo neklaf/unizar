@@ -1,0 +1,204 @@
+ \chapter{ArgoUML}
+ \label{chap:argo}
+ \section{Deficiencias de los diagramas de colaboración}
+
+Como hemos comentado con anterioridad ArgoUML es un programa de software libre, la mayor problemática existente con este tipo de proyectos es que la dedicación que los desarrolladores invierten en ellos, está muy determinada por su tiempo libre ya que, como norma general, estos productos no son implementados con ánimo de lucro, sino para cubrir una necesidad detectada por una cierta comunidad de usuarios, que serán los que a la postre lleven el peso de la implementación.
+
+Con todo esto es lógico que algunos de estos proyectos manifiesten ciertas deficiencias en su implementación, ArgoUML no es una excepción a todo esto, es más, las librerías utilizadas por éste también han sido desarrolladas de la misma forma, como consecuencia de ello presenta algunas carencias que nos afectaron a la hora de la realización de nuestro trabajo.
+
+Todas estas deficiencias se engloban en varios grupos:
+\begin{itemize}
+\item {\bf Diagramas enteros sin implementar}: Como es el caso de los diagramas de secuencia, aunque según queda reflejado en la página de ArgoUML se espera que en la versión 0.20 vuelva a estar  soportado por la herramienta.
+\item {\bf Elementos incorrectamente  implementados}: Normalmente esto se debe a una incorrecta interpretación de las características descritas en la especificación de UML.
+\item {\bf Funcionalidades  poco desarrolladas}: Ésto se ve reflejado, por ejemplo, en que la impresión de los diagramas no satisface grandes expectativas, lo mismo que ocurre con la generación de código y algún que otro fallo de programación, como excepciones no capturadas debidamente.
+\item {\bf Diagramas que no contemplan varios elementos} que se encuentran descritos en el estándar UML dentro de ellos, este último grupo será el que más nos afecte a la hora de poder realizar nuestro trabajo, en concreto, en el proceso de traducción.
+\end{itemize}
+
+Es importante tener en cuenta el hecho de que ArgoUML soporta en estos momentos la versión 1.3 de UML, esta versión ya quedó obsoleta a finales de 2003, este retraso en cuanto a la evolución de UML es debido a la librería Java que proporciona a ArgoUML una implementación del metamodelo de UML: la librería {\bf NSUML} \cite{NSUML}.
+
+Esta librería implementa la versión de UML con la que trabaja Argo, se encuentra inacabada con diversos fallos y en un estado de abandono en su desarrollo por parte de la empresa que inició este proyecto, la documentación que proporcionan es muy deficiente lo que hace más complicado la actualización de dicha librería.
+
+A continuación pasaremos a citar las carencias detectadas a lo largo del desarrollo de nuestro proyecto, éstas están agrupadas en dos apartados que señalaremos a continuación:
+
+\begin{itemize}
+\item{\bf Elementos no implementados en el Diagrama de Colaboración}:
+	\begin{itemize}
+	\item No es posible incluir un objeto múltiple (o multiobjeto) en uno de estos diagramas. Un {\bf multiobjeto} representa un conjunto de instancias de una determinada clase, es usado para mostrar que, ciertas operaciones y señales, van dirigidas a un conjunto, en vez de a una única instancia como ocurre habitualmente. Su representación sería algo como esto:
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.75]{multiobject.pdf}
+		\end{center}
+		\caption{Representación gráfica de un objeto múltiple.}
+		\label{fig:multiobject}
+	\end{figure}
+	
+	\item ArgoUML no permite añadir un objeto activo dentro de una colaboración. Un {\bf objeto activo} es aquel que posee el hilo de control e iniciaría la actividad de control, dicho de otra forma, será el encargado de iniciar la colaboración. Normalmente se suele representar del mismo modo que un objeto común, únicamente que aparecería resaltado en negrita como puede observarse en la figura \ref{fig:activeObject}:
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.75]{activeObject.pdf}
+		\end{center}
+		\caption{Representación gráfica de un diagrama con un objeto activo.}
+		\label{fig:activeObject}
+	\end{figure}
+	\item No podemos crear elementos a nivel de instancia, sólo a nivel de especificación. Esto impide que utilicemos instancias (en lugar de clasificadores), al igual que ocurre con los estímulos (en vez de los mensajes), por supuesto tampoco se puede modelar enlaces entre objetos.
+	\item La herramienta CASE no permite representar actores dentro de un diagrama de colaboración, por lo tanto no podríamos modelar un diagrama de este estilo:
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.75]{actor.pdf}
+		\end{center}
+		\caption{Representación gráfica de un actor en un diagrama de colaboración.}
+		\label{fig:actor}
+	\end{figure}
+	\end{itemize}
+	\item En ArgoUML no aparece el símbolo de la colaboración (ver \ref{fig:colaboracion}), por lo que tendremos un menor número de posibilidades de relacionar una colaboración con otros elementos de nuestro modelo, como por ejemplo con clasificadores, con instancias o con casos de uso:
+	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.75]{collabDiag.pdf}
+		\end{center}
+		\caption{Diagrama que representa una colaboración y sus clasificadores.}
+		\label{fig:collabDiag}
+	\end{figure}
+	
+	\item Es importante señalar que la implementación del diagrama de colaboración de Argo no soporta la representación de la {\bf ejecución} de una acción {\bf condicionada} al cumplimiento de una situación. Al igual que tampoco ofrece la posibilidad de expresar la {\bf ejecución} de un mensaje de forma {\bf iterativa}. Estas dos carencias han hecho que no nos sea posible utilizar todas las notaciones que disponíamos para este diagrama.
+\item{\bf Elementos implementados que presentan deficiencias}:
+	\begin{itemize}
+	\item No se puede establecer una asociación entre el papel representado por un clasificador y una clase existente dentro de nuestro modelo, es decir, no podemos reflejar la relación clasificador y su rol.
+	\item Los diagramas de colaboración no pueden ser creados sin que estén asociados a un caso de uso (más concretamente a un actor de un caso de uso) o a una clase (perteneciente a un diagrama de clases) que tengamos modelada en nuestro sistema previamente. Esta característica queda completamente fuera de la semántica que aparece en la especificación de UML, puesto que el diagrama de colaboración se encarga de representar la interacción entre objetos de diferentes clases a través de mensajes, no vemos que tenga sentido que para crearse estos diagramas tengan que estar asociados a alguna clase o a algún actor, por ejemplo en el esquema \ref{fig:actor}, ¿a qué clase tendríamos que asociar ese diagrama de colaboración? A la clase {\em Person} o la clase {\em Course}. Según la especificación no tendríamos porque tomar esta decisión ya que no se establece una relación directa con ninguna de las dos clases, sino que el diagrama estaría al mismo nivel que el diagrama de clases o que los casos de uso.
+%	Tenemos que comentar que esta peculiaridad a complicado aunque sólo sea ligeramente la %implementación de nuestro traductor.
+	\item ArgoUML no sigue estrictamente la notación para representar los nombres de los clasificadores indicada por la especificación del estándar, puesto que el clasificador tiene un formato claramente definido:
+	\begin{center}
+	\verb! "nombre_del_objeto" / "nombre_del_rol" : "nombre_de_la_clase"!
+	\end{center}
+	En nuestro caso no es posible escribir el nombre de la clase a la cual va asociada.
+	\item Los mensajes no pueden cambiar su orientación una vez han sido representados en una asociación entre clasificadores. Únicamente contamos con un tipo de mensaje, los mensajes síncronos (comunicación síncrona). El orden de los mensajes es generado automáticamente por la herramienta.
+	\item Las acciones también muestran su falta de corrección en relación a lo apuntado en la especificación estudiada, éstas no pueden estar asociadas a los métodos de una clase, ni tampoco podemos pasarle argumentos a una acción.
+	\end{itemize}
+\end{itemize}
+
+Todas estas carencias nos llevan a la conclusión de que todavía falta bastante trabajo para que los diagramas de colaboración estén implementados de acuerdo a toda la expresividad que ofrece UML, aunque tenemos que decir que son los únicos representantes, por el momento, de los diagramas de interacción en la herramienta CASE que utilizamos.
+
+\newpage
+
+\section{XMI}
+\label{sec:xmi}
+Cuando la OMG publicó en 1997 un {\bf RFP} (Request For Proposal) para un formato de intercambio de modelos basado en Stream \cite{SMIF}(Stream-Based Model Interchange Format -{\bf SMIF}) se presentaron Unisys, IBM, Oracle, y otras compañías con la propuesta de {\bf XMI}.
+
+Como su propio nombre indica XMI ({\bf X}ML {\bf M}etadata {\bf I}nterchange) es un formato de intercambio de {\bf metadatos} basado en {\bf XML}. Antes de continuar, consideramos necesario realizar unos comentarios acerca de XML.
+
+XML \cite{XML} significa e{\bf X}tensible {\bf M}arkup {\bf L}anguage, es un subconjunto de {\bf SGML} ({\bf S}tandard {\bf G}eneralized {\bf M}arkup {\bf L}anguage), la funcionalidad que convierte a XML en una herramienta tan poderosa es que es un {\bf metalenguaje}, es decir, que es un lenguaje utilizado para definir otros lenguajes de marcado que se adecúen a un problema concreto.
+
+Además de esta característica también podemos mencionar el hecho de que es un estándar del W3C \cite{W3C}, en su contenido (determinado por un {\bf DTD} \cite{DTD} o Definición del Tipo de Documentos) se combina tanto los datos como los metadatos para el intercambio de información, es flexible e independiente del sistema y las etiquetas forman una estructura en árbol ({\bf DOM} \cite{DOM} Modelo de Objetos del Documento). En la figura \ref{fig:xml} están representados todos los elementos que hemos mencionado.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{xml.pdf}
+	\end{center}
+	\caption{Relación entre XML, DTD y DOM.}
+	\label{fig:xml}
+\end{figure}
+
+El objetivo último de la definición de un formato como XMI era la integración de herramientas aplicaciones y repositorios que trabajaban con metamodelos que eran conformes a {\bf MOF} ({\bf M}odel {\bf O}bject {\bf F}acility).
+
+\subsection{MOF}
+UML es un estándar utilizado para describir {\em modelos de objetos}. Desde un punto de vista arquitectónico el modelo de UML está estructurado en tres niveles: 
+\begin{itemize}
+\item {\bf Metamodelo}: El metamodelo de UML define un número de elementos tales como {\em Class}, {\em Operation}, {\em Attribute}, {\em Association}, y algunos más. Estos elementos se llaman {\bf metaclases}.
+\item {\bf Modelo}: Instancias de una {\em Class} de UML representan entidades, y procesos. Por ejemplo: 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.7]{clases.pdf}
+	\end{center}
+	\caption{Clase Policia y Cliente.}
+	\label{fig:clases}
+\end{figure}
+
+Se puede definir también instancias de la metaclase Association entre clases, tal como la asociación ({\em protege} ver \ref{fig:clases}) entre Cliente y Policia. Estas instancias de metaclases de UML se denominan {\bf metaobjetos}.
+
+\item {\bf Objetos del usuario}: Son instancias de los elementos del modelo. Por ejemplo instancias de la clase {\em Cliente} son: c123:Cliente, c456:Cliente. Estos son los objetos. Los modelos de objetos de UML de dominios particulares, se denominan {\em modelos de objetos de dominio} o {\em modelos de dominio}. 
+\end{itemize}
+
+Existen también otros metamodelos como son los metamodelos para sistemas de bases de datos. Un metamodelo de una base de datos define elementos básicos como base de datos, tabla, columna, clave, y demás. Que son usados para definir modelos de datos específicos.
+
+Tantos los modelos de objetos de dominio como los modelos de datos son guardados en bases de datos especializadas llamadas {\bf repositorios de metadatos}, algunas veces llamado simplemente como {\bf repositorio}. Los administradores de los repositorios normalmente necesitan manejar modelos de dominios y modelos de datos de una forma unificada, pero la naturaleza tan dispar de los metamodelos sobre los cuales están basados constituye un gran obstáculo. 
+
+MOF provee una base común para esos metamodelos. Si dos metamodelos diferentes están de acuerdo con MOF, los modelos basados en ellos pueden residir en el mismo repositorio o intercambiarse por diferentes herramientas compatibles con él. 
+
+El metamodelo de UML está basado en el estándar MOF, (es decir que sus constructores están definidos en términos de los elementos {\em core} de MOF), y esto es una pieza clave de la estrategia de la OMG para soportar repositorios integrados. MOF define un conjunto de constructores que pueden ser usados para describir metamodelos. 
+
+MOF agrega un cuarto nivel a la clasificación que mostramos antes. MOF llama a estos niveles: M0, M1, M2, y M3.
+\begin{itemize}
+\item {\bf M3} (MOF core): Define los elementos usados para especificar metamodelos, como por ejemplo MetaClass, MetaAttribute, MetaAssociation, Mof::Class, Mof::Association, Mof::Attribute.
+\item {\bf M2} (Meta-Model): Un metamodelo definido en términos de los elementos core de MOF consiste de MetaClasses, MetaAttributes, y algunos otros. Como muestra, UML: Class, Attribute, Operation. Data Warehousing: Base de datos, tabla, fila.
+\item {\bf M1} (Modelo): Un modelo expresado en términos de un metamodelo. Modela un dominio de información específico. Consiste de instancias de elementos de un metamodelo (es decir metaobjetos).
+\item {\bf M0} (Objetos de usuario): Instancias de los elementos de un modelo.
+\end{itemize}
+
+XMI proporciona un mecanismo para derivar un XML-DTD que representa los constructores de un metamodelo compatible con MOF.
+
+Una herramienta compatible con MOF puede por lo tanto representar y enviar un modelo de dominio basado en UML en la forma de XML cuya estructura está de acuerdo a un XMl DTD. El objetivo de quienes envían un XMI es que el XML sea usado para importar y exportar modelos desde y a un repositorio persistente.
+
+Todo lo anterior justifica la sugerencia que realiza OMG en la definición de arquitectura propu
+ en el profile \cite{UML-SPT}, de la utilización de XMI como formato de intercambio entre las diversas partes, como el editor y el configurador del modelo.
+
+Después de habernos puesto en situación y teniendo claras las ideas que se han comentado pasamos a representar gráficamente, cómo ArgoUML exporta los elementos más importantes (desde el punto de vista de nuestro trabajo) que podemos encontrarnos dentro de un modelo UML.
+
+Lo primero que nos vamos a encontrar dentro de un fichero XMI generado con ArgoUML (0.18.1) es la siguiente cabecera:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.77]{xmiHeader.pdf}
+	\end{center}
+	\caption{Cabecera del documento XMI.}
+	\label{fig:xmiHeader}
+\end{figure}
+
+La primera también conocida como {\em declaración XML}, define la versión de XML que estamos utilizando, además en nuestro caso también especificamos la codificación del documento, en nuestro caso UTF-8. Después de esta línea comienza información referente a la versión de XMI, cual es el metamodelo que mapea y su versión, UML v1.3 para nosotros, la línea que nos informa de esto es:
+\verb!<XMI.metamodel xmi.name="UML" xmi.version="1.3"/>!.
+
+Diremos que \verb!XMI.metamodel! es el {\bf elemento} de la etiqueta, \verb!xmi.name! será un {\bf atributo} del elemento anterior, lo mismo que xmi.version, y tanto \verb!"UML"! como \verb!"1.3"! serán los respectivos valores de los atributos. Un elemento podrá llevar anidados otros elementos, atributos o ambos. A continuación vamos mostrar cómo están serializados los diagramas en formato XMI.
+
+\subsection{Diagrama de clases}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75,angle=90]{xmiClass.pdf}
+		%\includegraphics[scale=0.75,angle=-90]{xmiClass.pdf}
+	\end{center}
+	\caption{Representación XMI de los elementos del diagrama de clases.}
+	\label{fig:xmiClass}
+\end{figure}
+
+\subsection{Diagrama de despliegue}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75,angle=90]{xmiDeploy.pdf}
+		%\includegraphics[scale=0.75,angle=-90]{xmiDeploy.pdf}
+	\end{center}
+	\caption{Representación XMI de los elementos del diagrama de desarrollo.}
+	\label{fig:xmiDeploy}
+\end{figure}
+
+\subsection{Diagrama de estados}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75,angle=90]{xmiSM.pdf}
+		%\includegraphics[scale=0.75,angle=-90]{xmiSM.pdf}
+	\end{center}
+	\caption{Representación XMI de los elementos del diagrama de estados.}
+	\label{fig:xmiSM}
+\end{figure}
+
+\subsection{Diagrama de colaboración}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.75,angle=90]{xmiCollab.pdf}
+		%\includegraphics[scale=0.75,angle=-90]{xmiCollab.pdf}
+	\end{center}
+	\caption{Representación XMI de los elementos del diagrama de colaboración.}
+	\label{fig:xmiCollab}
+\end{figure}
