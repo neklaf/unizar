@@ -1,0 +1,99 @@
+\newpage 
+% ----------------------------------------------------------  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% ----------------------------------------------------------  
+\section{Modelos de tr\'afico para comunicaciones de voz}  
+ 
+El modelado de tr\'afico tiene su origen en los sistemas de telefon\'{\i}a  
+anal\'ogica convencional.  
+En este contexto, los modelos se han basado en procesos estoc\'asticos sencillos 
+cuya principal caracter\'{\i}stica es que no contemplan la posibilidad de que  
+las trazas de tr\'afico procedentes de las fuentes presenten dependencia a largo 
+plazo. 
+Es por ello, que se ha definido hist\'oricamente toda una familida de modelos 
+{\em cl\'asicos} fundados, siempre y casi exclusivamente, en suposiciones  
+markovianas para las tasas de llegada de llamadas (o paquetes de datos) y en  
+distribuciones exponenciales para los tiempos de ocupaci\'on de los recursos y 
+de servicio de los sistemas. Es decir, siempre se han considerado estos  
+modelos de tr\'afico como sistemas sin memoria o, en un sentido m\'as amplio, 
+de memoria limitada al conjunto de estados pasados del sistema (habitulamente 
+representados mediante una cadena de Markov). 
+Seg\'un este \'ultimo planteamiento, la dependencia no se alargar\'{\i}a sino 
+que a\~nadir\'{\i}a al modelo cierta memoria, aunque de corto plazo y siempre  
+a costa de aumentar considerablemente el n\'umero de estados de la cadena, que  
+crecer\'{\i}a exponencialmente con el n\'umero de estados que interese recordar. 
+%\vspace{0.35cm} 
+ 
+Alguno de estos modelos cl\'asicos, de hecho, no s\'olo est\'an muy desarrollados, 
+sino que est\'an completamente vigentes en muchos de los sistemas y aplicaciones 
+m\'as usuales. Los modelos que se han empleado tradicionalmente para caracterizar 
+las fuentes de voz aprovechan las caracter\'{\i}sticas del habla humana 
+que se presenta a r\'afagas ({\em talk spurts}), con silencios intercalados
+entre palabras y entre frases. 
+Por ello, lo m\'as habitual es que los codificadores 
+de voz (por ejemplo, GSM) incorporen detectores de silencios, durante los cuales no 
+transmiten informaci\'on. 
+Estos modelos de actividad y silencio presentan comportamientos particulares seg\'un 
+el intervalo temporal en el que se analicen. Esto se conoce como el 
+fen\'omeno de modelado por niveles, seg\'un el cual el an\'alisis de 
+tr\'afico puede realizarse en distintos periodos temporales obteniendo 
+resultados  claramente diferentes en funci\'on del intervalo elegido.  
+Si se establece una divisi\'on por niveles en funci\'on de estas 
+escalas temporales en la que se producen los eventos y la propia naturaleza de los  
+mismos, se puede encontrar una clasificaci\'on equivalente a los niveles OSI 
+que distingue entre el nivel de celda (N1, relacionado con el flujo de bits  
+y referenciado en {\em $\mu$s.}), el nivel de r\'afaga (N2, relacionado  
+con la tasa de paquetes y tramas de datos en {\em ms.}), y el nivel de llamada  
+(N3, relacionado con la tasa de llegadas en {\em s.}). 
+Seg\'un esta divisi\'on, los modelos de actividad y silencio adecuan bastante  
+bien sus caracter\'{\i}sticas a los niveles N2 y N3 presentando un cierto tiempo en 
+el que transmiten informaci\'on o periodo de actividad (marcado por su  
+duraci\'on media $T_{ON}$) seguido de un periodo de silencio (con su  
+correspondiente duraci\'on media $T_{OFF}$). As\'{\i} se define el par\'ametro  
+de referencia de este modelo como el factor de actividad  
+$a=T_{ON}/(T_{ON}+T_{OFF})$. 
+
+A nivel de celda, sin embargo, pueden encontrarse diferencias sustanciales  
+entre unas fuentes y otras lo que ha supuesto que aparezcan en la 
+literatura diversos modelos como los que se enumeran a continuaci\'on: 
+ 
+\begin{description} 
+\item[Modelo ON-OFF.] 
+Este primer modelo ampliamente extendido y aceptado, consta de dos estados 
+que intentan describir una fuente emisora de informaci\'on a r\'afagas de tal  
+manera que en el estado ON se generan paquetes de voz y durante el estado OFF 
+se produce silencio. El tiempo de estancia en cada uno de estos estados se  
+distribuye exponencialmente con medias $\alpha$ y $\beta$, respectivamente, lo  
+que permite expresiones anal\'{\i}ticas cerradas y manejables para establecer 
+los par\'ametros b\'asicos del trafico debido a este modelo. 
+ 
+\item[Modelo IPP.] 
+Es una variante del modelo anterior que se conoce como modelo de Poisson  
+interrumpido (IPP, {\em Interrupt Poisson Processes}), y se caracteriza por ser 
+una particularizaci\'on donde el estado activo en vez de presentar transmisi\'on 
+continua, se corresponde a llegadas distribuidas exponencialmente con media $\lambda$. 
+ 
+\item[Modelo MMPP.] 
+Se corresponde a procesos de Poisson modulados por cadenas de Markov  
+(MMPP, {\em Markov Modulated Poisson Processes}),  
+tambi\'en llamados procesos doblemente estoc\'asticos por utilizar 
+una cadena de Markov (que define la distribuci\'on de probabilidad del  
+tr\'afico) como moduladora, y un proceso de Poisson (que genera el tr\'afico 
+propiamente dicho) como proceso modulado. 
+Este modelo puede aprovechar los estudios y resultados del anterior ya que un  
+MMPP de M+1 estados se puede construir de forma evidente a partir de la  
+superposici\'on de M procesos IPP independientes e id\'enticamente 
+distribuidos. As\'{\i}, mediante los MMPP se puede conseguir que el modelo  
+de tr\'afico sea anal\'{\i}ticamente abordable y son especialmente adecuados 
+para modelar mezclas de tr\'afico de voz y datos. 
+ 
+\end{description} 
+ 
+
+Se muestra a continuaci\'on un esquema de los diagramas de Markov correspondientes
+a cada uno de los modelos de voz presentados.
+
+%%% fichero DOC adjunto %%%
+
+
+

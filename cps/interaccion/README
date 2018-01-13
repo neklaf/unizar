@@ -1,0 +1,11 @@
+Para compilar las pruebas que realice con las GTK tendre que poner
+la siguiente linea para compilar:
+
+gcc programa.c -o programa `pkg-config --cflags --libs gtk+-2.0`
+
+Me he hecho un script para no tener que poner la parrafada durante todo el rato
+ahora simplemente tendremos que poner ./gtk fichero.c
+
+Mañana le tendre que preguntar a Cristina cual es la version de las gtk que
+tenemos que usar pero por ahora hare otro script, uno para las libgtk2.0-dev
+libgtk1.2-dev. (No veo otra opcion).

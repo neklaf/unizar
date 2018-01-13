@@ -1,0 +1,1071 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Cadenas de Markov en tiempo continuo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\markboth{Dpto. M\'{e}todos Estad\'{\i}sticos. Universidad de Zaragoza}
+{Cadenas de Markov en tiempo continuo}\thispagestyle{empty}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conceptos b\'{a}sicos}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Definici\'{o}n propiedad de Markov.}
+\par
+Sea $\{X_t,\,t\in T\}$ un proceso estoc\'{a}stico con $T$ un conjunto
+de \'{\i}ndices, subconjunto de la recta real. Se dice que el proceso
+$\{X_t,\,t\in T\}$ tiene la propiedad de Markov si para cada
+$x_1,\ldots,x_{n+1}$ en el espacio de estados del proceso y para
+cada conjunto de \'{\i}ndices $t_1,\ldots,t_{n+1}$, con
+$n=0,1,2,\ldots$
+\[
+P(X_{t_{n+1}}\leq x_{n+1}| X_{t_n}=x_n,\ldots,X_{t_1}=x_1)=
+P(X_{t_{n+1}}\leq x_{n+1}| X_{t_n}=x_n)
+\]
+Un proceso discreto en tiempo continuo es una cadena de Markov si
+se verifica
+\[
+\begin{array}{l}
+P(X_{t_1}=x_1,X_{t_2}=x_2,\ldots,X_{t_k}=x_k)
+=\\[10pt]%\hbox{}\hspace{30pt}
+=P(X_{t_k}=x_k|X_{t_{k-1}}=x_{k-1})
+P(X_{t_{k-1}}=x_{k-1}|X_{t_{k-2}}=
+%\\[10pt]\hbox{}\hspace{30pt}=x_{k-2})\ldots
+P(X_{t_2}=x_2|X_{t_1}=x_1)P(X_{t_1}=x_1)
+\end{array}
+\]
+Ahora vemos que se necesitan conocer las probabilidades de
+transici\'{o}n tras un tiempo $s$ cualquiera a partir de un tiempo
+$t$, es decir, $P(X(s+t)=j|X(s)=i)$ para $t\geq 0$. Asumiendo que
+hay homogeneidad (no depende del instante $s$ que consideremos
+sino s\'{o}lo de la amplitud del intervalo $t$), podemos denotar
+\[
+p_{ij}(t) = P(X(s+t) = j | X(s) = i ) = P( X(t)=j | X(0)=i
+),\hspace{30pt} t\geq 0
+\]
+La matriz de probabilidades de transici\'{o}n tras un tiempo $t$ se
+puede denotar por $P(t)$ y $P(0)=I$ es la matriz identidad.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Tiempo de permanencia en un estado}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+En una cadena de Markov en tiempo continuo se verifica que el
+tiempo durante el que la cadena permanece en un estado antes de
+cambiar a otro estado tiene una distribuci\'{o}n exponencial. Sea la
+variable aleatoria $T_i$ definida como el tiempo que la cadena
+permanece en el estado $i$,
+\[
+%\begin{array}{ll}
+P(T_i>t+s|T_i>s)=P(T_i>t+s|X(s')=i,0\leq s'\leq s)=P( T_i > t )=
+e^{-\upsilon_i t}
+%\end{array}
+\]
+donde la propiedad de Markov implica que el pasado es irrelevante
+cuando hemos llegado a $X(s)=i$, es decir, que hay ausencia de
+memoria y s\'{o}lo la distribuci\'{o}n exponencial verifica esta propiedad
+entre las distribuciones continuas. El tiempo medio de
+permanencia en el estado $i$ es $1/\upsilon_i$, que puede ser
+diferente para cada estado.
+\par
+Una cadena de Markov en tiempo continuo se puede ver como un
+proceso que permanece en un estado durante un tiempo exponencial,
+transcurrido el cual, se produce un cambio de estado regido por
+una cadena de Markov en tiempo discreto, denominada cadena de
+Markov embebida o subyacente con probabilidades de transici\'{o}n
+$\tilde{q_{ij}}$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Tasa de transiciones y probabilidades de estado}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Se consideran las probabilidades de transici\'{o}n en un intervalo de
+tiempo muy peque\~{n}o $\delta$, entonces la probabilidad de
+permanecer en ese intervalo de tiempo en el estado $i$ es
+\[
+P(T_i>\delta)=e^{-\upsilon_i \delta}=1-\upsilon_i
+\delta+\frac{(\upsilon_i \delta)^2}{2}+\ldots=1-\upsilon_i
+\delta+o(\delta)
+\]
+Por otra parte, la probabilidad de que haya m\'{a}s de una transici\'{o}n
+en un intervalo $\delta$ es de orden $o(\delta)$ por ser una
+distribuci\'{o}n exponencial, entonces la probabilidad de estar en el
+estado $i$ despu\'{e}s de un tiempo $\delta$ es
+\[
+\begin{array}{ll}
+p_{ii}(\delta)=&P(\text{no se produce ninguna transici\'{o}n en el
+intervalo de amplitud $\delta$})+\\
+&+P(\text{m\'{a}s de dos transiciones en el intervalo $\delta$,
+volviendo al estado $i$})=\\
+\hfill=&P(T_i>\delta)+o(\delta)= 1-\upsilon_i\delta+o(\delta)
+\end{array}
+\]
+o de forma equivalente,
+$1-p_{ii}(\delta)=\upsilon_i\delta+o(\delta)$ con lo que la tasa
+con la que el proceso $X(t)$ deja el estado $i$ es $\upsilon_i$.
+Para pasar a un estado $j$ desde $i$ se tiene que
+\[
+\begin{array}{ll}
+p_{ij}(\delta)=&P(\text{se produce un cambio de estado y adem\'{a}s
+acaba en el estado $j$})=\\
+\hfill=&P(\text{se produce una \'{u}nica transici\'{o}n del estado $i$ al
+$j$})+\\
+&+P(\text{m\'{a}s de dos transiciones en el intervalo $\delta$, desde
+el estado $i$ al $j$})=\\
+\hfill=&(1-p_{ii}(\delta))\tilde q_{ij}+o(\delta)=\upsilon_i\delta
+\tilde q_{ij}+o(\delta)=\gamma_{ij}\delta+o(\delta)
+\end{array}
+\]
+donde $\gamma_{ij}=\upsilon_i \tilde q_{ij}$ es la tasa con la
+que el proceso $X(t)$ pasa del estado $i$ al $j$. Ahora si
+llamamos $\gamma_{ii}=-\upsilon_i$, podemos expresar
+\[
+\displaystyle\lim_{\delta\to
+0}\dfrac{p_{ij}(\delta)}{\delta}=\gamma_{ij} \hspace{50pt}
+\displaystyle\lim_{\delta\to
+0}\dfrac{1-p_{ii}(\delta)}{\delta}=\upsilon_i=-\gamma_{ii}
+\]
+Por el teorema de la probabilidad total tenemos que
+\[
+\begin{array}{l}
+p_j(t+\delta)=P(X(t+\delta)=j)=\displaystyle\sum_{i\in
+E}P(X(t+\delta) = j |
+X(t)=i)P(X(t)=i)=%\\[10pt]
+%\hbox{}\hspace{50pt}=
+\displaystyle\sum_{i\in E}p_{ij}(\delta)p_i(t)\Leftrightarrow\\[15pt]
+p_j(t+\delta)-p_j(t)=\displaystyle\sum_{\begin{array}{l}i\in E\\[-5pt]i\neq j\end{array}}
+p_{ij}(\delta)p_i(t)-
+p_j(t)+p_{jj}(\delta)p_j(t)=%\\[10pt]
+%\hbox{}\hspace{50pt}=
+\displaystyle\sum_{\begin{array}{l}i\in E\\[-5pt]i\neq j\end{array}}
+p_{ij}(\delta)p_i(t)+p_j(t)(p_{jj}(\delta)-1)\Leftrightarrow\\[10pt]
+\displaystyle\displaystyle\lim_{\delta \to
+0}\dfrac{p_j(t+\delta)-p_j(t)}{\delta}={p_j}^{\prime}(t)=\displaystyle\sum_{i\in
+E} \gamma_{ij}p_i(t)
+\end{array}
+\]
+que son las ecuaciones diferenciales de Chapman-Kolmogorov para
+las cadenas de Markov en tiempo continuo.
+\par
+Anal\'{o}gamente se pueden obtener las ecuaciones diferenciales
+``backward'' de Chapman-Kolmo\-go\-rov para las probabilidades de
+transici\'{o}n:
+\[
+{p_{ij}}^{\prime}(t)=\displaystyle\sum_{k\in
+E}\gamma_{ik}p_{kj}(t)
+\]
+y las ecuaciones 'forward':
+\[
+{p_{ij}}^{\prime}(t)=\displaystyle\sum_{k\in
+E}p_{ik}(t)\gamma_{kj}
+\]
+Estos sistemas de ecuaciones pueden expresarse en forma matricial,
+si denotamos como $Q$ a la matriz de tasas de transici\'{o}n, vemos
+que las ecuaciones 'backward' pueden expresarse como
+$P^\prime(t)=QP(t)$ y las 'forward' son $P'(t)=P(t)Q$. La
+soluci\'{o}n de estas ecuaciones diferenciales puede encontrarse
+generalizando el caso equivalente en una funci\'{o}n real,
+\[
+P(t)=P(0)e^{Qt}=\displaystyle\sum_{n=0}^\infty \dfrac{Q^nt^n}{n!}
+\]
+Las probabilidades de estado en cada instante $t$ se calculan
+resolviendo este sistema de ecuaciones diferenciales.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Probabilidades de estado a largo plazo y \hfill\break
+ecuaciones de balance globales}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Puede ocurrir que cuando el tiempo $t$ tiende a infinito entonces
+las probabilidades de estado ya no dependen de la situaci\'{o}n
+inicial. Se llega a un equilibrio en el sistema con unas
+probabilidades de estado estables,
+\[
+\displaystyle\lim_{t\to \infty}p_j(t)=p_j \hspace{20pt}\text{esto
+implica que }\displaystyle\lim_{t\to \infty}{p_j}^{\prime}(t)=0
+\]
+y las ecuaciones de Chapman-Kolmogorov quedan de la forma
+\[
+\displaystyle\sum_{j\in E}\gamma_{ji}p_{j}=0 \Leftrightarrow
+\upsilon_i p_i= \displaystyle\sum_{j\neq i\in E}\gamma_{ji}p_{j}
+\]
+denominadas ecuaciones de balance global. Estas establecen que en
+el equilibrio la tasa de salida del estado $i$ es igual a la tasa
+que fluye hacia el estado $i$. Resolviendo este conjunto de
+ecuaciones se obtienen las probabilidades de estado estacionarias
+o a largo plazo, si existen. Adem\'{a}s, si el estado comienza con esa
+distribuci\'{o}n inicial entonces las probabilidades de estado en
+cada instante siguen siendo las mismas.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ejemplos de Cadenas de Markov en  tiempo \hfill\break continuo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Proceso de Poisson}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Sea $N(t)$ el n\'{u}mero de peticiones realizadas a un servidor
+central desde las 0 horas hasta el instante $t$. Consideramos que
+se comporta como un proceso de Poisson de tasa $\alpha$. Tenemos,
+por lo tanto, que los tiempos entre dos llegadas sucesivas se
+distribuyen seg\'{u}n la distribuci\'{o}n exponencial de par\'{a}metro
+$\alpha$, con lo que $\upsilon_i=\alpha$. Por otra parte, la
+cadena de Markov en tiempo discreto subyacente se rige con las
+probabilidades de transici\'{o}n:
+\[
+\tilde q_{ij}=\left\{\begin{array}{ll} 1&j=i+1\\
+0&j\neq i+1
+\end{array}\right.\hspace{20pt}\text{ entonces }
+P(N(t)=i|\,N(0)=0)=\dfrac{(\alpha t)^ie^{-\alpha t}}{i!}
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Se\~{n}al telegr\'{a}fica aleatoria}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Se considera un proceso $X(t)$ que toma dos \'{u}nicos valores, -1 y
+1. En el instante inicial se tiene la misma probabilidad de que se
+encuentre en uno u otro estado. Por otra parte los cambios en la
+polaridad se producen seg\'{u}n un proceso de Poisson $N(t)$ de tasa
+$\alpha$. Con esto se tiene que el proceso es de Markov y
+homog\'{e}neo en el tiempo.
+\par
+El tiempo medio de permanencia en uno de los dos estados es
+$1/\alpha$, mientras que las transiciones en la cadena de Markov
+de tiempo discreto asociada ocurren seg\'{u}n una matriz de
+probabilidades de transici\'{o}n de la forma
+\[
+\tilde Q=\begin{pmatrix}
+  0 &1 \\
+  1 & 0
+\end{pmatrix}
+\]
+Las probabilidades de transici\'{o}n del proceso $X(t)$ viene dadas
+por
+\[
+\begin{array}{ll}
+P(X(t)=1|X(0)=1)&=P(X(t)=-1|X(0)=-1)=
+%\\&=
+P(\text{ n$^o$ de cambios hasta $t$ sea par })=\\
+&=P(N(t) \text{ sea par })=\dfrac{1}{2}e^{-\alpha t}(e^{-\alpha
+t}+ e^{\alpha t})=
+%\\&=
+\dfrac{1}{2}(1+e^{-2\alpha t})\\
+\end{array}
+\]
+\[
+\begin{array}{ll}
+P(X(t)=1|X(0)=-1)&=P(X(t)=-1|X(0)=1)=
+%\\&=
+P(\text{ n$^o$ de cambios
+hasta $t$ sea impar })=
+\\&=
+P(N(t) \text{ sea impar })=\dfrac{1}{2}(1-e^{-2\alpha t})
+\end{array}
+\]
+Se puede demostrar que $P(X(t)=1)=1/2=P(X(t)=-1 )$ y por tanto
+$E(X(t))=0$ y $Var(X(t))=1$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Proceso de dos estados}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Supongamos que en un sistema de producci\'{o}n la situaci\'{o}n puede
+clasificarse en dos \'{u}nicos estados, $1$ 'operativo' y $0$ 'bajo
+reparaci\'{o}n'. Supongamos que el tiempo hasta que se produce una
+ruptura es exponencial de par\'{a}metro $\mu$, mientras que el tiempo
+que tarda en realizarse una reparaci\'{o}n es exponencial de
+par\'{a}metro $\lambda$. De esta forma, $X(t)$, estado en el instante
+$t$, es un proceso de Markov en tiempo continuo. Se tiene que
+$\upsilon_0=\mu$ y $\upsilon_1=\lambda$ y la matriz de transici\'{o}n:
+\[
+P=\begin{pmatrix}
+   0&1 \\
+  1&0
+\end{pmatrix}
+\]
+Las ecuaciones 'forward' de Chapman-Kolmogorov quedan:
+\[
+\begin{array}{l}
+ p^\prime_{i0}(t)=-\lambda p_{i0}(t)+\mu p_{i1}(t)=-\lambda p_{i0}(t)+\mu
+ (1-p_{i0}(t))\\[10pt]
+%
+p'^\prime_{i0}(t)+(\lambda +\mu )p_{i0}(t)=\mu \Leftrightarrow
+p_{i0}(t)
+= \dfrac{\mu}{\mu+\lambda}+ Ce^{-(\lambda+\mu)t}
+\end{array}
+\]
+Como $p_{00}(0)=1$ y $p_{10}(0)=0$ entonces
+\[
+\begin{array}{ccc}
+  p_{00}(t)=\dfrac{\mu+\lambda
+  e^{-(\lambda+\mu)t}}{\lambda+\mu}&\hbox{}\hspace{10pt}
+  &
+  p_{01}(t)=\dfrac{\lambda-\lambda e^{-(\lambda+\mu)t}}{\lambda+\mu}\\
+  p_{10}(t)=\dfrac{\mu-\mu e^{-(\lambda+\mu)t}}{\lambda+\mu}& \hbox{}\hspace{10pt}&
+  p_{11}(t)=\dfrac{\lambda+\mu e^{-(\lambda+\mu)t}}{\lambda+\mu}
+\end{array}
+\]
+Si se toman l\'{\i}mites se tiene que las probabilidades l\'{\i}mite son
+\[
+q_0=\displaystyle\lim_{t\to\infty}
+p_{i0}(t)=\dfrac{\mu}{\lambda+\mu}\hspace{20pt}
+q_1=\displaystyle\lim_{t\to\infty}
+p_{i1}(t)=\dfrac{\lambda}{\lambda+\mu}
+\]
+Tambi\'{e}n se puede obtener este resultado con las ecuaciones de
+balance:
+\[
+-\lambda q_0 + \mu q_1= 0\hspace{20pt} \lambda q_0 - \mu q_1= 0
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Rupturas en un conjunto de m\'{a}quinas}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+La situaci\'{o}n previa se puede generalizar. Sean $N$ m\'{a}quinas
+iguales, que operan independientemente y servidas por un \'{u}nico
+servidor. Si la m\'{a}quina se rompe mientras otra est\'{a} siendo
+reparada, debe esperar. Suponemos que una ruptura llega en una
+m\'{a}quina tras un tiempo de funcionamiento $Exponencial(\mu)$ y que
+las reparaciones tardan en realizarse $Exponencial(\lambda)$. Sea
+$X(t)$ el n\'{u}mero de m\'{a}quinas que funcionan en el instante $t$. Es
+una cadena de Markov con espacio de estados $E=\{0,1,2,...,N\}$.
+Veamos c\'{o}mo determinar las tasas de transici\'{o}n.
+\par
+Por una parte las transiciones s\'{o}lo pueden ser de forma que se
+pase al estado anterior o al siguiente, salvo en los extremos en
+que s\'{o}lo puede pasarse al contiguo. Por otra parte, se pasa de
+$i$ a $i+1$ si se repara una m\'{a}quina y de $i$ a $i-1$ si se
+estropea una m\'{a}quina, donde compiten en romperse $i$ exponenciales
+independientes, entonces
+\[
+\gamma_{ij}=\left \{
+\begin{array}{cl}
+0& j\neq i,i-1,i+1\\
+\lambda&j=i+1\\
+i\mu&j=i-1\\
+-(\lambda+i\mu)&j=i
+\end{array}\right.
+\]
+El diagrama de estados aparece en la figura~\ref{ruptura}.
+\begin{figure}
+\centerline{\scalebox{0.5}{\includegraphics{ruptura.ps}}}
+\caption[]{Diagrama de estados del proceso n\'{u}mero de m\'{a}quinas en
+funcionamiento} \label{ruptura}
+\end{figure}
+Con esto la matriz de tasas de transici\'{o}n es
+\[
+\begin{pmatrix}
+  -\lambda & \lambda   &     0 & 0 & \cdots &  0\\
+   \mu     &-(\lambda+\mu)& \lambda &  0&\cdots  & 0 \\
+      0    & 2\mu      & -(\lambda+2\mu)&\lambda  & \cdots&0  \\
+ \vdots    &  \vdots   & \vdots & \vdots & \cdots & \vdots \\
+   0       &  0        &0  & 0 & \cdots &-n\mu
+\end{pmatrix}
+\]
+La ecuaciones de Chapman-Kolmogorov son m\'{a}s dif\'{\i}ciles de resolver.
+Las ecuaciones de balance son
+\[
+\begin{array}{lll}
+\lambda q_0&=&\mu q_1\\
+(\lambda+\mu_i)q_i&=&\mu_{i+1}q_{i+1}+\lambda
+q_{i-1},\hspace{20pt}
+i=1,2,3,\ldots,n-1\\
+\mu_nq_n&=&\lambda q_{n-1}\\
+
+\end{array}
+\]
+Ahora se tiene que
+\[
+\begin{array}{ll}
+q_1=\dfrac{\lambda}{\mu}q_0&q_2=\dfrac{1}{2\mu}\left((\lambda+\mu)q_1-
+\lambda q_0\right )=\dfrac{1}{2}\left
+(\dfrac{\lambda}{\mu}\right)^2q_0\Rightarrow\\[10pt] \left
+\{\begin{array}{l}
+q_i=\dfrac{1}{i!}\left (\dfrac{\lambda}{\mu}\right)^iq_0\\
+\displaystyle\sum_j q_j=1
+\end{array}\right.&
+\Rightarrow q_0=\dfrac{1}{\displaystyle\sum_{i=0}^n
+\dfrac{1}{i!}\left (\dfrac{\lambda}{\mu}\right)^i}
+\end{array}
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Probabilidades l\'{\i}mite en las cadenas de Markov en
+tiempo continuo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Veamos algunas condiciones para que existan las probabilidades de
+estado l\'{\i}mite. Una cadena de Markov en tiempo continuo es
+irreducible si existe alg\'{u}n $t$ para el que $p_{ij}(t)>0$,
+$\forall i,\,j$.
+\par
+{\bf Teorema}\hfill\break Si el proceso de Markov es irreducible,
+entonces existen los l\'{\i}mites de las probabilidades y siempre
+tienen el mismo valor, independientemente de la distribuci\'{o}n
+inicial.
+\par
+{\bf Teorema}\hfill\break Si la cadena es irreducible y existe la
+derivada ${p_{ij}}^{\prime}(t)$ entonces
+\[
+\displaystyle\lim_{t \to \infty}\dfrac{dp_{ij}(t)}{dt}=0,\enspace
+\forall i,j\in E
+\]
+Con esto las ecuaciones normales o de balance quedan:
+\[
+0=\displaystyle\sum_{i\in E}\gamma_{ij}p_i \Leftrightarrow
+\upsilon_j p_j=\displaystyle\sum_{\begin{array}{l}i\in E\\[-5pt]i\neq j\end{array}}
+\gamma_{ij}p_i
+\]
+Estas ecuaciones siempre tienen la soluci\'{o}n trivial
+$(0,0,\ldots)$. Si existe otra soluci\'{o}n $(p_j)$, tambi\'{e}n lo ser\'{a}
+cualquier otro vector $(p_j)$ multiplicado por un escalar.
+\par
+{\bf Teorema}\hfill\break Sea $X(t)$ un proceso de Markov
+irreducible y homog\'{e}neo en el tiempo, entonces:
+\begin{enumerate}
+  \item Si la \'{u}nica soluci\'{o}n a las ecuaciones de balance que satisface
+  $\displaystyle\sum_j |p_j|<\infty$ es la nula entonces
+las probabilidades l\'{\i}mite son $p_j=0$.
+  \item Si existe una \'{u}nica soluci\'{o}n con t\'{e}rminos estrictamente positivos
+$p_j>0$ y $\displaystyle\sum_j p_j=1$, entonces el proceso es
+recurrente positivo y la soluci\'{o}n al sistema es la distribuci\'{o}n
+l\'{\i}mite.
+  \item Si el espacio
+de estados es finito, entonces el proceso es recurrente positivo
+y la soluci\'{o}n al sistema es la distribuci\'{o}n l\'{\i}mite.
+\end{enumerate}
+Se puede ver una cadena de Markov en tiempo continuo como una
+cadena de Markov subyacente en tiempo discreto, que marca c\'{o}mo
+son los cambios de estado y que permanece en un estado durante un
+tiempo aleatorio exponencial. Vamos a ver que si la cadena de
+Markov en tiempo discreto asociada o subyacente es irreducible y
+recurrente positiva con distribuci\'{o}n estacionaria $\pi_i$ , es
+decir, los $\pi_j$ son las soluciones del sistema correspondiente
+\[
+\pi_j=\displaystyle\sum_{i\in E}\pi_i \tilde q_{ij}
+\]
+entonces la proporci\'{o}n de tiempo que el proceso $X(t)$ permanece
+en el estado $i$ a largo plazo viene dado por
+\[
+p_i=\dfrac{\pi_i/\upsilon_i}{\displaystyle\sum_j \pi_j/\upsilon_j}
+\]
+donde $1/\upsilon_i$ es el tiempo medio que permanece el estado
+$i$ en una visita. Supongamos que la cadena subyacente es
+irreducible y recurrente positiva, entonces sabemos que si
+observamos $n$ transiciones en la cadena entonces
+\[
+\dfrac{N_i(n)}{n}\to \pi_i
+\]
+donde $N_i(n)$ es el n\'{u}mero de visitas al estado $i$ en esas $n$
+transiciones. Sea $T_i(k)$ el tiempo que ha pasado el proceso en
+el estado $i$ en la visita $k$-\'{e}sima. Ahora podemos expresar
+\[
+\begin{array}{l}
+\dfrac{\text{tiempo pasado en el estado $i$}}{\text{tiempo total
+observado}}=\dfrac{\displaystyle\sum_{k=1}^{N_i(n)}T_i(k)}{\displaystyle\sum_{j\in
+E}\displaystyle\sum_{k=1}^{N_j(n)}T_j(k)}=
+\dfrac{\dfrac{N_i(n)}{n}\dfrac{1}{N_i(n)}\displaystyle\sum_{k=1}^{N_i(n)}T_i(k)}
+{\displaystyle\sum_{j\in
+E}\frac{N_j(n)}{n}\frac{1}{N_j(n)}\displaystyle\sum_{k=1}^{N_j(n)}T_j(k)}
+\end{array}
+\]
+ahora haciendo tender $n$ a infinito se tiene que
+\[
+ \begin{array}{l}
+ \dfrac{\text{tiempo pasado en el estado $i$}}{\text{tiempo total
+observado}}\to p_i=
+\dfrac{1}{N_i(n)}\displaystyle\sum_{k=1}^{N_i(n)}T_j(k)\to
+\dfrac{1}{\upsilon_i}\Rightarrow\\[10pt] \dfrac{\text{tiempo pasado en el
+estado $i$}}{\text{tiempo total observado}}\to
+\dfrac{\pi_i/\upsilon_i}{\displaystyle\sum_j \pi_j/\upsilon_j}
+\end{array}
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cadenas en tiempo continuo reversibles}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Se considera una cadena de Markov $X(t)$ en tiempo continuo. Se
+tiene que
+\[
+\begin{array}{l}
+P(\text{proceso est\'{e} en $i$ en $[t-s,t)$}|X(t)=i)=
+%\\[10pt]=
+P(X(t')=i, t-s<t'<t|X(t)=i)=\\[10pt]
+=\dfrac{P(X(t-s)=i,T_i>s)}{P(X(t)=i)}
+=\dfrac{P(X(t-s)=i)P(T_i>s)}{P(X(t)=i)}= P(T_i>s)=e^{-\upsilon_i
+s}
+\end{array}
+\]
+ya que si el proceso es estacionario se tiene que $P(X(t-s)=i)=P(
+X(t)=i)=p_i$, as\'{\i} el tiempo que la cadena permanece en el estado
+$i$ tiene distribuci\'{o}n exponencial de tasa $\upsilon_i$. Usando la
+cadena de Markov de tiempo discreto subyacente, puede demostrarse
+que las tasas de transici\'{o}n en la cadena de tiempo continuo
+\[
+\overline \gamma_{ij}=\dfrac{\upsilon_i \pi_j
+\gamma_{ji}}{\upsilon_j \pi_i}=\dfrac{p_j \gamma_{ji}}{p_i}
+\]
+Se puede ver que la expresi\'{o}n es an\'{a}loga a la del caso de tiempo
+discreto, salvo que las probabilidades de transici\'{o}n se
+sustituyen por las tasas. Tambi\'{e}n en este caso tenemos un m\'{e}todo
+para buscar las probabilidades de estado estacionarias,
+resolviendo el sistema
+\[
+p_i \overline \gamma_{ij}=p_j \gamma_{ji},\enspace \forall i,j
+\]
+Se tiene que la distribuci\'{o}n estacionaria ser\'{a} la misma en las
+dos cadenas. La cadena en tiempo continuo $X(t)$ es reversible si
+y s\'{o}lo si la cadena en tiempo discreto subyacente lo es, o
+equivalentemente si se verifica
+\[
+p_i\gamma_{ij}=p_j\gamma_{ji}
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proceso de Poisson}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Un ejemplo de cadena de Markov en tiempo continuo con espacio de
+estados discreto es el proceso de Poisson. Consideremos, por
+ejemplo, los tiempos que transcurren entre los accidentes en la
+central energ\'{e}tica.
+\par
+Sea $N=\{N_t,t\geq 0\}$ el proceso
+definido como $N_t$=``n\'{u}mero de accidentes hasta el instante
+$t$''. Se dice que es un proceso de Poisson si verifica
+\begin{enumerate}
+  \item[(a)] Cualquier trayectoria del proceso $N$ crece a saltos de
+  una unidad y $N_0=0$,
+  \item[(b)] $\forall t,s\geq 0$, $N_{t+s}-N_t$ es independiente de $\{N_u, u\leq t\}$,
+  \item[(c)] $\forall t,s\geq 0$, la distribuci\'{o}n de $N_{t+s}-N_t$ es independiente
+  de $t$.
+\end{enumerate}
+Se puede ver que estas hip\'{o}tesis son f\'{\i}sicamente razonables para
+este proceso. La experiencia nunca ha producido dos rupturas
+simult\'{a}neas, por lo tanto el n\'{u}mero de rupturas aumenta de uno en
+uno. La segunda hip\'{o}tesis indica que lo ocurrido en tiempos
+anteriores no influye en la ocurrencia del fen\'{o}meno en un per\'{\i}odo
+posterior. La tercera hip\'{o}tesis indica que los accidentes ocurren
+con la misma intensidad en cualquier \'{e}poca o instante de tiempo,
+de forma que, el n\'{u}mero de ocurrencias durante un periodo de
+tiempo s\'{o}lo depende de la amplitud del intervalo. Estas hip\'{o}tesis
+implican que la distribuci\'{o}n de $N_{t+s}-N_t$ es una variable de
+Poisson de par\'{a}metro igual a la intensidad por la amplitud del
+intervalo, es decir, $\lambda s$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Probabilidades de estado}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Para encontrar las probabilidades de estado o de transici\'{o}n nos
+podemos basar en las ecuaciones diferenciales de
+Chapman-Kolmogorov:
+\[
+\begin{array}{l}
+P(N_{t+s}-N_t=0)=1-\lambda s+o(s)\\
+P(N_{t+s}-N_t=1)=\lambda s+o(s)\\
+P(N_{t+s}-N_t=k)=o(s),\enspace k\geq 2
+\end{array}
+\]
+Entonces,
+\[
+\begin{array}{ll}
+P(N_{t+s}=n)&=\displaystyle\sum_{k=0}^n
+P(N_t=k)P(N_{t+s}-N_s=n-k)=
+\\
+&=o(s)+P(N_t=n-1)(\lambda s +o(s))+ P(N_t=n)(1-\lambda
+s+o(s))\Rightarrow
+\end{array}
+\]
+\[
+\begin{array}{l}
+\dfrac{P(N_{t+s}=n)-P(N_t=n)}{s}=P(N_t=n-1)\lambda-P(N_t=n)\lambda+\dfrac{o(s)}{s}
+\Rightarrow \hbox{}\hfill\\[10pt]
+\displaystyle\lim_{s\to
+0}\dfrac{P(N_{t+s}=n)-P(N_t=n)}{s}={p_n}^{\prime}(t)=P_{n-1}(t)\lambda-P_n(t)\lambda
+\hspace{20pt}\text{y para $n=0$ }\\[10pt]
+p_0^\prime(t)=-p_0(t)\lambda \hspace{20pt}\text{donde se ha
+denotado $p_n(t)=P(N_t=n)$}
+\end{array}
+\]
+Las ecuaciones anteriores se resuelven de forma recursiva,
+\[
+\begin{array}{lll}
+\left.\begin{array}{l}
+{p_0}^\prime(t)=-p_0(t)\lambda\\
+p_0(0)=1
+\end{array}\right\}
+&\Rightarrow &p_0(t)=e^{-\lambda t}\\[5pt]
+%
+\left.\begin{array}{l} {p_{10}}^\prime(t)=-\lambda p_1(t) +
+\lambda p_0(t)=-\lambda p_1(t) +
+e^{-\lambda t}\\
+p_1(0)=0
+\end{array}\right\}
+&\Rightarrow &p_1(t)=\lambda t e^{-\lambda t}\\[5pt]
+%
+\end{array}
+\]
+En general, $p_n(t)=\dfrac{e^{-\lambda t}(\lambda t)^n}{n!}$,
+luego la distribuci\'{o}n de $N_t$ es Poisson con par\'{a}metro $\lambda
+t$. La resoluci\'{o}n de estas ecuaciones puede realizarse
+recurriendo a la funci\'{o}n generatriz de probabilidades de $N_t$
+(z-transformada).
+\par
+Sea $W(z,t)=E(z^{N_t})=\displaystyle\sum_{k=0}^\infty z^kp_k(t)$,
+entonces de las ecuaciones anteriores,
+\[
+\begin{array}{l}
+\displaystyle\sum_{k=0}^\infty z^k
+p_k^\prime(t)=\lambda\displaystyle\sum_{k=1}^\infty z^k
+P_{k-1}(t)-\lambda \displaystyle\sum_{k=0}^\infty z^k
+P_k(t)\Rightarrow
+\\[15pt]
+\dfrac{d W(z,t)}{dt}=\lambda zW(z,t)-\lambda W(z,t)=\lambda
+W(z,t)(z-1)\Rightarrow\\[10pt]
+\left.\begin{array}{l}
+W(z,t)=Ce^{\lambda t(z-1)}\\
+W(z,0)=1 \end{array}\right \}\Rightarrow W(z,t) = e^{\lambda
+t(z-1)}
+\end{array}
+\]
+por tanto, la funci\'{o}n generatriz de probabilidades de $N_t$
+corresponde a una distribuci\'{o}n de Poisson. Las probabilidades se
+pueden obtener mediante
+\[
+\frac{1}{n!}\left.\dfrac{d^nW(z,t)}{dz^n}\right
+|_{t=0}=p_n(t)=\dfrac{e^{-\lambda t}(\lambda t)^n}{n!}
+\]
+Las funciones generatriz de momentos o caracter\'{\i}stica
+(transformada de Laplace o la de Fourier) se pueden utilizar con
+todas sus propiedades, que simplifican la obtenci\'{o}n de la soluci\'{o}n
+en la ecuaci\'{o}n diferencial correspondiente.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Probabilidades de transici\'{o}n y l\'{\i}mite
+%\hfill \break
+de probabilidades}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Las probabilidades de transici\'{o}n pueden obtenerse de forma
+parecida a partir de las ecuaciones 'backward':
+\[
+\begin{array}{l}
+p^\prime_{ii}(t)=-\lambda p_{ii}(t),\enspace \forall i\\
+p^\prime_{ij}(t)=-\lambda p_{ij}(t)+\lambda p_{(i+1)j}(t),\enspace
+\forall j\geq i+1\\
+p^\prime_{ij}(t)=0,\enspace \forall j<i
+\end{array}
+\]
+o de las ecuaciones 'forward':
+\[
+\begin{array}{l}
+p^\prime_{ii}(t)=-\lambda p_{ii}(t),\enspace \forall i\\
+p^\prime_{ij}(t)=-\lambda p_{ij}(t)+\lambda p_{i(j-1)}(t),\enspace
+\forall j\geq i+1\\
+p^\prime_{ij}(t)=0,\enspace \forall j<i
+\end{array}
+\]
+en cualquier caso, las soluciones son
+\[
+p_{ij}(t)=\left\{\begin{array}{ll} \dfrac{e^{-\lambda t}(\lambda
+t)^{j-i}}{(j-i)!}&j\geq i\\
+0&j<i
+\end{array}\right.
+\]
+Puede verse que en el proceso de Poisson los l\'{\i}mites de las
+probabilidades de transici\'{o}n, cuando $t$ tiende a infinito, son 0.
+Esto significa que en el largo plazo las probabilidad de que nos
+encontremos en un estado $n$ cualquiera es nula. Esto es l\'{o}gico
+dada la definici\'{o}n del proceso que cuenta las ocurrencias de un
+determinado fen\'{o}meno y tiene trayectorias nunca decrecientes.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Tiempos entre llegadas y tiempos de espera}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+El tiempo que transcurre entre dos accidentes consecutivos, se
+puede demostrar, tiene una distribuci\'{o}n exponencial. Esta es otra
+caracter\'{\i}stica que permite identificar un proceso de Poisson.
+\par
+{\bf Teorema}\hfill\break Un proceso es de Poisson si y s\'{o}lo si
+los tiempos entre llegadas sucesivas son independientes,
+id\'{e}nticamente distribuidos con distribuci\'{o}n exponencial.
+\par
+Consecuencia de esto y de la independencia de lo ocurrido en
+intervalos de tiempo no solapados, se demuestra que, el tiempo
+hasta que llega la $k$-\'{e}sima ocurrencia sigue una distribuci\'{o}n
+$Gamma$ de par\'{a}metros $k$ y la tasa de llegadas del proceso.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Aplicaci\'{o}n en la estimaci\'{o}n de la fiabilidad de un software}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ejemplo de Ross, Introduction to probability models.
+\par
+Cuando un nuevo paquete de software se desarrolla, es necesario
+realizar algunos tests para eliminar errores. Una pr\'{a}ctica com\'{u}n
+es intentar con el paquete un conjunto de problemas muy conocidos
+y comprobar si comete errores.
+\par
+Para modelar lo anterior, supongamos que inicialmete el paquete
+tiene un n\'{u}mero desconocido de tipos de error, m. Supongamos que
+los errores de tipo $i$ se producen seg\'{u}n un proceso de Poisson de
+tasa $\lambda_i$ y que los errores de un tipo se producen de
+forma independiente a los de otros. En un tiempo $t$, el n\'{u}mero
+de fallos que esperamos encontrar es
+\[
+E(N(t))=\displaystyle\sum_i \lambda_i t
+\]
+Si se deja funcionar al paquete durante un tiempo $t$, los
+errores que se han producido se han podido arreglar. Pero no
+podemos estar convencidos de que se han eliminado todos los
+errores que tiene el paquete. Es necesario estimar el ratio de
+errores del paquete revisado. Se considera que se ha observado la
+variable
+\[
+\phi_i(t)=\left \{
+\begin{array}{ll}
+1&\begin{array}{l} \text{el error de tipo $i$ no ha causado
+ning\'{u}n fallo en el intervalo de amplitud $t$}
+\end{array}\\
+0&\text{ en otro caso}
+\end{array}\right.
+\]
+entonces el ratio de error del paquete en un tiempo de amplitud
+$t$ de un tipo u otro es
+$\Delta(t)=\displaystyle\displaystyle\sum_i \lambda_i\phi_i(t)$ y
+el n\'{u}mero esperado de fallos ser\'{a} ahora
+\[
+\begin{array}{ll}
+E(\Delta(t))&=\displaystyle\displaystyle\sum_i
+\lambda_iE(\phi_i(t))=
+\displaystyle\displaystyle\sum_i \lambda_i P(\phi_i(t)=1)=
+%\\&=
+\displaystyle\displaystyle\sum_i \lambda_iP(Poisson(\lambda_i
+t)=0)=\displaystyle\displaystyle\sum_i \lambda_i e^{-\lambda_i t}
+\end{array}
+\]
+es decir, habremos rebajado la tasa de fallos. Se puede ver que
+cuanto mayor sea el tiempo t m\'{a}s se rebajar\'{a} la tasa de fallos,
+l\'{o}gicamente puesto que se pueden descubrirse m\'{a}s tipos de errores.
+\par
+Adem\'{a}s, se llega a que puede estimarse cu\'{a}nto vale dicha tasa
+mediante $M_1(t)/t$, donde $M_1(t)/t$ es el n\'{u}mero de tipos de
+errores que han aparecido s\'{o}lo una vez durante el intervalo de
+prueba de amplitud t. La justificaci\'{o}n es que si consideramos las
+variables indicadoras
+\[
+I_i(t)=\left \{
+\begin{array}{ll}
+1&\begin{array}{l} \text{si el error de tipo $i$ ha causado un
+solo fallo en el intervalo de amplitud $t$}
+\end{array}\\
+0&\text{ en otro caso}
+\end{array}\right.
+\]
+entonces, como $M_1(t)=\displaystyle\displaystyle\sum_i I_i(t)$,
+\[
+\begin{array}{l}
+E(M_1(t))=\displaystyle\displaystyle\sum_i
+E(I_i(t))=\displaystyle\displaystyle\sum_i P(Poisson(\lambda_i
+t)=1)=
+\displaystyle\displaystyle\sum_i \lambda_i te^{-\lambda_i t}=t E(\Delta(t))\Rightarrow\\
+E(\Delta(t))=\dfrac{E(M_1(t))}{t}
+\end{array}
+\]
+adem\'{a}s veremos en su momento que este estimador adem\'{a}s de centrado
+es consistente, o lo que es lo mismo, que si aumentamos t
+indefinidamente el estimador coincide con el valor esperado.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Propiedades del proceso de Poisson}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Consideremos un proceso de Poisson $\{N(t),\,t\geq 0\}$ con tasa
+$\lambda$ y supongamos que cada llegada puede ser clasificada de
+tipo I \'{o} de tipo II. Las llegadas se clasifican en el tipo I con
+probabilidad $p$ y en el tipo II con probabilidad $1-p$,
+independientemente unas de otras. Sean los procesos que describen
+las llegadas de tipo I, $\{N_1(t),\,t\geq 0\}$ y de tipo II,
+$\{N_2(t),\,t\geq 0\}$, entonces $N(t)=N_1(t)+N_2(t)$.
+\par
+{\bf Proposici\'{o}n}\hfill\break Los procesos $\{N_1(t),\,t\geq 0\}$
+y $\{N_2(t),\,t\geq 0\}$ son de Poisson con par\'{a}metros $\lambda
+p$ y $\lambda (1-p)$) y adem\'{a}s son independientes. \hfill\break
+Demostraci\'{o}n:
+\[
+\begin{array}{l}
+P(N_1(t)=n, N_2(t)=m)=%\\[10pt]\hbox{}\hspace{10pt}=
+P(N_1(t)=n, N_2(t)=m|N(t)=n+m
+)P(N(t)=n+m)=\\[10pt]
+\hbox{}\hspace{10pt}=P(Binomial(n+m,p)=n)P(N(t)=n+m)={n+m \choose
+n}p^n(1-p)^m \dfrac{e^{-\lambda t}(\lambda
+t)^{n+m}}{(n+m)!}=\\[10pt]
+\hbox{}\hspace{10pt}=\dfrac{e^{-\lambda pt}(\lambda
+pt)^{n}}{n!}\dfrac{e^{-\lambda (1-p)t}(\lambda (1-p)t)^{m}}{m!}
+\end{array}
+\]
+Para la ver las distribuciones marginales
+\[
+\begin{array}{ll}
+P(N_1(t)=n)&=\displaystyle\sum_{m=0}^\infty P(N_1(t)=n, N_2(t)=m)=\\[10pt]
+&=\displaystyle\sum_{m=0}^\infty \dfrac{e^{-\lambda pt}(\lambda
+pt)^{n}}{n!}\dfrac{e^{-\lambda (1-p)t}(\lambda (1-p)t)^{m}}{m!}=
+\dfrac{e^{\lambda pt}(\lambda pt)^{n}}{n!}
+\end{array}
+\]
+luego se tiene que el proceso $\{N_1(t),\,t\geq 0\}$ es de Poisson
+con tasa $\lambda p$. An\'{a}logamente se tiene que el proceso
+$\{N_2(t),\,t\geq 0\}$ es de Poisson con tasa $\lambda (1-p)$.
+Para la independencia, observemos que
+$P(N_1(t)=n,N_2(t)=m)=P(N_1(t)=n)P(N_2(t)=m)$.
+\par
+Consideremos un proceso de Poisson $\{N_1(t),\,t\geq 0\}$, de tasa
+$\lambda_1$ y otro proceso de Poisson $\{N_2(t),\,t\geq 0\}$ de
+tasa $\lambda_2$ e independiente del anterior. Sean la variable
+$S_n^1$ definida como el instante en que se produce la llegada $n$
+en el proceso $N_1(t)$, an\'{a}logamente se define $S_m^2$. Se
+demuestra que
+\[
+P(S_n^1<S_1^2)=\left
+(\dfrac{\lambda_1}{\lambda_1+\lambda_2}\right )^n
+\]
+por competir dos tiempos exponenciales independientes y esta
+distribuci\'{o}n tiene ausencia de memoria. La probabilidad de que en
+el proceso de Poisson $\{N_1(t),\,t\geq 0\}$, de tasa
+$\lambda_1$, se produzcan $n$ llegadas antes de que en el otro
+proceso de Poisson $\{N_2(t),\,t\geq 0\}$ de tasa $\lambda_2$ e
+independiente del anterior, se produzcan $m$ llegadas es
+\[
+P(S_n^1<S_m^2)=\displaystyle\sum_{k=n}^{\infty}{k+m-1 \choose
+k}\left (\dfrac{\lambda_1}{\lambda_1+\lambda_2}\right )^k \left
+(\dfrac{\lambda_2}{\lambda_1+\lambda_2}\right )^{m}
+\]
+es decir, de las $k+m-1$ llegadas que ha habido, $n$ \'{o} m\'{a}s han
+sido del proceso $\{N_1(t),\,t\geq 0\}$.
+\par
+Consideremos que en un instante $t$ observamos un proceso de
+Poisson $\{N(t),\,t\geq 0\}$, de tasa $\lambda$ y toma el valor 1,
+?`cu\'{a}l es la distribuci\'{o}n del instante en que se ha producido esa
+llegada?. Si se denota por $S_k$ al instante en que se produce la
+$k$-\'{e}sima llegada, entonces:
+\[
+\begin{array}{l}
+P(S_1<s|N(t)=1)=\dfrac{P(S_1<s, N(t)=1)}{P( N(t)=1)}=\\[10pt]
+\hbox{}\hspace{30pt}=\dfrac{P\left(\begin{array}{l}\text{haya 1
+ocurrencia en el intervalo $(0,s)$}\\ \text{y ninguna ocurrencia
+en $(s,t)$}\end{array}\right )}{P(N(t)=1)}=\dfrac{\lambda s
+e^{-\lambda s}e^{-\lambda(t-s)}}{\lambda t e^{-\lambda
+t}}=\dfrac{s}{t}
+\end{array}
+\]
+es decir, se tiene que $S_1|N(t)=1$ es uniforme en $(0,t)$. Esto
+se puede extender con el siguiente resultado.
+\par
+{\bf Teorema}\hfill\break Dado que $N(t)=n$, se tiene que los
+instantes de llegadas $(S_1,\ldots,S_n)$ tienen la distribuci\'{o}n
+correspondiente a los estad\'{\i}sticos ordenados de $n$ variables
+aleatorias independientes e id\'{e}nticamente distribuidas con
+distribuci\'{o}n $Uniforme(0,t)$ y funci\'{o}n de densidad conjunta
+\[
+f(s_1,\ldots,s_n|N(t)=n)=\left(\dfrac{t^n}{n!}\right)^{-1}=\dfrac{n!}{t^n}
+\]
+{\bf Proposici\'{o}n}\hfill\break Dado que $S_n=t$, entonces la
+distribuci\'{o}n de $(S_1,\ldots,S_{n-1})$ es la de un conjunto de
+$n-1$ variables aleatorias independientes e id\'{e}nticamente
+distribuidas con distribuci\'{o}n $Uniforme(0,t)$ ordenadas.
+\par
+{\bf Ejemplo:} Ross, Introduction to Probability Models
+\par
+Un medidor de ondas el\'{e}ctricas se orienta para percibir las ondas
+que provienen de una fuente que emite pulsos en instantes
+aleatorios, que siguen un proceso de Poisson de tasa $\lambda$.
+Las ondas que emiten tienen una amplitud aleatoria $A$, con
+distribuci\'{o}n id\'{e}ntica en todo momento, pero independiente en los
+distintos pulsos. Por otra parte, la se\~{n}al que se emite en un
+instante pierde potencia y la amplitud de onda disminuye
+exponencialmente con el tiempo. De esta forma, la se\~{n}al que se
+percibe en un instante $t$ tiene amplitud
+\[
+A(t)=\displaystyle\sum_{i=1}^{N(t)} A_i e^{-\alpha(t-S_i)}
+\]
+donde $N(t)$ es el n\'{u}mero de pulsos generados hasta el instante
+$t$, $A_i$ es la amplitud inicial con la que se ha emitido el
+pulso $i$-\'{e}simo, $S_i$ es el instante en que se ha producido el
+$i$-\'{e}simo pulso y $A_i e^{-\alpha(t-S_i)}$ es la amplitud del
+pulso $i$-\'{e}simo que permanece en el instante $t$. El valor
+esperado de la amplitud que se percibe en el instante $t$ ser\'{a}
+\[
+E(A(t))=\displaystyle\sum_{n=0}^{\infty} E(A(t)|N(t)=n)P(N(t)=n)=
+\displaystyle\sum_{n=0}^{\infty} E\left
+(\displaystyle\sum_{i=1}^{n}A_i e^{-\alpha(t-S_i)}\right
+)P(N(t)=n)
+\]
+donde si $N(t)=n$, $(S_1,\ldots,S_n)$ tiene la distribuci\'{o}n de los
+estad\'{\i}sticos ordenados de una muestra aleatoria simple de $n$
+elementos de una variable aleatoria $Uniforme(0,t)$, con lo que
+$E\left (\displaystyle\sum_{i=1}^{n}A_i
+e^{-\alpha(t-S_i)}\right)=n E(A e^{-\alpha(t-Y)})$ con lo que
+\[
+\begin{array}{ll}
+E(A(t))&=\displaystyle\sum_{n=0}^{\infty} nE(A
+e^{-\alpha(t-Y)})P(N(t)=n)= E(A
+e^{-\alpha(t-Y)})E(N(t))=\\
+&=E(A)\dfrac{1-e^{-\alpha t}}{\alpha t}\lambda t=\lambda
+E(A)\dfrac{1-e^{-\alpha t}}{\alpha}
+\end{array}
+\]
+Si se estudia la varianza se puede ver si la amplitud tiende a
+estabilizarse.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Generalizaciones del proceso de Poisson}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Proceso de Poisson no homog\'{e}neo}
+\par
+Un proceso de Poisson $N_t$ en el que la tasa de ocurrencia no es
+constante, sino que es funci\'{o}n del instante $t$, sea $\lambda(t)$,
+se dice proceso de Poisson no homog\'{e}neo y verifica:
+\begin{enumerate}
+  \item[(a)] $N_0=0$,
+  \item[(b)] $\{N_t,\,t\geq 0\}$ tiene incrementos independientes, es decir, dados
+$t_1<t_2<t_3<t_4$ se tiene que $N_{t_2}-N_{t_1}$ y
+$N_{t_4}-N_{t_3}$ son variables aleatorias independientes,
+  \item[(c)] $P(N_{t+h}-N_t\geq 2)=o(h)$,
+  \item[(d)] $P(N_{t+h}-N_t=1)=\lambda(t)h+o(h)$.
+\end{enumerate}
+y se puede demostrar que las probabilidades de estado son
+\[
+P(N_{t+s}-N_t=n)=\dfrac{(m(t+s)-m(t))^n}{n!}e^{-(m(t+s)-m(t))}
+\]
+donde $m(t)=\displaystyle \int_0^t \lambda(s)\enspace ds$, es
+decir, $N_{t+s}-N_t$ es una variable de Poisson de tasa
+$m(t+s)-m(t)$.
+\par
+{\bf Proceso de Poisson compuesto}
+\par
+Supongamos un proceso de Poisson $\{N_t,\,t\geq 0\}$ que rige los
+instantes en que se producen llegadas. En este caso, cuando se
+produce la llegada $i$-\'{e}sima, el n\'{u}mero de ocurrencias en ese
+instante es una variable aleatoria $D_i$ con funci\'{o}n de
+distribuci\'{o}n $F$ y con funci\'{o}n generatriz de momentos $G$, siendo
+las variables aleatorias $\{D_n,n=1,2,\ldots\}$ independientes.
+Se define el proceso que cuenta el n\'{u}mero total de ocurrencias
+hasta el instante $t$:
+\[
+X_t=\left \{ \begin{array}{ll} \displaystyle\sum_{i=1}^{N_t}D_i&
+\text{ si
+}N_t>0\\[5pt]
+0& \text{ en otro caso }\end{array} \right.
+\]
+La funci\'{o}n generatriz de momentos de $X_t$ es
+$L(X_t,u)=E(e^{uX_t})=\exp{(\alpha t(-1+G(u)))}$, luego
+$E(X_t)=\alpha t E(D_1)$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Procesos de nacimiento y muerte}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Consideramos una cadena de Markov en tiempo continuo, en que el
+espacio de estados es $\{0,1,2,\ldots\}$ y donde las transiciones
+s\'{o}lo pueden darse desde un estado a los contiguos, de forma que la
+matriz de tasas de transici\'{o}n es
+\[
+\Lambda=
+\begin{pmatrix}
+  -\lambda_0 & \lambda_0  &     0 & 0 & \cdots \\
+   \mu_1   &-(\lambda_1+\mu_1)& \lambda_1 &  0&\cdots \\
+      0    & \mu_2      & -(\lambda_2+\mu_2)&\lambda_2  & \cdots \\
+    0       &  0        &\mu_3  & -(\lambda_3+\mu_3) & \cdots
+\end{pmatrix}
+\]
+y el diagrama de transiciones es el de la figura~\ref{nacimiento}.
+\begin{figure}
+\centerline{\scalebox{0.5}{\includegraphics{nacimiento.ps}}}
+\caption[]{Diagrama de estados del proceso} \label{nacimiento}
+\end{figure}
+De lo anterior, se obtienen las ecuaciones de Chapman-Kolmogorov
+``forward'',
+\[
+\begin{array}{l}
+ p^\prime_{i0}(t)=-\lambda_0 p_{i0}(t)+\mu_1 p_{i1}(t)\\
+%
+{p_{ij}}^\prime(t)=\lambda_{j-1}p_{i(j-1)}(t)-(\lambda_j+\mu_j)
+p_{ij}(t)+\mu_{j+1}p_{i(j+1)}(t),\enspace j=1,2,\ldots\\
+\end{array}
+\]
+La estructura del problema refleja la poblaci\'{o}n en un instante
+determinado, considerando que los individuos nacen y mueren de
+uno en uno, con tasas de nacimiento $\lambda_j$ y muerte $\mu_j$,
+que dependen del estado del proceso $j$. Las probabilidades de
+estado a largo plazo pueden encontrarse a partir de las
+ecuaciones de balance
+\[
+\begin{array}{l}
+ \lambda_0 q_0=\mu_1 q_1\\
+%
+(\lambda_j+\mu_j)q_j=\lambda_{j-1}q_{j-1}+\mu_{j+1}q_{j+1},\hspace{20pt} j=1,2,\ldots\\
+\end{array}
+\]
+que dan lugar a la relaci\'{o}n
+$q_{j+1}=\dfrac{\lambda_j}{\mu_{j+1}}q_j$ y por lo tanto, la
+soluci\'{o}n de dicho sistema de ecuaciones es:
+\[
+\begin{array}{l}
+q_n=\dfrac{\lambda_0 \lambda_1\ldots \lambda_{n-1}}{\mu_1 \mu_2
+\ldots \mu_n}q_0\\[10pt]
+q_0=\left\{
+\begin{array}{ll}
+\dfrac{1}{S}& \text{ si la serie }\enspace
+S=1+\displaystyle\sum_{n=1}^\infty \frac{\lambda_0
+\lambda_1\ldots \lambda_{n-1}}{\mu_1 \mu_2 \ldots
+\mu_n} \text{ es convergente}\\[5pt]
+0&\text{ la serie no es convergente }
+\end{array}
+\right.
+\end{array}
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ejemplos}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Cola M/M/1}
+\par
+Consideramos una cola M/M/1 donde se tiene que la tasa de
+llegadas de clientes es $\lambda$ y el tiempo de servicio es
+exponencial de par\'{a}metro $\mu$, por lo que
+$\lambda_j=\lambda,\,\mu_j=\mu,\enspace \forall j$.
+\par
+Se demuestra que s\'{o}lo hay situaci\'{o}n estable en la cola si se
+verifica que la serie $S$ es convergente, es decir, si
+$\lambda<\mu$. En este caso, se tiene que la distribuci\'{o}n a largo
+plazo viene descrita por
+\[
+q_0=1-\frac{\lambda}{\mu}\hspace{60pt}
+q_n=\left(\frac{\lambda}{\mu}\right)^n
+\left(1-\frac{\lambda}{\mu}\right)
+\]
+por tanto, el tama\~{n}o medio de individuos en el sistema es
+$L=\displaystyle\sum_{n=0}^\infty n
+q_n=\dfrac{\lambda}{\mu-\lambda}$.
+\par
+{\bf Crecimiento de una poblaci\'{o}n}
+\par
+Sea $X_t$=``n\'{u}mero de bacterias en una colonia en el instante
+$t$''. La evoluci\'{o}n de la poblaci\'{o}n viene dada por la siguiente
+informaci\'{o}n. Consideramos que el tiempo que tarda cada una de la
+bacterias en dividirse en dos trozos es exponencial de par\'{a}metro
+$\lambda$, se comporta en cada una de ellas de forma
+independiente. Por otra parte, la vida de una bacteria se
+representa como una variable aleatoria exponencial de par\'{a}metro
+$\mu$.
+\par
+Se define el proceso de nacimiento y muerte $\{X_t,\,t\geq 0\}$,
+donde las tasa son $\lambda_0=0$, $\lambda_j=j\lambda$, para
+$j=1,2,\ldots$ y $m_j=j\mu$, para $j=1,2,\ldots$. Notemos que el
+estado 0 es un estado absorbente del proceso. Las ecuaciones de
+Chapman-Kolmogorov quedan en la forma
+\[
+\begin{array}{l}
+ p^\prime_{0}(t)=\mu_1 p_{1}(t)\\[10pt]
+%
+p'^\prime_{i}(t)=(j-1)\lambda p_{j-1}(t)-j(\lambda +\mu)
+p_j(t)+(j+1)\mu p_{j+1}(t),\enspace j=1,2,\ldots\\
+\end{array}
+\]
+La soluci\'{o}n de las ecuaciones no es sencilla, pero podemos
+encontrar una expresi\'{o}n para el tama\~{n}o esperado de la poblaci\'{o}n
+en un instante $t$, $M(t)=\displaystyle\sum_{n=0}^\infty n
+p_n(t)$:
+\[
+\begin{array}{l}
+M'(t) =(\lambda-\mu) M(t)\Rightarrow M(t) =M(0) e^{(\lambda-\mu)t}
+\end{array}
+\]
+De esta expresi\'{o}n se deduce que el tama\~{n}o esperado de la poblaci\'{o}n
+tiende a 0, si $\lambda<\mu$ o a infinito si $\lambda>\mu$. Otra
+caracter\'{\i}stica de inter\'{e}s es la probabilidad de que el proceso
+llegue al estado 0, cuando se parte de $i$ individuos:
+\[
+\alpha_i=P(X_t \text{ absorbido en el estado 0}|X_0=i)
+\]
+Se demuestra que las relaciones entre estas probabilidades son
+\[
+(\lambda+\mu)\alpha_i=\lambda \alpha_{i+1}+\mu
+\alpha_{i-1}\Rightarrow \alpha_i=\left \{
+\begin{array}{ll}
+\left(\dfrac{\mu}{\lambda}\right)^i&\text{ si } \lambda \geq \mu\\
+1&\text{ si }\lambda < \mu
+\end{array}\right.
+\]
+es decir, se extingue con toda seguridad si la tasa de muertes es
+superior a la de nacimientos.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{Problemas propuestos}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

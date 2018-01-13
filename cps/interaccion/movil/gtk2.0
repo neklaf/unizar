@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#Script que utiliza las librerias libgtk+-2.0
+gcc $1 -o `echo $1 | cut -d . -f 1` `pkg-config --cflags --libs gtk+-2.0`

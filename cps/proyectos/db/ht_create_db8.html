@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><html><head><!-- Copyright (c) DBAonCall.net. All rights reserved. E-mail: info@dbaoncall.net --><!-- Copyright (c) DBAonCall.net. All rights reserved. E-mail: info@dbaoncall.net --><!-- dbConnect.inc --> 
+  <script language="JavaScript"><!-- 
+    if (top!=self) 
+	top.location.href=location.href;//--> 
+  </script> 
+ 	<meta http-equiv="Content-Type" content="text/html"> 
+	<meta http-equiv="charset" content="iso-8859-1"> 
+    <meta name="DBAonCAll.net" content="Resources"> 
+	<meta name="description" content="Create a new database on Oracle 8i - SQL scripts">    <meta name="keywords" content="database,install,create,new,tnsnames.ora,listner.ora,creation,installation,8i"><title>How to Create a New Database on Oracle 8i</title></head> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<body marginheight="5" marginwidth="0" leftmargin="0" topmargin="5" link="#000066" bgcolor="#ffffff" alink="#990000" vlink="#444464"> 
+ 
+<!-- Header --> 
+<table border="0" cellspacing="0" cellpadding="0" width="768" align="left" valign="top"> 
+  <tbody><tr> 
+    <td width="184" align="left" valign="middle"> 
+	<a href="http://www.dbaoncall.net/"><img src="ht_create_db8_files/logo_small.gif" width="184" height="40" align="left" border="0" alt="DBAonCall.net"></a>	</td> 
+	<td width="400" align="left" valign="middle"> 
+	<img src="ht_create_db8_files/oracle.gif" width="400" height="40" align="left" border="0" alt="Oralce">	</td> 
+	<td width="184" align="right" valign="middle"> 
+<!-- VC active --> 
+<script language="JavaScript"> 
+<!-- 
+// ValueParameters 
+ValueHost = "hs0258482"; 
+ValueLoaded = false; 
+ValueID = '29_120x60_ne';//ValueID = "valueid"; 
+ValueVersion = "1.1"; 
+ValueWidth = 120; 
+ValueHeight = 60; 
+//--> 
+</script> 
+<script language="Javascript" src="ht_create_db8_files/jsmaster.js"></script> 
+<script language="JavaScript"> 
+<!-- 
+if (ValueLoaded) ValueShowAd(); 
+//--> 
+</script><script src="ht_create_db8_files/cycle_002.js" language="JavaScript"></script><a href="http://oz.valueclick.com/redirect?banner=a0000000&amp;host=h0258482&amp;c=11&amp;size=120x60&amp;t=js&amp;dart_timestamp=1054991816.1704741" target="_blank"><img src="ht_create_db8_files/120x60_default.gif" width="120" height="60" border="0" alt="ValueClick - Performance Advertising"></a>
+<!-- Ad-Reach: valueclick.com -->
+ 
+<noscript> <A
+HREF='http://oz.valueclick.com/redirect?host=hs0258482&size=120x60&b=29_120x60_ne&v=0'
+TARGET='_top'><IMG BORDER='0' WIDTH='120' HEIGHT='60' ALT='Click here
+to visit our sponsor' 
+SRC='http://oz.valueclick.com/cycle?host=hs0258482&size=120x60&b=29_120x60_ne&noscript=1'></a></noscript> 
+<!-- vc active --> 
+	</td> 
+  </tr> 
+  <tr> 
+    <td width="768" colspan="3"><hr size="1" align="left"></td> 
+  </tr> 
+</tbody></table> 
+<!-- Header End --> 
+ 
+<br clear="all"> 
+ 
+<!-- Search --> 
+			<!-- Copyright (c) DBAonCall.net. All rights reserved. E-mail: info@dbaoncall.net --> 
+<!-- Copyright (c) DBAonCall.net. All rights reserved. E-mail: info@dbaoncall.net --> 
+<input type="hidden" name="id" size="0" value="7006769"><input value="r" size="0" name="pageid" type="hidden"><input value="ALL" size="0" name="mode" type="hidden"><table width="768" border="0" cellspacing="0" cellpadding="0"><form action="http://search.freefind.com/find.html" method="get"></form><tbody><tr><td width="768" height="1" colspan="4" bgcolor="#999999"><img src="ht_create_db8_files/spacer.html" width="669" height="1"></td></tr><tr><td width="768" bgcolor="#e3e3e3" valign="top"><table width="768" border="0" cellspacing="0" cellpadding="0" bgcolor="#e3e3e3"><tbody><tr><td width="516"><img src="ht_create_db8_files/spacer.html" width="516" height="7" border="0"></td><td width="60" valign="middle"><font face="arial,helvetica,sans serif" size="2" color="#003399">Search:</font></td><td valign="middle" width="130"><input type="text" name="query" size="20" value=""></td><td width="14"><img src="ht_create_db8_files/spacer.html" width="7" height="31" border="0" alt=""></td><td width="18" valign="middle"><input value="Search" width="18" height="19" border="0" name="submit" alt="Search" type="image" src="ht_create_db8_files/search.gif"></td><td width="14"><img src="ht_create_db8_files/spacer.html" width="7" height="31" border="0" alt=""></td></tr></tbody></table></td><td rowspan="2" width="1" bgcolor="#999999" align="left" valign="top"><img src="ht_create_db8_files/spacer.html" width="1" height="1" border="0"></td></tr><tr><td width="768" height="1" colspan="4" bgcolor="#999999"><img src="" width="669" height="1"></td></tr></tbody></table><!-- Search end --> 
+ 
+<table border="0" cellspacing="0" cellpadding="0" width="768" align="left" valign="top"> 
+	<tbody><tr> 
+		<td rowspan="2" width="98" align="left" valign="top" bgcolor="#cccccc"> 
+ 
+<!-- Menu start --> 
+			<!-- Copyright (c) DBAonCall.net. All rights reserved. E-mail: info@dbaoncall.net --> 
+<!-- Copyright (c) DBAonCall.net. All rights reserved. E-mail: info@dbaoncall.net --> 
+<table width="98" border="0" cellpadding="0" cellspacing="0" bgcolor="#ffffff"><tbody><tr><td colspan="3"><font face="arial,helvetica,sans serif" size="1"><br></font><a href="http://www.dbaoncall.net/"><img src="ht_create_db8_files/home.gif" width="98" height="20" border="0" alt="Home"></a></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td width="91"><img src="ht_create_db8_files/spacer.html" width="1" height="7" border="0"></td></tr><tr><td colspan="3"><a href="http://www.dbaoncall.net/index_files/contact_us.php"><img src="ht_create_db8_files/contact_us_small.gif" width="98" height="20" border="0" alt="Contact Us"></a></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td width="91"><img src="ht_create_db8_files/spacer.html" width="1" height="7" border="0"></td></tr><tr><td colspan="3"><a href="http://www.dbaoncall.net/index_files/submit.php"><img src="ht_create_db8_files/submit_small.gif" width="98" height="20" border="0" alt="Submit Article/Script"></a></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td width="91"><img src="ht_create_db8_files/spacer.html" width="1" height="7" border="0"></td></tr><tr><td colspan="3"><img src="ht_create_db8_files/resources_small.gif" width="98" height="20" border="0" alt="Resources"></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/index_files/index_oracle.html">Oracle</a></font></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/index_files/index_unix.html">Unix</a></font></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/index_files/index_sql_scripts.html">SQL Scripts</a></font></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/index_files/index_unix_scripts.html">Unix Scripts</a><br><br></font></td></tr><tr><td colspan="3"><img src="ht_create_db8_files/misc.gif" width="98" height="20" border="0" alt="Miscellaneous"></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/index_files/index_humor.html">Humor</a></font></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/cgi-bin/ikonboard/ikonboard.cgi" target="new">Forums</a></font></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/index_files/index_links.html">Links</a></font></td></tr><tr><td width="7"><img src="ht_create_db8_files/spacer.html" width="7" height="1" border="0"></td><td colspan="2"><font face="arial,helvetica,sans serif" size="1"><a href="http://www.dbaoncall.net/index_files/index_books.html">Books</a></font><br><br></td></tr><tr><td height="1" bgcolor="#999999" colspan="3"></td></tr></tbody></table><!-- Menu end --> 
+ 
+		</td> 
+		<td rowspan="2" width="1" bgcolor="#999999" align="left" valign="top"><img src="ht_create_db8_files/spacer.html" width="1" height="1" border="0"></td> 
+	</tr> 
+	<tr> 
+		<td width="669" align="left" valign="top"> 
+<!--ArticleBody start --> 
+			<table border="0" cellspacing="0" cellpadding="0" width="669" align="left" valign="top"> 
+				<tbody><tr><td colspan="4" width="669" valign="bottom" align="center"><img src="ht_create_db8_files/spacer.html" width="669" height="3"></td></tr> 
+				<tr> 
+					<td width="8" align="left" valign="top"><img src="ht_create_db8_files/spacer.html" width="8" height="1" border="0"></td> 
+					<td width="468" align="left" valign="top"> 
+						<table border="0" cellspacing="0" cellpadding="0" width="468" align="left" valign="top"> 
+							<tbody><tr><td><img src="ht_create_db8_files/spacer.html" width="468" height="1"></td></tr> 
+							<tr><td width="468" align="left"> 
+<!-- VC active --> 
+<script language="JavaScript"> 
+<!-- 
+// ValueParameters 
+ValueHost = "hs0258482"; 
+ValueLoaded = false; 
+ValueID = '29_468x60_nn';//ValueID = "valueid"; 
+ValueVersion = "1.1"; 
+ValueWidth = 468; 
+ValueHeight = 60; 
+//--> 
+</script> 
+<script language="Javascript" src="ht_create_db8_files/jsmaster.js"></script> 
+<script language="JavaScript"> 
+<!-- 
+if (ValueLoaded) ValueShowAd(); 
+//--> 
+</script><script src="ht_create_db8_files/cycle_003.js" language="JavaScript"></script><a href="http://oz.valueclick.com/redirect?banner=a0075395&amp;host=h0258482&amp;c=11&amp;size=468x60&amp;t=js&amp;dart_timestamp=1054991818.8918241" target="_blank"><img src="ht_create_db8_files/a0075395.gif" width="468" height="60" border="0" alt=""></a>
+<!-- Ad-Reach: valueclick.com -->
+ 
+<noscript> <A
+HREF='http://oz.valueclick.com/redirect?host=hs0258482&size=468x60&b=29_468x60_nn&v=0'
+TARGET='_top'><IMG BORDER='0' WIDTH='468' HEIGHT='60' ALT='Click here
+to visit our sponsor' 
+SRC='http://oz.valueclick.com/cycle?host=hs0258482&size=468x60&b=29_468x60_nn&noscript=1'></a></noscript> 
+<!-- vc active --> 
+                            </td></tr> 
+							<tr> 
+								<td width="468" valign="top" align="left"> 
+								<br> 
+<h5>August 26, 2000</h5><h2>How to Create a New Database on Oracle 8i</h2><font size="-1"><strong>By Alexander Geldutes</strong></font><br><br>			Suppose that you have Oracle 8i &amp; Unix
+			  <ol>
+			    <li>Set Unix environment for the new database:<br>
+				  <ul>
+				    <li>ORACLE_SID - name of the new database<br>
+				    </li><li>ORACLE_HOME - path to the Oracle home directory<br>
+				    </li><li>PATH has to include $ORACLE_HOME/bin directory<br>
+				  </li></ul>
+				<br>
+				<b>Attention:</b> Make sure that your environment is set correctly.<br>
+				If you made a mistake - your next actions may corrupt existing database.<br>
+				<br> 
+				    
+				</li><li>Create a new init<oracle_sid>.ora file.<br>
+				You may make a copy of this file from existing database or 
+				make a copy of default file from Oracle:
+				<br><br>
+<samp>
+$ cp $ORACLE_HOME/dbs/init.sql $ORACLE_HOME/dbs/init<oracle_sid>
+
+				<br><br>
+			    </oracle_sid></samp></oracle_sid></li><li> Update just created init<oracle_sid>.ora file, set your:<br>
+				  </oracle_sid><ul>
+				    <li>INSTANCE_NAME
+				    </li><li>DB_NAME
+					</li><li>DB_BLOCK_SIZE - size in bytes of Oracle database blocks
+					</li><li>CONTROL_FILES - names and location of control files of 
+					the new database
+					</li><li>any others parameters that you would like to change
+				  </li></ul>
+				  <br>
+				</li><li> Edit the following Korn scripts, see comments to them:
+				<br><br>
+                    <a href="http://www.dbaoncall.net/scripts/cr_db8.html">cr_db8.sh</a> - executes CREATE DATABASE command<br> 
+					<a href="http://www.dbaoncall.net/scripts/cr_db8_2.html">cr_db8_2.sh</a> - creates tablespaces, rollback segments, runs catalog.sql<br> 
+					<a href="http://www.dbaoncall.net/scripts/cr_db8_3.html">cr_db8_3.sh</a> - runs catproc.sql, caths.sql, otrcsvr.sql, pupbld.sql<br> 
+				  
+				</li><li>Run these scripts from UNIX. Check log file of the current script before running a next one.  
+				<br><br>
+				</li><li>Change passwords of SYSTEM and SYS users:
+				<br><br>
+<samp>
+ALTER USER SYSTEM IDENTIFIED BY ... ;<br>
+<br>
+ALTER USER SYS IDENTIFIED BY ...;
+</samp>
+				<br><br>
+			    </li><li>Update the following files: /etc/oratab, tnsnames.ora, listener.ora
+			  </li></ol>  
+ 
+<br> 
+								</td> 
+							</tr> 
+							<tr><td> 
+<!-- VC active --> 
+<script language="JavaScript"> 
+<!-- 
+// ValueParameters 
+ValueHost = "hs0258482"; 
+ValueLoaded = false; 
+ValueID = '29_468x60_ss';//ValueID = "valueid"; 
+ValueVersion = "1.1"; 
+ValueWidth = 468; 
+ValueHeight = 60; 
+//--> 
+</script> 
+<script language="Javascript" src="ht_create_db8_files/jsmaster.js"></script> 
+<script language="JavaScript"> 
+<!-- 
+if (ValueLoaded) ValueShowAd(); 
+//--> 
+</script><script src="ht_create_db8_files/cycle.js" language="JavaScript"></script><a href="http://oz.valueclick.com/redirect?banner=a0075394&amp;host=h0258482&amp;c=1b&amp;size=468x60&amp;t=js&amp;dart_timestamp=1054991818.9853741" target="_blank"><img src="ht_create_db8_files/a0075394.gif" width="468" height="60" border="0" alt=""></a>
+<!-- Ad-Reach: valueclick.com -->
+ 
+<noscript> <A
+HREF='http://oz.valueclick.com/redirect?host=hs0258482&size=468x60&b=29_468x60_ss&v=0'
+TARGET='_top'><IMG BORDER='0' WIDTH='468' HEIGHT='60' ALT='Click here
+to visit our sponsor' 
+SRC='http://oz.valueclick.com/cycle?host=hs0258482&size=468x60&b=29_468x60_ss&noscript=1'></a></noscript> 
+<!-- vc active --> 
+							</td></tr> 
+ 
+<!--Footer start --> 
+							<tr> 
+								<td width="468" valign="bottom" align="center"> 
+								<font face="arial,helvetica,sans-serif" color="#000099" size="1"> <!-- Copyright (c) DBAonCall.net. All rights reserved. E-mail: info@dbaoncall.net --> 
+ 
+Copyright © 2000-2003 DBAonCall.net All rights reserved.<br>E-mail: <a href="mailto:info@dbaoncall.net"><u>info@dbaoncall.net</u></a><br><a href="http://www.dbaoncall.net/index_files/legal_notice.html"><u>Legal Notice</u></a>								</font> 
+<br><br> 
+<center> 
+<!-- SpyLOG v2 f:0111 -->  
+<script language="javascript">  
+u="u1209.70.spylog.com";d=document;nv=navigator;na=nv.appName;p=1;  
+bv=Math.round(parseFloat(nv.appVersion)*100);  
+n=(na.substring(0,2)=="Mi")?0:1;rn=Math.random();z="p="+p+"&rn="+rn;y="";  
+y+="<a href='http://"+u+"/cnt?f=3&p="+p+"&rn="+rn+"' target=_blank>";  
+y+="<img src='http://"+u+"/cnt?"+z+  
+"&r="+escape(d.referrer)+"&pg="+escape(window.location.href)+"' border=0 width=88 height=31 alt='SpyLOG'>";  
+y+="</a>"; d.write(y);if(!n) { d.write("<"+"!--"); }//--></script><a href="http://u1209.70.spylog.com/cnt?f=3&amp;p=1&amp;rn=0.39457213060966967" target="_blank"><img src="ht_create_db8_files/cnt.gif" border="0" width="88" height="31" alt="SpyLOG"></a><noscript>  
+<a href="http://u1209.70.spylog.com/cnt?f=3&p=1" target=_blank>  
+<img src="http://u1209.70.spylog.com/cnt?p=1" alt='SpyLOG' border='0' width=88 height=31 >  
+</a></noscript><script language="javascript1.2"><!--  
+if(!n) { d.write("--"+">"); }//--></script>  
+<!-- SpyLOG --> 
+</center> 
+								</td> 
+							</tr> 
+<!-- Footer end --> 
+						</tbody></table> 
+					</td> 
+<!-- Related Books --> 
+					 
+<!-- Related Books end --> 
+				</tr> 
+			</tbody></table> 
+<!--ArticleBody end --> 
+		</td> 
+	</tr> 
+</tbody></table> 
+ 
+ 
+</body></html>

@@ -1,0 +1,4 @@
+#!/bin/bash
+#Script para la generacion y visualizacion del fichero PDF resultante
+
+latex trabajo.tex && dvipdf trabajo.dvi && rm trabajo.aux trabajo.log trabajo.dvi && clear && gv trabajo.pdf &

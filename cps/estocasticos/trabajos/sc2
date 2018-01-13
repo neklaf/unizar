@@ -1,0 +1,4 @@
+#!/bin/bash
+#Otro script para la generacion del pdf
+
+latex trabajo.tex && dvipdf trabajo.dvi

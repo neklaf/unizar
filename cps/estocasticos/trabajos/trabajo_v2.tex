@@ -1,0 +1,556 @@
+\documentclass[12pt]{article}
+%\usepackage[spanish,activeacute]{babel} Esto es una mierda y no funciona realmente
+\usepackage[latin1]{inputenc}	%Para utilizar la letras normales!!
+\usepackage[dvips]{graphicx} %Para poder insertar graficos dentro de los ficheros
+
+\author{Aitor Acedo Legarre}
+\title{Modelos Estocásticos en la Ingeniería: Aplicaciones de las Cadenas de Markov}
+\date{12 de Agosto de 2003} %Forzamos a que ponga esta fecha
+\pagestyle{headings}
+%Hasta aqui llega la configuracion del documento
+\begin{document} 
+\large
+\maketitle
+\begin{center}{Powered by \LaTeX.}\end{center}
+\newpage
+\tableofcontents
+\newpage
+\hyphenation{ra-zo-na-ble} %Para que divida correctamente las palabras en el texto
+\hyphenation{mo-de-los}
+
+\section{Introducción del problema}
+
+El objetivo de este trabajo será el de explicar los posibles modelos que podemos utilizar cuando estudiemos el comportamiento de 
+las fuentes de información, dichas fuentes alimentarán a los dispositivos que forman parte de una red de telecomunicaciones, por lo que es de gran utilidad
+conocer su comportamiento para poder realizar un diseño eficiente de una red de telecomunicaciones. 
+Este es el primer problema que deberemos tratar cuando queremos dimensionar ciertos dispositivos como por ejemplo las centralitas telefónicas. Para no hablar de 
+situaciones genéricas, y aprovechando que se ha mencionado el problema común del dimensionado de las centralitas, analizaremos los posibles modelos que 
+pueden ser aplicados a las fuentes de voz que será la información que llegue a un centralita de teléfonos analógicos.
+
+\begin{center}
+\includegraphics[width=13cm,height=9cm]{imagenes/Problema.eps}
+\end{center}
+
+\newpage
+Como se puede observar en la figura tenemos un pequeño ejemplo de lo que es una jerarquía de centralitas que constituyen parte de una red 
+telefónica, la primera centralita, la dibujada más a la izquierda es la que nos proondríamos dimensionar, a ella están entrando \emph{N}
+líneas telefónicas analógicas, que conducirán la voz de los abonados hasta la centralita. Después tendremos \emph{M} enlaces a la 
+siguiente centralita, estos enlaces serán los que lleven la información multiplexada de todas las entradas telefónicas que nos han llegado, 
+la cuestión final que deberíamos resolver es que cantidad de líneas de entrada y de salida serán necesarias para garantizar un funcionamiento 
+óptimo de la centralita.
+Para la resolución de nuestro problema vamos a echar mano de los modelos de Markov que son frecuentemente utilizados en el mundo de las
+telecomunicaciones para modelar el comportamiento de las fuentes de voz.
+
+\newpage
+
+\section{Teoría}
+
+\subsection{Proceso de Poisson}
+
+Un ejemplo de cadena de Markov en tiempo continuo con espacio de
+estados discreto es el proceso de Poisson. Consideremos, por
+ejemplo, los tiempos que transcurren entre los accidentes en la
+central energ\'{e}tica.
+\par
+Sea $N=\{N_t,t\geq 0\}$ el proceso
+definido como $N_t$=``n\'{u}mero de accidentes hasta el instante
+$t$''. Se dice que es un proceso de Poisson si verifica
+
+\begin{enumerate}
+  \item[(a)] Cualquier trayectoria del proceso $N$ crece a saltos de
+  una unidad y $N_0=0$,
+  \item[(b)] $\forall t,s\geq 0$, $N_{t+s}-N_t$ es independiente de $\{N_u, u\leq t\}$,
+  \item[(c)] $\forall t,s\geq 0$, la distribuci\'{o}n de $N_{t+s}-N_t$ es independiente
+  de $t$.
+\end{enumerate}
+
+Se puede ver que estas hip\'{o}tesis son f\'{\i}sicamente razonables para
+este proceso. La experiencia nunca ha producido dos rupturas
+simult\'{a}neas, por lo tanto el n\'{u}mero de rupturas aumenta de uno en
+uno. La segunda hip\'{o}tesis indica que lo ocurrido en tiempos
+anteriores no influye en la ocurrencia del fen\'{o}meno en un per\'{\i}odo
+posterior. La tercera hip\'{o}tesis indica que los accidentes ocurren
+con la misma intensidad en cualquier \'{e}poca o instante de tiempo,
+de forma que, el n\'{u}mero de ocurrencias durante un periodo de
+tiempo s\'{o}lo depende de la amplitud del intervalo. Estas hip\'{o}tesis
+implican que la distribuci\'{o}n de $N_{t+s}-N_t$ es una variable de
+Poisson de par\'{a}metro igual a la intensidad por la amplitud del
+intervalo, es decir, $\lambda s$.
+
+\subsubsection{Probabilidades de estado}
+Para encontrar las probabilidades de estado o de transici\'{o}n nos
+podemos basar en las ecuaciones diferenciales de
+Chapman-Kolmogorov:
+\[
+\begin{array}{l}
+P(N_{t+s}-N_t=0)=1-\lambda s+o(s)\\
+P(N_{t+s}-N_t=1)=\lambda s+o(s)\\
+P(N_{t+s}-N_t=k)=o(s),\enspace k\geq 2
+\end{array}
+\]
+Entonces,
+\[
+\begin{array}{ll}
+P(N_{t+s}=n)&=\displaystyle\sum_{k=0}^n
+P(N_t=k)P(N_{t+s}-N_s=n-k)=
+\\
+&=o(s)+P(N_t=n-1)(\lambda s +o(s))+ P(N_t=n)(1-\lambda
+s+o(s))\Rightarrow
+\end{array}
+\]
+
+\[
+\begin{array}{l}
+\frac{P(N_{t+s}=n)-P(N_t=n)}{s}=P(N_t=n-1)\lambda-P(N_t=n)\lambda+\frac{o(s)}{s}
+\Rightarrow \hbox{}\hfill\\[10pt]
+\displaystyle\lim_{s\to
+0}\frac{P(N_{t+s}=n)-P(N_t=n)}{s}={p_n}^{\prime}(t)=P_{n-1}(t)\lambda-P_n(t)\lambda
+\hspace{20pt}\textrm{y para $n=0$ }\\[10pt]
+p_0^\prime(t)=-p_0(t)\lambda \hspace{20pt}\textrm{donde se ha
+denotado $p_n(t)=P(N_t=n)$}
+\end{array}
+\]
+
+Las ecuaciones anteriores se resuelven de forma recursiva,
+\[
+\begin{array}{lll}
+\left.\begin{array}{l}
+{p_0}^\prime(t)=-p_0(t)\lambda\\
+p_0(0)=1
+\end{array}\right\}
+&\Rightarrow &p_0(t)=e^{-\lambda t}\\[5pt]
+%
+\left.\begin{array}{l} {p_{10}}^\prime(t)=-\lambda p_1(t) +
+\lambda p_0(t)=-\lambda p_1(t) +
+e^{-\lambda t}\\
+p_1(0)=0
+\end{array}\right\}
+&\Rightarrow &p_1(t)=\lambda t e^{-\lambda t}\\[5pt]
+%
+\end{array}
+\]
+En general, $p_n(t)=\frac{e^{-\lambda t}(\lambda t)^n}{n!}$,
+luego la distribuci\'{o}n de $N_t$ es Poisson con par\'{a}metro $\lambda
+t$. La resoluci\'{o}n de estas ecuaciones puede realizarse
+recurriendo a la funci\'{o}n generatriz de probabilidades de $N_t$
+(z-transformada).
+\par
+Sea $W(z,t)=E(z^{N_t})=\displaystyle\sum_{k=0}^\infty z^kp_k(t)$,
+entonces de las ecuaciones anteriores,
+\[
+\begin{array}{l}
+\displaystyle\sum_{k=0}^\infty z^k
+p_k^\prime(t)=\lambda\displaystyle\sum_{k=1}^\infty z^k
+P_{k-1}(t)-\lambda \displaystyle\sum_{k=0}^\infty z^k
+P_k(t)\Rightarrow
+\\[15pt]
+\frac{d W(z,t)}{dt}=\lambda zW(z,t)-\lambda W(z,t)=\lambda
+W(z,t)(z-1)\Rightarrow\\[10pt]
+\left.\begin{array}{l}
+W(z,t)=Ce^{\lambda t(z-1)}\\
+W(z,0)=1 \end{array}\right \}\Rightarrow W(z,t) = e^{\lambda
+t(z-1)}
+\end{array}
+\]
+por tanto, la funci\'{o}n generatriz de probabilidades de $N_t$
+corresponde a una distribuci\'{o}n de Poisson. Las probabilidades se
+pueden obtener mediante
+\[
+\frac{1}{n!}\left.\frac{d^nW(z,t)}{dz^n}\right
+|_{t=0}=p_n(t)=\frac{e^{-\lambda t}(\lambda t)^n}{n!}
+\]
+Las funciones generatriz de momentos o caracter\'{\i}stica
+(transformada de Laplace o la de Fourier) se pueden utilizar con
+todas sus propiedades, que simplifican la obtenci\'{o}n de la soluci\'{o}n
+en la ecuaci\'{o}n diferencial correspondiente.
+
+
+\subsubsection{Probabilidades de transición y límite de probabilidades}
+Las probabilidades de transici\'{o}n pueden obtenerse de forma
+parecida a partir de las ecuaciones 'backward':
+\[
+\begin{array}{l}
+p^\prime_{ii}(t)=-\lambda p_{ii}(t),\enspace \forall i\\
+p^\prime_{ij}(t)=-\lambda p_{ij}(t)+\lambda p_{(i+1)j}(t),\enspace
+\forall j\geq i+1\\
+p^\prime_{ij}(t)=0,\enspace \forall j<i
+\end{array}
+\]
+o de las ecuaciones 'forward':
+\[
+\begin{array}{l}
+p^\prime_{ii}(t)=-\lambda p_{ii}(t),\enspace \forall i\\
+p^\prime_{ij}(t)=-\lambda p_{ij}(t)+\lambda p_{i(j-1)}(t),\enspace
+\forall j\geq i+1\\
+p^\prime_{ij}(t)=0,\enspace \forall j<i
+\end{array}
+\]
+en cualquier caso, las soluciones son
+\[
+p_{ij}(t)=\left\{\begin{array}{ll} \frac{e^{-\lambda t}(\lambda
+t)^{j-i}}{(j-i)!}&j\geq i\\
+0&j<i
+\end{array}\right.
+\]
+Puede verse que en el proceso de Poisson los l\'{\i}mites de las
+probabilidades de transici\'{o}n, cuando $t$ tiende a infinito, son 0.
+Esto significa que en el largo plazo las probabilidad de que nos
+encontremos en un estado $n$ cualquiera es nula. Esto es l\'{o}gico
+dada la definici\'{o}n del proceso que cuenta las ocurrencias de un
+determinado fen\'{o}meno y tiene trayectorias nunca decrecientes.
+
+\subsubsection{Tiempos entre llegadas y tiempos de espera}
+El tiempo que transcurre entre dos accidentes consecutivos, se
+puede demostrar, tiene una distribuci\'{o}n exponencial. Esta es otra
+caracter\'{\i}stica que permite identificar un proceso de Poisson.
+\par
+{\bf Teorema}\hfill\break Un proceso es de Poisson si y s\'{o}lo si
+los tiempos entre llegadas sucesivas son independientes,
+id\'{e}nticamente distribuidos con distribuci\'{o}n exponencial.
+\par
+Consecuencia de esto y de la independencia de lo ocurrido en
+intervalos de tiempo no solapados, se demuestra que, el tiempo
+hasta que llega la $k$-\'{e}sima ocurrencia sigue una distribuci\'{o}n
+$Gamma$ de par\'{a}metros $k$ y la tasa de llegadas del proceso.
+
+\subsection{Procesos de nacimiento y muerte}
+Consideramos una cadena de Markov en tiempo continuo, en que el
+espacio de estados es $\{0,1,2,\ldots\}$ y donde las transiciones
+sólo pueden darse desde un estado a los contiguos, de forma que la
+matriz de tasas de transición es:
+
+
+\begin{displaymath}
+\Lambda=
+\left( \begin{array}{ccccc}
+-\lambda_0 & \lambda_0 & 0 & 0 & \cdots \\
+\mu_1 &-(\lambda_1+\mu_1) & \lambda_1 & 0 & \cdots \\
+0 & \mu_2 & -(\lambda_2+\mu_2) &\lambda_2 & \cdots \\
+0 & 0 &\mu_3 & -(\lambda_3+\mu_3) & \cdots
+\end{array}\right)
+\end{displaymath}
+
+y el diagrama de transiciones es el de la figura 4.2. De loa anterior, se obtiene las ecuaciones de 
+Chapman-Kolmogorov "forward",
+
+\[
+\begin{array}{c}
+p^\prime_{i0}(t)=-\lambda_0 p_{i0}(t)+\mu_1 p_{i1}(t)\\
+{p_{ij}}^\prime(t)=\lambda_{j-1}p_{i(j-1)}(t)-(\lambda_j+\mu_j)
+p_{ij}(t)+\mu_{j+1}p_{i(j+1)}(t),\enspace j=1,2,\ldots\\
+\end{array}
+\]
+
+La estructura del problema refleja la poblaci\'{o}n en un instante
+determinado, considerando que los individuos nacen y mueren de
+uno en uno, con tasas de nacimiento $\lambda_j$ y muerte $\mu_j$,
+que dependen del estado del proceso $j$. Las probabilidades de
+estado a largo plazo pueden encontrarse a partir de las
+ecuaciones de balance
+
+\[
+\begin{array}{l}
+ \lambda_0 q_0=\mu_1 q_1\\
+ %
+ (\lambda_j+\mu_j)q_j=\lambda_{j-1}q_{j-1}+\mu_{j+1}q_{j+1},\hspace{20pt} j=1,2,\ldots\\
+ \end{array}
+\]
+ 
+que dan lugar a la relaci\'{o}n
+$q_{j+1}=\frac{\lambda_j}{\mu_{j+1}}q_j$ y por lo tanto, la
+soluci\'{o}n de dicho sistema de ecuaciones es:
+
+
+\[
+q_n=\frac{\lambda_0 \lambda_1\ldots \lambda_{n-1}}{\mu_1 \mu_2\ldots \mu_n}q_0\\[10pt]
+q_0=\left\{\begin{array}{ll}
+\frac{1}{S} &  \textrm{ si la serie }  S=1+\sum_{n=1}^\infty 
+\frac{\lambda_0\lambda_1\ldots \lambda_{n-1}}{\mu_1 \mu_2 \ldots \mu_n} \\[5pt]
+ & \textrm{ es convergente }\\
+0 &  \textrm{ la serie no es convergente }
+\end{array}\right.
+\]
+
+\newpage
+
+\section{Modelos utilizados en el problema}
+Como se dijo en la introducción nuestro objetivo es el de dimensionar una centralita telefónica a 
+la que llegan líneas de teléfonos analógicos, por esas líneas nos llegara la voz de los abonados mientras están
+realizando las llamadas. 
+La parte más importante para poder dimensionar correctamente la centralita será modelar el comportamiento que tenemos
+en cada una de las líneas telefónicas, es decir, tenemos que saber de una manera aproximada como se comporta 
+una fuente de voz, vamos a centrarnos en los modelos de fuentes de voz por ser la parte más relevante y en la que se aplica la teoría de Cadenas de Markov. 
+En la siguiente sección explicaremos los distintos modelos de voz que podemos utilizar para la resolución de nuestro problema.
+
+\subsection{Modelos de Voz}
+\subsubsection{Modelo de Actividad y Silencio (ON-OFF)}
+Modela las fuentes de voz a través de un proceso de dos estados, es decir, ña voz consiste en una secuencia
+alternada de:
+
+\begin{center}
+\includegraphics[width=10cm,height=5cm]{imagenes/ModeloVoz.eps}
+\end{center}
+
+
+\begin{itemize}
+\item{Los períodos de actividad, denominados ON, tienen una duración aproximada de 0.4 a 1.2 segundos}
+\item{Los períodos de silencio, denminados OFF, tienen una duración de 0.6 a 1.8 segundos}
+\end{itemize}
+
+El \emph{tiempo de permanencia} en cada uno de los estados está \emph{exponencialmente distribuído}. \\
+Durante el período de actividad (ON) los paquetes se generan con una tasa constante o pueden generarse siguiendo una distribución exponencial lo que nos daría lugar
+a un modelo IIP (o lo que es lo mismo un modelo de proceso de Poisson interrumpido). \\
+Teniendo la situación descrita anteriormente modelaremos el sistema como un proceso de nacimiento y muerte de dos estados (es posible mejorar el modelo añadiendo más estados
+pero se complica la representación). \\
+La representación del sistema de que hemos descrito sería algo parecido a esto:\\
+
+\begin{center}
+\includegraphics[width=5cm,height=3.5cm]{imagenes/cadena1.eps}
+\end{center}
+
+x, y son las tasas de transición. El tiempo medio de permanencia en el estado ON será $\frac{1}{y}$, y el tiempo medio en el estado OFF será $\frac{1}{x}$. \\
+El factor de actividad se define como la probabilidad de que la fue esté activa lo denotaremos matemáticamente como:
+
+\[P(ON)=\frac{\frac{1}{y}}{\frac{1}{y}+\frac{1}{x}}=\frac{x}{x+y}\]
+
+Ejemplo: si tenemos que $\frac{1}{y}=0.4$ segundos y $\frac{1}{x}=0.6$ segundos tendremos:
+
+\[P(activo)=\frac{1}{1+\frac{y}{x}}=\frac{1}{1+\frac{0.6}{0.4}}=0.4\]
+
+Lo que implica que sobre un mismo enlace caben $\frac{1}{0.4}=2.5$ usuarios.
+
+Ejemplo:\\
+Supongamos que en el proceso de codificación de voz muestreamos cada $125\mu$segundos (o lo que es lo mismo 8KHz de frecuencia) y cada muestra se codifica con 8 bits,
+lo que supone 256 niveles. Cada muestra ocupará un octeto de una celda ATM. Por tanto durante el período de actividad se genera una celda cada 5.875 msegundos, es decir, 
+se generan 170 celdas en cada segundo.
+
+\[\frac{53 - 5}{5.875}=8*10^{3}\]
+
+Tenemos 53 octetos por tratarse de celdas ATM y 5 octetos de cabecera en la celda.
+
+Supongamos que tenemos un enlace de capacidad 3000 celdas/segundo y que deseamos hallar el número de fuentes
+de voz que puede soportar.
+Tenemos dos alternativas:
+CASO A:
+
+\[
+Nº De Fuentes = \frac{Capacidad Del Enlace}{V} = C \\
+\]
+\[
+Capacidad Del Enlace = C * V
+\]
+En este caso consideraremos que el período de actividad es contínuo.
+
+CASO B:
+Aprovechamos el multiplexado estadístico de las fuentes.
+\[
+Nº De Fuentes = \frac{Capacidad Enlace}{V*\left(\frac{x}{x+y}\right)} = N
+\]
+El segundo factor del denominador será la tasa promedio de generación de celdas.
+\[
+N*V*\left(\frac{x}{x+y}\right)\leq C*V
+\]
+
+Condición de Estabilidad:
+\[
+N*\left(\frac{x}{x+y}\right)\leq C
+\]
+\[
+\rho = \frac{x}{x+y}*\frac{N}{C} \leq 1
+\]
+$\rho$ es el factor de utilización de la red
+
+
+\begin{center}
+\includegraphics[width=10cm,height=5cm]{imagenes/Cola1.ps}
+\end{center}
+
+
+Dado el modelo ON-OFF para una fuente de voz, nos interesaría encontrar un modelo para la multiplexación de
+$N$ fuentes de voz que nos permita determinar el comportamiento y diseñar parámetros como:
+
+\begin{itemize}
+	\item Estadística de la ocupación de la cola.
+	\item Retardo (Calidad de servicio de la voz).
+	\item Tamaño de la cola para una probabilidad de pérdida dada.
+\end{itemize}
+
+\subsubsection{Modelo de Nacimiento y Muerte}
+Para modelar el multiplexado de $N$ fuentes \emph{independientes}, cada una de ellas representada por un modelo
+ON-OFF (2 estados) y \emph{no sincronizadas}
+
+
+\begin{center}
+\includegraphics[width=10cm,height=5cm]{imagenes/Cola2.eps}
+\end{center}
+
+
+En este modelo cada estado representa en número de fuentes activas. En el estado $i$, por ejemplo, tenemos $i$ fuentes activas con lo cual la tasa media
+de celdas que llegan al buffer es de i*V celdas/seg.
+
+
+\begin{center}
+\includegraphics[width=5cm,height=5cm]{imagenes/Cola3.eps}
+\end{center}
+
+
+¿Cuál es la posibilidad de que el sistema esté en el estado $i$?
+
+\[
+P\left(\textrm{Fuente Activa}\right)=\frac{x}{x+y} \\
+\]
+\[
+P\left(\textrm{Fuente En Silencio}\right)=\frac{y}{x+y}
+\]
+
+Si tenemos $N$ fuentes de las cuales $i$ están activas y $(N-i)$ están en silencio, la probabilidad de estar en este estado la podemos obtener a partir de una \emph{binomial}.
+
+\[
+\pi_i={N \choose i}*\left(\frac{x}{x+y}\right)^i*\left(\frac{y}{x+y}\right)^{N-i}
+\]
+
+La expresión se puede reescribir como:
+
+\[
+\pi_i={N \choose i}*\left(\frac{x}{y}\right)^i*\left(1+\frac{x}{y}\right)^{-N}
+\]
+
+Otra forma de obtener la solucióna anterior es aplicar
+
+\[
+\left.\begin{array}{l}
+\pi_i = \frac{x_0*x_1\ldots* x_{i-1}}{y_1*y_2*\ldots*y_i}*\pi_0\\
+\sum_{i=0}^N \pi_i = 1
+\end{array}
+\right\}
+\]
+
+
+Estas fórmulas son válidas en procesos de nacimiento y muerte. Otra forma de representar el proceso de nacimiento y muerte es a través de las \emph{ecuaciones
+de balance}:
+
+\[
+\begin{array}{ll}
+i=0 & N*x*\pi_0 = y*\pi_1 \\
+1 \leq i \leq N-1 & \pi_i * (i*y + (N-i)*x) = [N - (i-1)]* x * \pi_{i-1} +\\ 
+ & + (i+1) * y * \pi_{i+1} \\
+i=N & N*y*\pi_N = x*\pi_{N-1} \\
+\end{array}
+\]
+
+\[
+\begin{array}{ll}
+i=0 & N*x*\pi_0 = y* \pi_1 \\
+1 \leq i \leq N-1 & \pi_i*[i*y+(N-i)*x]=[N-(i-1)]*x*\pi_{i-1}+\\
+ & +(i+1)*y*\pi_{i+1} \\
+i=N & N*y*\pi_N = x * \pi_{N-1}
+\end{array}
+\]
+
+Reescribiendo las ecuaciones
+
+\[
+\begin{array}{l}
+-N*x*\pi_0 + y*\pi_1 = 0 \\
+N*x*\pi_0 - [y + (N-1)*x]*\pi_1 + 2 * y * \pi_2 = 0 \\
+(N - (i-1))*x*pi_{i-1}-[i*y + (N-1)*x]*\pi_i + (i+1)*y*\pi_{i+1} = 0 \\
+\ldots \\
+x*\pi_{N-1} - N * y * \pi_N = 0
+\end{array}
+\]
+
+Si definimos el vector fila de $N+1$ componentes
+
+\[
+\overline{\pi} = (\pi_0,\pi_1,\ldots,\pi_N)
+\]
+
+El conjunto de ecuaciones anteriores se puede expresar de forma compacta como
+
+\[
+\overline{\pi}*M = 0
+\]
+
+Donde $M$ es una matriz (N+1)*(N+1)
+
+\[
+M = \left(\begin{array}{llll}
+-N*x & N*x & 0 & \ldots \\
+x & -[y+(N-1)*x] & (N-1)*x & \ldots \\
+0 & 2*y & -(N-2)*x-2*y & \ldots \\
+0 & 0 & 3*y & \ldots \\
+\ldots & \ldots & \ldots & \ldots
+\end{array}
+\right)
+\]
+
+Resolviendo el sistema de ecuaciones anterior $\overline{\pi}*M=0$ obtenemos la probabilidad de tener $i$ fuentes activas.
+
+Estabilidad del sistema:
+
+\begin{itemize}
+	\item Cuando $C>i$ la cola tiende a vaciarse.
+	\item Cuando $C<i$ la cola tiende a llenarse.
+\end{itemize}
+
+La tasa de cambio en la cola es $V*(C-i)$ celdas/seg.
+\\
+\\
+Estado de sobrecarga = $J_0 =\lceil C \rceil$. Será el entero superior.\\
+
+Estado de infracarga = $J_n =\lfloor C \rfloor$. Será la parte entera de C.
+
+Con este modelo, ¿cómo vamos a calcular parámetros com retardo, pérdidas y tamaño del buffer requierido?
+\\
+
+Tenemos varias opciones de análisis:
+
+\begin{itemize}
+	\item[(1)] Analizar la llegada  periódica de celdas a Tasa $V$ en cada fuente.
+	\item[(2)] Analizar la generación de celdas (paquetes) en cada fuente, en estado activo, como un proceso de Poisson, con paquetes de longitud exponencialemente distribuídos.
+	\item[(3)] Asumir que cada fuente activa transmite información uniformemente con el enlace y el servidor operando de la misma forma (Modelo de Fluidos)
+\end{itemize}
+
+
+\subsubsection{Modelo de Fluidos}
+Modelo ON-OF a nivel de celda.
+\\
+
+\begin{center}
+\includegraphics[width=12cm,height=5cm]{imagenes/ModeloFluidoVoz.eps}
+\end{center}
+
+Tendremos que hacer alguna suposición como por ejemplo que el número de celdas generadas durante el período de actividad es tan grande que se asemeja a un 
+flujo contínuo.
+Esta suposición es especialmente válida cuando el número de fuentes multiplexadas, $N$, y la capacidad $V*C$ son tan grandes que el carácter discreto del 
+buffer debido a la llegada y salida de celdas es despreciable. El estado del buffer será representado por una variable aleatoria contínua $X$, esta indicará 
+la ocupación del buffer.
+
+\begin{center}
+\includegraphics[width=12cm,height=7cm]{imagenes/Cola4.eps}
+\end{center}
+
+$X$ se define como el número de celdas que llegan durante un "talkspurt", o período en el que la fuente está activa. \\
+\\
+Una fuente genera celdas a $V$ celdas/seg durante un período de longitud media $1/y$ segundos, por tanto, en media $X$ se incrementa en $V/y$ durante un "talkspurt". \\
+A $V/y$ lo llamamos \emph{UNIDAD DE INFORMACIÓN}. En un sistema con una capacidad de $V*C$ celdas/seg la capacidad equivalente es de $\frac{V*C}{\left(\frac{V}{y}\right)}=y*C \textrm{  unidades de información por segundo}$.
+
+$y*C$ será pues la CAPACIDAD NORMALIZADA A UNIDADES DE INFORMACIÓN.
+\subsubsection{Conclusión}
+Gracias a estos modelos que definen un comportamiento para las fuentes de voz que llegan a la centralita podremos ser capaces de realizar el dimensionado adecuado del buffer que deberemos tener, marcándonos unos márgenes de 
+calidad de servicio que tendrá que cumplir nuestra centralita, estos parámetros requeridos para cumplir una cierta calidad de servicio en las líneas serán todas de las normativas internacionales y quedan fuera del alcance de 
+trabajo. Con esto hemos dado varios ejemplos de modelos que podemos utilizar a la hora de ver el comportamiento de las fuentes de voz, dentro del mundo de las telecomunicaciones.
+
+\newpage
+\section{Bibliografía}
+\begin{itemize}
+	\item Apuntes de Modelos Estocásticos de la Ingeniería (Curso 2002-2003)
+	\item Introduction to Probability Models Seventh Edition Sheldon M. Ross
+	\item Apuntes de Técnicas de Control de Redes (Curso 2002-2003)
+\end{itemize}
+
+\newpage
+\section{Agradecimientos}
+Antes de finalizar quisiera agradecer el tiempo invertido por Ignacio Martínez, profesor de Accesos Digitales, intentando hacer que entiendera los conceptos de telecomunicaciones que subyacen en la problemática anteriormente expuesta.
+
+\end{document}
