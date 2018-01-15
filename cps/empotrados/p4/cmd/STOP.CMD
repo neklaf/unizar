@@ -1,0 +1,1 @@
+// The stop command file is executed right after the debugger is halted/stopped. 

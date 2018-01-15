@@ -1,0 +1,1401 @@
+\documentclass[12pt]{article}
+\title{\textsf{T\'ecnicas de modelado y animaci\'on del pelo.}}
+\author{Aitor Acedo Legarre, Cristina Pu\'ertolas Rebollar\\
+Modelado Visual, Curso 2003-2004\\
+Centro Polit\'ecnico Superior\\
+\texttt{460829@celes.unizar.es, 460918@celes.unizar.es} }
+\pagestyle{headings}
+
+\begin{document}
+
+\maketitle
+
+\begin{quote}
+    Construir los \'ultimos modelos de personajes para MONSTRUOS S.A. ... fue una tarea dif\'icil
+    y compleja, realizada utilizando las estaciones de trabajo Silicon Graphics  Octane2 con un
+    sistema operativo IRIX. Sulley est\'a cubierto por un pelaje azul compuesto por millones de pelos
+    individuales, todo este pelo se ha colocado y estilizado interactivamente en las estaciones de trabajo Octane2.
+    Su movimiento se ha computerizado utilizando algoritmos propios de Pixar S.A. para la simulaci\'on din\'amica.
+\end{quote}
+
+\begin{abstract}
+    Este trabajo presentar\'a una framework unificada para el
+    modelado y la animaci\'on de pelo rizado. Tanto el
+    modelado como la animaci\'on empiezan desde un conjunto
+    disperso de gu\'ias de pelos. Un modelo inicial est\'atico de
+    un mech\'on de pelos, se extrae de un campo de vectores
+    superpuestos mediante el trazado de l\'ineas de campo. Puede
+    ser perfectamente interpolado para producir una gran cantidad
+    de pelo en el modelo, esto es un modelo de pelo denso. El
+    rizado aleatorio natural o artificial podr\'a ser añadido
+    posteriormente a este modelo a trav\'es de funciones
+    param\'etricas con una distribuci\'on aleatoria de
+    par\'ametros sobre el cuero cabelludo.
+
+    Adem\'as, el reto del modelado del pelo, tambi\'en reside en
+    la fuertes propiedades din\'amicas anis\'otropas que demandan
+    distintas t\'ecnicas de animaci\'on para mechones simples de
+    pelo e interacci\'on entre ellos. Mientas que un mech\'on
+    \'unico puede ser modelado como una cadena abierta multicuerpo
+    expresada en coordenadas generalizadas, el modelar la
+    interacci\'on entre pelos es algo m\'as complejo. En este
+    documento se expone  el modelado de mechones din\'amico basado
+    en una gu\'ia de mechones de pelo dispersos. La colisi\'on
+    din\'amica entre pelos se resuelve con la ayuda de tiras de
+    tri\'angulos auxiliares entre mechones de pelo cercanos. Se
+    puede generar o eliminar una gu\'ia adaptativa de  mechones al
+    vuelo para controlar din\'amicamente la exactitud de la
+    simulaci\'on.
+    La imagen final de este modelo de pelo denso, se renderiza
+    considerando tanto la dispersi\'on inicial como las sombras
+    entre pelos con volumen que son modeladas como si fuesen
+    parcialmente transl\'ucidos.
+
+\end{abstract}
+
+\tableofcontents
+
+\section{Introducci\'on}
+\label{sintro}
+
+El pelo es un elemento crucial de apariencia. Uno de los muchos
+retos en la simulaci\'on de humanos y animales virtuales es
+producir una apariencia del pelo real. Crear pelo de la forma
+m\'as real posible presenta problemas en todos los aspectos, como
+por ejemplo el modelado de la forma, la din\'amica y el render del
+pelo. El render del pelo y el modelado del pelo animal se est\'a
+convirtiendo en una herramienta m\'as accesible entre los
+animadores gr\'aficos. Sin embargo, el modelado y la din\'amica de
+pelo m\'as largo sigue siendo un reto dif\'icil. Las dificultades
+m\'as comunes son el n\'umero de mechones de pelo, y la
+geometr\'ia asociada a la complicada interacci\'on f\'sica entre
+pelos, como colisiones, sombras y carga est\'atica. Todas estas
+interacciones  contribuyen tanto al comportamiento est\'atico como
+din\'amico del pelo.
+
+La parte m\'as importante del pelo reside en la forma en la que
+las ondas naturales del mismo se mueven y deforman. Las causas por
+las que se deforma el pelo pueden ser resumidas en : rizado
+natural, estilo artificial del pelo y deformaci\'on debido a
+fen\'omenos naturales como son la gravedad, colisiones y la
+electricidad est\'atica. El grado de naturalidad del pelo lo marca
+la curvatura del mech\'on de pelo cuando no est\'a sometido a
+fuerzas externas. En las peluquer\'ias se introducen m\'ultiples
+efectos antinaturales en el movimiento del pelo, como la
+permanente, el peinado, la aplicaci\'on de productos, etc... El
+efecto de la permanente y el producto son sobretodo influenciables
+en la deformaci\'on del pelo largo. El pelo se dobla y deforma
+bajo el efecto gravitatorio y la colisi\'on, estos factores
+podr\'ian denominarse los factores din\'amicos del pelo. El estilo
+artificial que se introduce en las peluquer\'ias y las fuerzas
+externas que act\'uan sobre \'el hacen que los mechones de pelo no
+crezcan ni se curven de un modo completamente aleatorio en todas
+las direcciones, sin embargo de forma global, siguen un patr\'on
+tanto en movimientos internos como en externos.
+
+Otro de los retos del modelado del pelo, como antes se ha
+mencionado, son las propiedades din\'amicas altamente
+anis\'otropas, como por ejemplo, los mechones de pelo son lo
+suficientemente duros para doblarse todo lo que se quiera pero
+tienen un movimiento lateral completamente libre interactuando
+unos con otros de manera irregular. Los mechones no pueden
+penetrar unos dentro de otros a medida que se encuentra una
+intersecci\'on de los mismos, es m\'as, cada mech\'on no tiene un
+n\'umero fijo de mechones vecinos.
+
+Estas propiedades \'unicas y tan particulares, dan una idea de que
+el modelo din\'amico diseñado a medida debe necesariamente obtener
+resultados realistas. La din\'amica del pelo largo engloba tres
+aspectos:
+\begin{itemize}
+    \item Un mech\'on de pelo individual puede deformarse y actuar
+    directamente con el cuero cabelludo.
+    \item Dado un estilo de pelo, se suele dar la situaci\'on en
+    que , despu\'es de unos movimientos determinados de cabeza, el
+    pelo suele volver a su estado inicial. Esto significa que un
+    estilo de pelo es capaz de "memorizar" su configuraci\'on
+    inicial. Los movimientos suaves NO tienen p\'erdida de
+    memoria, sin embargo, los movimientos bruscos pueden dañar
+    permanentemente esta "memoria" y puede que el sistema no regrese
+    al estado inicial.
+    \item Las colisiones din\'amicas entre diferentes mechones de
+    pelo. Una persona normal suele tener alrededor de 50.000
+    pelos, cada pelo puede ser modelado como docenas de segmentos
+    de pelos. Es pr\'actimante imposible computacionalmente detectar las parejas de
+    colisiones entre segmentos de pelos. As\'i pues, deberemos
+    modelar las colisiones entre mechones de pelos de una manera
+    m\'as abstracta.
+\end{itemize}
+
+Ahora presentaremos el modelo unificado para modelar y animar el
+pelo. Tanto el modelado como la animaci\'on empiezan en un
+conjunto de mechones de pelos repartidos en una gu\'ia de pelos.
+El objetivo principal del modelo de pelo propuesto es poder
+generar un movimiento realista de las ondulaciones del mismo,
+editando un modelo de conexi\'on por trasquilones con una
+funci\'on gen\'erica de rizado. El modelo din\'amico del pelo
+sigue las siguientes caracter\'isitcas:
+\begin{enumerate}
+    \item Un modelo inicial de conexi\'on entre pelos que permite
+    la recuperaci\'on del estilo del pelo tras un movimiento
+    suave.
+    \item Un modelo de colisi\'on m\'utua entre pelos que
+    considera todo el volumen del pelo como una colecci\'on
+    cont\'inua de mechones.
+    \item Un esquema adaptativo de generaci\'on de pelo para
+    complementar el modelo inicial de mechones de pelo esparcidos.
+\end{enumerate}
+
+Como todo esta art\'iculo contempla un entorno de trabajo basado
+en una gu\'ia de pelos esparcidos por mechones, el diseño de
+estilos de pelo y la resoluci\'on de las interacciones entre pelos
+ser\'an computacionalmente eficientes SIN perder mucha calidad con
+respecto al modelado de pelo denso.
+\subsection{Trabajos relacionados}
+Existen varios m\'etodos para el modelado del pelo. Debido al
+ efecto de las fuerzas adhesivas, el pelo tiende a agruparse.
+ Watanbe introdujo el modelo "mech\'on" (wisp) \footnote{Y.Watanbe e Y.Suenaga. M\'etodo basado en
+ primas triangulares para la generaci\'on de pelo. IEEE Computer Graphics and Applications,
+ 12(1):47-53, 1992.}. Este modelo wisp tambi\'en se utiliza en el
+ modelo propuesto por \emph{Daldegan et al} donde se definen unas
+ cuantas caracter\'isitcas e mechones de pelo en 3D y cuyo modelo
+ de poblaci\'on se basa en el anterior. \emph{Hadap y
+ Magnenat-Thalmann} \footnote{S.Hadap y N.Magnenant-Thalmann. Estilismo del pelo interactivo
+ basado en un flujo flu\'ido. En Computer Animation and Simulation 2000.
+ Proceedings of the Eleventh Eurographics Workshop, 2000.}
+ modelan el pelo como chorros de l\'ineas de un flujo ideal de un
+ l\'iquido. El usuario puede configurar unos cuantos flujos de
+ elementos alrededor del objeto para generar un estilo.
+ \emph{Yan et al} modela los mechones como cilindros gen\'ericos.
+ Otros investigadores tambi\'en han intentado modelar y construir
+ pelo utilizando una c\'ascara fina y simple o m\'ultiples capas
+ de cuero cabelludo.
+
+ Tambi\'en se han propuesto m\'ultiples m\'etodos para la
+ animaci\'on del pelo. \emph{Rosenblum et al} y \emph{Daldegan et
+ al} utilizaron el modelo "mass-spring-model" para controlar la
+ posici\'on y orientaci\'on de mechones de pelo. \emph{Anjyo et
+ al} model\'o el pelo con una viga y utiliz\'o una ecuaci\'on diferencial
+ proyectiva de una \'unica dimensi\'on del momento angular para
+ animar el mech\'on de pelo.
+
+ Ninguno de los anteriores experimentos consideraron la
+ interacci\'on entre pelos y la recuperaci\'on del estado de
+ reposo del estilo del pelo. Recientemente \emph{Hadap y
+ Magnenant-Thalmann} han propuesto un modelo para el pelo denso y
+ din\'amico como un cont\'inuo utilizando un modelo fluido para el
+ movimiento del pelo lateral. La colisi\'on entre pelos se
+ aproxima mediante el t\'ermino de presi\'on definido en
+ mec\'anica de fluidos, mientras que la fricci\'on se aproxima
+ mediante la viscosidad.\emph{Planet et al} propuso un modelo de
+ mechones par ala simulaci\'on de interacciones internas en el
+ pelo largo \footnote{E.Plante, M.-P. Cani, and P.Poulin. Modelo de mechones
+ capado para las imulaci\'on de interacciones entre pelos largos. En Proceedings of
+ Eurographics Computer Animation and Simulation, 2001.}.
+ Los mechones de pelos formar\'an cl\'usteres de mechones formados
+ por un esqueleto y un envoltorio deformable. Las fuerzas de
+ colisi\'on sobre los mechones siguen una formulaci\'on
+ anis\'otropa. \emph{Koh y Huang} presentan otro trabajo mediante
+ el modelado expl\'icito del pelo mediante conjuntos de tiras 2D
+ \footnote{C.K. Koh y Z.Huang Un modelo f\'isico simple para animar el pelo humano
+ mediante el modelado 2D por tiras en tiempo real. En Proceedings of Eurographics
+  Computer Animation Simluation, 2001.}. La colisi\'on entre pelos
+  se contempla para crear un movimiento mucho m\'as realista. Sin
+  embargo, el aspecto volum\'etrico del pelo no se contempla.
+
+  Recientemente, algunas pel\'iculas como Final Fantasy y
+  Monstruos S.A., incluyen simulaciones muy realistas de pelo.
+  Igualmente han nacido nuevos paquetes software como Shave
+  \footnote{plugin para Lightwave, www.joealter.com/software.html} y Shag
+  \footnote{Plugin para 3D Studio Max,home.abac.com/ddag/hair.html}. Shave es
+  considerado el mejor paquete comercial para el modelado y
+  simulaci\'on del pelo en la industria del software. Sin embargo,
+   la din\'amica que incorpora para el movimiento de mechones por
+   separado, no es muy realista, y no contempla la colisi\'on
+   entre pelos. \textbf{Final Fantasy} es la pel\'icula con mejor
+   simulaci\'on de pelo humano largo. El pelo de \emph{Aki} fu\'e
+   modelado con toda una superficie deformable. Alguna
+   simulaci\'on fu\'e construida con el plugin de Maya para telas,
+   esto significa, que el modelado del pelo construido sobre una
+   superficie permite realizar una recuperaci\'on del estado
+   natural del pelo muy buena. \textbf{Monstruos S.A.} tiene una
+   simulaci\'on de pelo animal muy definida \footnote{M.Fong. Animaci\'on del pelo de monstruos.
+   En el curso SIGGRAPH, notas de p\'agina 36, 2001.}. Cada pelo
+   es considerado como un conjunto de part\'iculas unidas en una
+   cadena por un conjunto de muelles r\'igidos. Se utiliz\'o un
+   pequeño algoritmo para generar pelos entre pelos. En este caso, la
+   colisi\'on entre pelos tampoco se consider\'o.
+ \label{sworks}
+
+\subsection{Vista general}
+\label{sview}
+
+Veamos unos cuantos tipos de modelos de pelos que se han
+contemplado en este art\'iculo. Analizamos tanto el modelo
+disperso como el denso.
+
+El \emph{modelo disperso} tiene desde docenas hasta cientos de
+gu\'ias de pelos. El \emph{modelo denso} tiene alrededor de 50000
+mechones , que es un n\'umero muy aproximado al del ser
+humano.
+
+Un modelo de pelo tambi\'en puede caracterizarse por ser
+\emph{din\'amico} o \emph{est\'atico}.
+
+El \emph{modelo est\'atico} tiene la propiedad de que su
+configuraci\'on geom\'etrica no cambia a lo largo del
+tiempo.
+
+El \emph{modelo din\'amico} tiene la propiedad de que el pelo
+cambia de posici\'on y velocidad de movimiento a lo largo del
+tiempo cuando se presentan fuerzas externas. As\'i pues podemos
+distinguir cuatro combinaciones de modelos de pelos, que se
+muestran en la Figura 1 a). Dada una geometr\'ia para un modelo
+sint\'etico de cabeza, el sistema genera primero un modelo
+est\'atico disperso \emph{$H_{ss}$}, utilizando alternativamente
+campos de vectores y esplines. Un \emph{$H_{ss}$} puede ser
+interpolado a un modelo est\'atico de pelo denso \emph{$H_{sd}$},
+el cual podr\'a ser editado m\'as adelante para añadirle ondas
+naturales al pelo. El modelo que se obtenga de realizar el rizado,
+puede ser renderizado para producir im\'agenes sint\'eticas ya
+acabadas (figura 1b).
+
+Un \emph{$H_{ss}$} tambi\'en puede sufrir otras variaciones en el
+sistema para obtener animaciones de pelo. Cada gu\'ia de pelo del
+\emph{$H_{ss}$} esta inicialmente representada por una polil\'inea
+de m\'ultiples v\'ertices. El \emph{$H_{ss}$} est\'a equipado con
+elementos estructurados necesarios para la simulaci\'on
+din\'amica. Por ejemplo, cada v\'ertice se considera una uni\'on
+que puede rotar libremente como una bisagra. Las conexiones y la
+malla triangular entre las gu\'ias de pelos se construyen
+posteriormente para simular las interacciones entre pelos. Dado
+que el modelo es muy completo, tras este paso, estar\'a listo para
+la simulaci\'on din\'amica. Cabe notar que estas estructuras
+enlazadas son "invisibles", lo que significa no se mostrar\'an
+durante el renderizado aunque los efectos que produzcan sean
+incorporados al movimiento del pelo. Una vez que la secuencia de
+animaci\'on del modelo disperso se haya generado, se obtendr\'a el
+modelo din\'amico disperso \emph{$H_{ds}$} para cada frame. Un
+\emph{$H_{ds}$} puede interpolarse para producir un modelo
+din\'amico denso \emph{$H_{dd}$} que puede ser renderizado para
+producir im\'agenes sint\'eticas correspondientes a un frame
+espec\'ifico de una secuencia de animaci\'on. El rizado del pelo
+podr\'a añadirse antes del render como en el caso del modelo
+est\'atico.
+
+En la fase de render, se considera tanto la reflexi\'on especular
+como la difusa, al igual que transparencias parciales de cada
+mech\'on al integrar la densidad volum\'etrica del render, con una
+versi\'on modificada del  del algoritmo del b\'ufer de sombras
+opacas. \footnote{T.-Y. Kim y Neumann. Opacity Shadow maps. En
+Proc. of Eurographics Workshop on Rendering, p\'aginas
+177-182,2001}.
+
+La figura 1 b) muestra los m\'ultiples caminos que se pueden
+seguir en el sistema, notemos que para un pelo rizado,
+forzosamente se tendr\'an que seguir dos niveles de detalle. El
+modelo disperso o interpolado solo tiene deformaciones a gran
+escala sin detalles como el rizado fino. Cada mech\'on de estos
+modelos sirve de lomo a su correspondiente mech\'on rizado. El
+rizado se añade en el modelo denso de interpolaci\'on antes del
+render.
+
+Ahora, en la siguiente secci\'on, describiremos varios aspectos
+del modelado. La tercera secci\'on presentar\'a t\'ecnicas para
+animaci\'on del pelo. El render del pelo es un punto que se
+describe brevemente en la secci\'on cuarta. Por \'ultimo, la
+secci\'on quinta presenta los resultados de comparar las distintas
+t\'ecnicas. Cerraremos el documento con varias conclusiones.
+
+
+\section{Modelado del pelo}
+\label{shairmodel}
+
+Las aproximaciones anteriores de cualquiera de los modelos
+expuestos anteriormente, modela tanto pelos individuales
+expresamente como pelos agrupados en un volumen y con una densidad
+fija en cada punto. Se analiz\'a sobre todo el modelo expl\'icito,
+pues consideraremos un gran n\'umero de variaciones de los estilos
+del pelo. La entrada para este m\'etodo ser\'a un modelo poligonal
+de la cabeza y el cuero cabelludo, junto con la cara. El m\'etodo
+virtual del modelado del estilo del pelo seguir\'a los siguientes
+pasos:
+\begin{enumerate}
+    \item seleccionar una regi\'on del cuero cabelludo donde
+    queramos que crezca el pelo, especificar la longitud de la
+    distribuci\'on;
+    \item modelar las polinl\'ineas para un conjunto esparcido de
+    mechones de pelo utilizando un conjunto de vectores de campo,
+    transformar las polinl\'ineas de las gu\'ias de pelos en
+    curvas esplines, y m\'as adelante ajustar las deformaciones
+    oportunas utilizando sus puntos de control asociados;
+    \item generar un modelo denso de pelo de las gu\'ias de pelos
+    anteriores mediante interpolaci\'on;
+    \item editar cada mech\'on del modelo denso utilizando la
+    func\'on de offset para producir el rizado aleatorio;
+    \item unir todo lo anterior para formar cl\'usters de pelos.
+\end{enumerate}
+
+\subsection{Shearing}
+\label{sshear}
+
+Primero necesitamos definir la regi\'on del cuero cabelludo donde
+el pelo deber\'ia crecer (Figura 2 a). El contorno de esta
+regi\'on se genera linealmente interpolando las coordenadas de
+algunos puntos, que han sido interactivamente seleccionados de un
+mapa plano del cuero cabelludo. El centro de este mapa est\'a
+alineado con el centro del cuero cabelludo (Figura 3 c). Una vez
+especificado, la misma regi\'on puede usarse repetidamente para
+distintos estilos de pelo.
+
+Shearing es el punto de partida para definir un estilo de pelo.
+Cada estilo de pelo necesita una distribuci\'on de pelo
+determinada. La longitud de un mech\'on en particular est\'a
+determinada por la localizaci\'on de su ra\'iz en el cuero
+cabelludo. Utilizaremos el vector entre la ra\'iz del mech\'on y
+el centro del cuero cabelludo para definir su localizaci\'on 3D en
+un sistema de coordenadas polares. Se han estudiado dos
+representaciones para la distribuci\'on definida para pelo largo:
+\emph{la primera} est\'a basada en un \'arbol BSP (figura 2b). El
+plano definido para un nodo intermedio en el BPS dividir\'a la
+regi\'on del cuero cabelludo en dos regiones m\'as pequeñas. El
+plano del nodo terminal del BSP define la referencia para el plano
+del corte del pelo. Todos los pelos que nazcan en esa regi\'on y
+que correspondan al nodo terminal deber\'an ser cortados en el
+mismo plano de referencia dado por ese mismo nodo terminal. Esto
+se hace determinando la longitud del mech\'on a la longitud del
+camino m\'as corto desde fuera del cuero cabelludo entre la ra\'iz
+y el plano de referencia. Actualmente esta aproximaci\'on se hace
+mediante una esfera, es decir, se moldea el cuero cabelludo como
+una esfera para acelerar el proceso de c\'alculo. La
+\emph{segunda} representaci\'on es una interpolaci\'on lineal
+basada en la longitud especificada en unos puntos claves del cuero
+cabelludo.
+
+\textbf{Aitor, aqu\'i tienen que ir las fotos de las figuras 2 y
+3, con el texto que venga del art\'iculo}
+
+\subsection{Modelar gu\'ias de pelos dispersas}
+\label{ssparse}
+
+Para generar un modelo de pelo detallado con unos 50.000 mechones,
+empezaremos con un conjunto disperso de mechones, uniformemente
+distribu\'idos sobre todo el cuero cabelludo. Cada gu\'ia de pelo
+est\'a inicialmente representada por una polil\'inea que se
+obtiene trazando la trayectoria a trav\'es de un vector de campo
+global previamente definido. Para llevar a cabo el trazado,
+empezaremos desde la ra\'iz de la gu\'ia de pelo. Cada paso
+generar\'a un nuevo segmento de la polil\'inea a lo largo de la
+direcci\'on actual del vector de campo. Este proceso se repetir\'a
+hasta que la gu\'ia de pelos haya alcanzado la longitud deseada.
+
+El vector global de campo es actualmente, una superposici\'on de
+m\'ultiples primitivas de vectores de campo con influencia local.
+Una primitiva de un vector de campo es un simple vector de campo
+con una transformaci\'on preestablecida entre el sistema de las
+coordenadas del mundo y sus coordenadas locales. Esta
+transformaci\'on r\'igida puede ser editada para cambiar la
+posici\'on y orientaci\'on del sistema de coordenadas locales.
+Podremos utilizar, por ejemplo, una primitiva para modificar el
+pelo hacia delante o hacia atra\'as de la cabeza; o incluso hacer
+que los pelos de la frente se curven de manera distinta a los que
+est\'an en la parte de atr\'as.
+
+La orientaci\'on y fuerza de una primitiva de vector de campo en
+un cierto punto, viene dada por dos funciones. La fuerza del
+vector de campo, es realmente, el producto entre la fuerza
+heredada del vector de campo anterior y un t\'ermino espacial que
+disminuye a medida que nos alejamos del punto de referencia del
+campo. En la pr\'actica, se utilizan tres funciones de t\'ermino
+espacial: la uniforme, la de fuerza inversa y la funci\'on de
+suavizado seg\'un distancias para conectar dos constantes. La
+funci\'on de suavizado seg\'un distancias viene definida por:
+\begin{displaymath}
+\left\{
+    \begin{array}{ll}
+        s_{0} & \mbox{$r \leq r_{0} $,} \\
+        0.5(s_{0}+s_{1})+0.5(s_{0}-s_{1})\cos(\frac{r-r_{0}}{r_{1}-r_{0}}\pi) &\mbox{$r_{0} < r < r_{1}$,} \\
+        s_{1} & \mbox{$r \geq r_{1} $.} \\
+    \end{array}
+\right.
+\end{displaymath}
+donde la funci\'on coseno conecta dos par\'ametros constantes
+$s_{0}$ y $s_{1}$. Cualquiera de los dos puede inicializarse con
+0. La influencia local puede definirse con $s_{1} = 0$. La figura
+3 muestra un modelo disperso de pelo extra\'ido de la
+superposici\'on de un vector de campo. Algunas de las primitivas
+de campo que se utilizan se muestran en la figura 4.
+
+La localidad de la primitiva de un vector de campo tambi\'en puede
+especificarse sobre el cuero cabelludo. Podemos asociar una lista
+de regiones locales del cuero cabelludo con una primitiva, as\'i
+s\'olo los mechones de pelo que nazcan de estas regiones pueden
+verse afectados por dicha primitiva. La uni\'on de estas regiones
+locales se denominan \emph{dominios} de las primitivas de campo.
+
+Las gu\'ias de pelo se han representado hasta ahora por
+polil\'ineas. La suavidad de dichas polil\'ineas puede mejorarse
+por la interpolaci\'on mediante esplines de Hermite. La tangente
+de cada v\'ertice requerir\'a un esplín Hermite que puede
+obtenerse como la media de las direcciones de dos segmentos que
+compartan el mismo v\'ertice. A\'un puede irse m\'as lejos y
+editar dicha gu\'ia de pelos transformando los esplines Hermite en
+B-splines y ajustar sus posiciones seg\'un los puntos de control.
+
+Cabe notar que durante esta etapa de modelado del pelo, podemos
+interactivamente realizar cambios a los vectores de campo y a los
+B-splines en tiempo real, pues el renderizado de un pequeño
+n\'umero de esplines junto con el modelo sint\'etico de la cara,
+es m\'inimo. Esta es la raz\'on por la que se elige el modelo de
+gu\'ias de pelos dispersas de primeras.
+
+\subsection{Interpolaci\'on del pelo}
+\label{sinterpol}
+
+Se necesita un modelo de pelo denso para el renderizado, los
+mechones que quedan sin manipular, se interpolan desde la gu\'ia
+de pelos. Instintivamente, uno podr\'ia imaginar un procedimiento
+simple para calcular en media la posici\'on de los mechones
+vecinos. Sin embargo, esta aproximaci\'on tiende a agrupar los
+mechones en cl\'usteres de pelo NO-naturales. Se adoptar\'a
+entonces un modelo m\'as sofisticado que produce unos resultados
+mucho m\'as positivos en la interpolaci\'on. Requiere una
+aproximaci\'on en la que definiremos coordenadas locales para cada
+punto potencial de la ra\'iz del cabello. Un esquema t\'ipico
+utilizar\'a un vector global UP, como la direcci\'on vertical, y
+la orientaci\'on local de la normal. El procedimiento de
+interpolaci\'on se define como sigue:
+
+\begin{itemize}
+    \item Encontrar la ra\'iz de la gu\'ia de pelo m\'as cercana y
+    transformar los segmentos de la gu\'ia del pelo de las
+    coordenadas del mundo a las coordenadas locales. El nombre de
+    esta transformaci\'on es $ M_{1}$.
+    \item Coger dichos segmentos de las coordenadas locales y
+    transformarlos de nuevo a las coordenadas del mundo utilizando
+    la transformaci\'on local-a-mundo definida en la ra\'iz del
+    mech\'on de pelo interpolado. El nombre de esta
+    transformaci\'on ser\'a $M_{2}^{-1}$
+\end{itemize}
+
+\begin{equation}
+    M_{2}^{-1}M_{1}p
+\end{equation}
+
+Este procedimiento se denotar\'a por "ecuaci\'on 1", donde
+\emph{p} es la localizaci\'on de la gu\'ia de pelos en las
+coordenadas del mundo, $M_{1}$ y $M_{2}$ son las dos
+transformaciones descritas anteriormente. Pueden utilizarse m\'as
+de una gu\'ia pr\'oxima para obtener resultados mucho m\'as
+suavizados si se sumergen las m\'ultiples transformaciones con
+alg\'un esquema medio. Los efectos locales de agrupaci\'on pueden
+ser eliminados mediante la interpolaci\'on de muchas gu\'ias de
+pelos. Sin embargo, cuando se producen discontinuidades causadas
+por el vector de campo como la que se muestra en la figura 4 a,
+las gu\'ias de pelos de la interpolaci\'on deber\'an ser elegidas
+a conciencia  para que caigan en el mismo lado de cualquier
+l\'inea divisoria.
+
+Resumiendo, el procedimiento genera mejores resultados si se tiene
+en cuenta una forma ovalada del cuero cabelludo y si se considera
+tanto la rotaci\'on como la traslaci\'on entre coordenadas
+locales.
+
+\subsection{Generar rizado aleatorio con una funci\'on de offset}
+\label{soffset}
+
+Dado el modelo de interpolaci\'on denso estudiado en la secci\'on
+anterior,  todav\'ia es necesario añadir un rizado natural a los
+mechones anteriores e incluso añadir una pequeña aletoriedad en la
+base de cada mech\'on, para as\'i crear un efecto mucho m\'as
+natural. Para conseguir esto, primero se define una funci\'on
+espec\'ifica de offset para los mechones de pelo que se encuentran
+en el sistema de coordenadas can\'onico, despu\'es se reconstruye
+el pelo rizado mediante un barrido de los vectores de campo con
+esta funci\'on de offset.
+\subsubsection{Funci\'on offset}
+\textbf{Aquí va la figura 5: Sistema can\'onico de coordenadas de
+la funci\'on offset...} Asumimos  el mech\'on de pelo m\'as
+interno es coincidente con el eje de la \emph{z} del sistema de
+coordenadas can\'onico de la funci\'on de offset, y que el origen
+est\'a en la ra\'iz del mech\'on. La funci\'on de offset tiene dos
+componentes que devuelven un offset sobre los ejes \emph{x} e
+\emph{y}, dado un valor \emph{z} (figura 5).
+
+Existen tres tipos de ondas naturales del cabello, llamadas, ondas
+uniplanas, ondas "dished" y las helicoidales. Una onda uniplana se
+parece mucho a una onda sinusoidal plana, mientras que la "dished"
+se parece mucho a una onda sinusoidal que ha sido mapeada en mitad
+de una superficie cil\'indrica con el eje de la ondulaci\'on
+longitudinal a dicho cilindro. La onda helicoidal tambi\'en puede
+verse como un rulo de pelo de la permanente, primero se enganchan
+los pelos al rulo y luego se extrae el rulo, obteniendo una
+simetr\'ia perfecta respecto a los ejes.
+
+Podemos ver que los tres tipos de ondas pueden ser f\'acilmente
+representadas con la funci\'on de offset que vamos a presentar. La
+onda uniplana puede ser representada con un offset sinusoidal para
+el eje de las \emph{x} y cero para el eje de las \emph{y}. La onda
+helicoidal puede ser un offset sinusoidal para el eje de las
+\emph{x} y cosenoidal par el eje de las \emph{y}. El tipo "dished"
+puede ser representado por la funci\'on de offset sinusoidal para
+el eje de las \emph{x}, pero para el eje de las \emph{y} la
+funci\'on es mucho m\'as complicada que siempre devuelve un valor
+positivo de offset y cuyo periodo es m\'as de la mitad del periodo
+de una onda para el eje de las \emph{x}.
+
+Aunque se puedan utilizar una variedad de funciones param\'etricas
+o procedurales, se ha diseñado una clase de funciones espec\'ifica
+para el offset, con un n\'umero fijo de par\'ametros:
+
+\begin{equation}
+    Wave(t) = Mag(t)\sin(2\pi(Rt+P_{0})t+\phi_{0})+Bias
+\end{equation}
+donde \emph{t} es la funci\'on variable; \emph{R}, $P_{0}$,
+$\phi_{0}$, y \emph{Bias} son par\'ametros constantes; y
+
+\begin{equation}
+    Mag(t) = A + Btexp(-\alpha t)+C(1-exp(-\beta t)+Dexp(\gamma(t-t_{0}))
+\end{equation}
+donde \emph{A,B,C,D,$\alpha$,$\beta$,$\gamma$} y $t_{0}$ son todo
+par\'ametros constantes. Podemos ver b\'asicamente esto como una
+onda sinusoidal con periodo variable cuyo valor inicial es
+$P_{0}$, y con magnitudes variables cuyo valor inicial es
+\emph{A}. Si $ R > 0$, el periodo de la onda se convierte en una
+magnitud m\'as pequeña a medida que nos vamos moviendo hacia las
+puntas del pelo, que es un fen\'omeno muy com\'un que se da en los
+pelos reales rizados. Los \'ultimos tres t\'erminos de la
+ecuaci\'on (3) permiten variar la magnitud del offset a diferentes
+partes del mech\'on de pelo escogido. El segundo t\'ermino alcanza
+el m\'aximo en $ t = 1/\alpha $; el tercer t\'ermino se convierte
+pr\'acticamente en \emph{C} con una \emph{t} lo suficientemente
+larga; el \'ultimo elemento incrementa exponencialmente
+especialmente cuando $ t > t_{0} $ que puede ser utilizado para
+modelar caracter\'isticas del rizado al final del mech\'on. Con
+dos conjuntos de par\'ametros, esta funci\'on de offset puede
+modelar al o largo de los ejes \emph{x,y}. Todos los ejemplos que
+veamos, estar\'an sometidos a esta funci\'on de offset.
+
+\subsubsection{Editar barridos de pelo con la funci\'on offset}
+
+Para modelar barridos de pelos de los vectores de campos con la
+funci\'on de offset antes  citada, necesitamos considerar el
+barrido de pelo como  el eje param\'etrico de la variable \emph{t}
+en la funci\'on offset. Para cierto punto \emph{p} del barrido, su
+correspondiente valor \emph{t} es la longitud acumulada entre el
+punto \emph{p} y la ra\'iz del barrido. As\'i podemos obtener el
+par de valores de offset para cada punto del barrido.
+
+Todav\'ia es necesario definir un sistema de coordenadas locales
+en cada punto del barrido para imponer los offsets. El eje
+\emph{z} del sistema de coordenadas locales en el punto \emph{p}
+es siempre tangente a la direcci\'on de barrido en \emph{p}.
+Usaremos un vector entre el punto \emph{p} y el centro del cuero
+cabelludo como un vector UP del sistema local. Tanto el eje
+\emph{x} como el \emph{y} pueden ser derivados del vector UP y del
+eje \emph{z}. As\'i pues el punto \emph{p} esta originalmente en
+el origen del sistema local. Su nueva localizaci\'on estar\'a
+siempre en el plano local \emph{x y} y estar\'a determinado por el
+par de offsets devueltos de la funci\'on offset.
+
+Esta misma operaci\'on podr\'a ser aplicada cuando el barrido del
+pelo tenga din\'amica que origine una deformidad de frame a frame.
+Sin embargo, cada sistema de coordenadas locales, una vez se ha
+inicializado la funci\'on anterior,  deber\'a seguir las mismas
+transformaciones que siga el punto sobre el que va el barrido.
+\subsubsection{Rizado aleatorio}
+Para conseguir un efecto natural, obviamente no se deber\'ia
+editar todos los barridos de pelo con la misma funci\'on de
+offset. Por otro lado, el rizado aleatorio est\'a muy lejos de no
+presentar ruidos. Durante la permanente, normalmente la
+agrupaci\'on local de pelos se agarran a un rulo, que tambi\'en
+sugiere que las ondas de los pelos que pertenecen al mismo
+cl\'uster tienen forma similar. En la pr\'actica, se configura una
+cuadr\'icula multiescala sobre el cuero cabelludo en un sistema de
+coordenadas polares, y se generan variaciones aleatorias suaves de
+los par\'ametros de la funci\'on offset utilizando la funci\'on de
+ruido Perlin dada la media y la desviaci\'on t\'ipica para cada
+par\'ametro a una escala definida.
+
+\subsection{Cl\'usters de pelos}
+\label{scluster}
+
+Debido a los productos y a la electricidad est\'atica, los pelos
+cercanos tienden a formar agrupaciones de pelos (cl\'usters). Este
+efecto esta parcialmente expuesto en la secci\'on 2.4.3 cuando se
+sintetiza el ruido multiescala. Los pelos que crecen de la misma
+celda, a m\'axima resoluci\'on vemos que tienen los mismos
+par\'ametros para la funci\'on de offset, as\'i pues, tienden a
+estar mucho m\'as cerca unos de otros. Aqu\'i introducimos un
+offset adicional para reforzar mucho m\'as este efecto cuando los
+tratamientos anteriores no son suficientes. Se elige un pelo para
+ser el representante de los pelos que crezcan en la misma celda de
+la cuadr\'icula. Cada v\'ertice de los otros pelos que vienen del
+mismo v\'ertice se mueven a una distancia determinada del
+v\'ertice origen. Despu\'es de este paso, las agrupaciones de
+pelos son muy claras.
+
+La figura 6(a) muestra la interpolaci\'on resultante. Las figuras
+6(b)-(c) muestran las diferencias que se pueden obtener de la
+funci\'on offset sobre la apariencia del pelo. La figura 6(d)
+demuestra la efectividad del paso de agrupaci\'on de pelos.
+
+\textbf{Aqu\'i vendr\'ia la figura 6 y sus comentarios...}
+\section{Animaci\'on del pelo}
+\label{sanimation}
+
+La aproximaci\'on del modelado de la secci\'on anterior s\'olo
+genera modelos de pelo est\'aticos. Para elaborar t\'ecnicas de
+animado, habr\'a que modificar el proceso. Se empezar\'a por una
+din\'amica simple del pelo. Despu\'es se introducir\'a un modelo
+de interacci\'on entre pelos.
+
+\subsection{Din\'amica de mechones de pelos simples}
+\label{sdyn1}
+
+Existen varias t\'ecnicas desarrolladas en el modelado de mechones
+de pelo simples. Algunas investigaciones anteriores modelan
+mechones simples como part\'iculas conectadas con lazos r\'igidos.
+Cada part\'icula tiene tres niveles de libertad, uno de
+traslaci\'on y dos de rotaci\'on angular. Este m\'etido es simple
+y f\'acil de implementar. Sin embargo los mechones de pelo
+individuales tienen una fuerza tensora muy grande y a penas se
+dobla por su propio peso o fuerzas corporales. Esta propiedad se
+aprovecha para endurecer las ecuaciones que tienden a causar
+inestabilidad num\'erica, a no ser que el n\'umero de iteraciones
+sea muy pequeño. Modelamos cada mech\'on de pelo como una cadena
+serie r\'igida multicuerpo. Existe una uni\'on rotacional entre
+dos segmentos adyacentes, y el movimiento de traslaci\'on se
+proh\'ibe. Una cadena simple puede ser considerada como un cuerpo
+simple articulado con articulaciones. Las f\'orumulas din\'amicas
+de los cuerpos articulados son tratadas tanto en rob\'otica como
+en la literatura gr\'afica. Tanto las propiedades din\'amicas con
+multiplicadores de Lagrange como la formulaci\'on generalizada son
+igualmente v\'alidas para ser aplicadas. La din\'amica de una
+cadena serie multicuerpo y su formulaci\'on generalizada ha sido
+recientemente aplicada en una simulaci\'on de pelo. Se har\'a una
+breve descripci\'on en las subsecciones que siguen.
+
+\subsubsection{Ecuaciones cinem\'aticas}
+
+En este modelo se asume que el giro de un mech\'on a lo largo de
+un eje no esta permitido. Esto reduce cada uni\'on rotacional a
+tener solo dos ejes de movimiento libre. La uni\'on rotacional
+puede descomponerse en dos cascadas unidimensionales de uniones,
+cada una de las cuales tiene un eje de rotaci\'on fijo. Los
+\'angulos de rotaci\'on en una dimensi\'on representan el conjunto
+generalizado de coordenadas en un sistema de cadena multicuerpo.
+Si una uni\'on en una dimensi\'on tiene una rotaci\'on sobre el
+eje $\omega$ en un punto \emph{q} del eje, la matriz de
+transformaci\'on correspondiente a la rotaci\'on sobre el eje
+$\omega$ con un \'angulo $\theta$ puede darse con el mapa
+exponencial $e^{\widehat{\xi \theta}}$ donde:
+
+\begin{equation}
+   \widehat{\xi} = \left[ \begin{array}{cc}
+    \widehat{\omega} & \nu \\
+    0 & 0
+    \end{array}
+    \right] =, \widehat{\omega}= \left[ \begin{array}{ccc}
+        0 & - \omega_{3} & \omega_{2} \\
+        \omega_{3} & 0 & - \omega_{1} \\
+        - \omega_{2} & \omega_{1} & 0 \end{array}
+    \right],
+\end{equation}
+
+ $ \nu = - \omega x q $.  Supongamos que un segmento de pelo tiene
+ \emph{n} uniones de una dimensi\'on de revoluci\'on en la cadena
+ y su frame local esta definido en el mismo segmento. Asumimos que
+ la transformaci\'on de local-a-mundo para este frame cuando todas
+ las uniones de \'angulos precedentes son cero, esto es $
+ g_{st}(0) $. La transformaci\'on actualizada de local-a-mundo
+ despu\'es de una serie de transformaciones de rotaci\'on de
+ \emph{n} uniones pasa a ser:
+
+ \begin{equation}
+    g_{st}(\Theta) = e^{\widehat{\xi_{1} \theta_{1}}} e^{\widehat{\xi_{2}
+    \theta_{2}}} \ldots e^{\widehat{\xi_{n} \theta_{n}}} g_{st}(0)
+ \end{equation}
+
+As\'i, dado una serie arbitraria de uni\'on de \'angulos, la
+posici\'on de cada v\'ertice en la cadena puede obtenerse
+utilizando este producto de exponenciales de sus anteriores
+uniones. El mapa exponencial es, en realidad, otra manera de
+formular una matriz 4x4 homog\'enea. Podr\'a ser calculada en un
+tiempo constante. As\'i, toda la cadena puede ser evaluada en
+tiempo lineal.
+
+\subsubsection{Din\'amica de un mech\'on de pelo}
+
+Dada la ecuaci\'on de mapeo (4), que es la transformaci\'on del
+conjunto de coordinadas generalizadas (de los \'angulos de
+uni\'on) a las coordinadas del mundo real en 3D, la simulaci\'on
+de mechones de pelo puede resolverse integrando las velocidades
+angulares y aceleraciones de cada uni\'on que lo integre. Para
+t\'erminos din\'amicos m\'as avanzados sobre un mech\'on simple se
+resolver\'an tanto las velocidades angulares y aceleraciones con
+el algoritmo de Featherstone o las ecuaciones de Lagrange. Este
+m\'etodo es m\'as eficiente con una complejidad lineal. En la
+pr\'actica se utiliza la implementaci\'on del algoritmo de
+Featherstone.
+
+Tanto las fuerzas internas como externas son indispensables para
+la din\'amica de un simple pelo. En este art\'iculo se tratan las
+fuerzas entre pelos como fuerzas externas sumadas a la acci\'on de
+la gravedad. En cada uni\'on de los mechones existe tambi\'en una
+fuerza interior que reflejar\'a la rigidez de torsi\'on y doblado
+del mech\'on. Los pelos de este modelo tienen deformidades incluso
+cuando no existen fuerzas externas, se definir\'a una posici\'on
+de reposo no nula para cada pelo. Cualquier desviaci\'on de la
+posici\'on estable, resulta una fuerza que act\'ua sobre el
+sistema NO NULA para reducir la cantidad desviada. Esta
+configuraci\'on ayuda al mech\'on a recuperarse de su posici\'on
+original tras una secuencia de movimientos.
+
+\subsubsection{Colisi\'on hebra cuero cabelludo}
+
+Para simular colisiones no el\'asticas entre pelo y cuerpo humano,
+no existen fuerzas que se introduzcan por el movimiento del cuerpo
+humano. Una vez que el v\'ertice del pelo que se mueve se
+encuentra lo suficientemente cerca del cuero cabelludo,
+simplemente se parar\'a adoptando la velocidad a la que se est\'a
+moviendo el cuerpo humano mientas que los v\'ertices de la cadena
+multicuerpo seguir\'an movi\'endose libremente. Cualquier
+aceleraci\'on hacia el cuerpo humano tambi\'en finalizar\'a en el
+v\'ertice m\'as cercano al cuero cabelludo, sin embargo, si que se
+permite propagar el movimiento hacia fuera del cuerpo humano. Las
+fuerzas de fricci\'on se suman al igual que aquellos v\'ertices
+que est\'an pegados al cuerpo humano. La detecci\'on de colisiones
+se gestiona expl\'icitamente comprobando la penetraci\'on de las
+part\'iculas del mech\'on de pelo en los tri\'angulos definidos
+sobre el cuero cabelludo ( o partes del cuerpo).
+
+Este esquema no garantiza que los v\'ertices del pelo no penetren
+en otras superficies colindantes en medio de un paso. Si se
+produce esta penetraci\'on, necesitaremos mover ese mech\'on fuera
+de la zona colindante a la vez, para que no se pueda percibir
+dicha penetraci\'on. Es muy importante que la punta del pelo
+permanezca intacta a lo largo de este proceso, para reducir
+efectos visuales no realistas. Para corregir este error se
+utilizan las f\'ormulas de cinem\'atica inversa. Lo m\'as sencillo
+es empezar en la ra\'iz y mover el primer v\'ertice que penetra
+$p_{1}$ a un lugar v\'alido $p_{1}'$ y despu\'es propagar dicho
+movimiento, as\'i nos aseguramos que no se producen penetraciones
+intermedias.
+\subsection{Modelo disperso para la interacci\'on entre pelos}
+\label{sdisperso}
+
+Una g\'ia de pelo representa esencialmente un mech\'on de pelo
+local. As\'i pues, deber\'ia tener la masa de todo el mech\'on en
+vez de de un simple pelo. Primero se introduce un modelo
+el\'astico para preservar las posiciones relativas de cada
+mech\'on. Las uniones est\'aticas modelan la interacci\'on entre
+pelos debida a la ondulci\'on, cargas est\'aticas y cambios
+antinaturales del pelo. Las colisiones entre pelos y la fricci\'on
+se simula utilizando una gu\'ia de pelos y una colecci\'on de
+tri\'angulos de mechas. Por \'ultimo se provee una t\'ecnica de
+generaci\'on adaptativa del pelo para complementar este modelo
+disperso de pelo. El modelo que se propone modela con eficiencia
+la din\'amica del pelo con una buena visi\'on realista del mismo.
+
+\subsubsection{Uniones est\'aticas}
+
+Es evidente que los mechones de pelo tienden a agruparse seg\'un
+productos para el pelo, cargas est\'aticas y movimiento de los
+rizos del pelo con ondulaciones. Como resultado, el movimiento de
+cada mech\'on depende, en su mayor parte, del movimiento de los
+dem\'as. Estas interacciones pueden tener relativamente grandes
+efectos entre agrupaciones de pelo en un \'area pequeña. Mientras
+que las agrupaciones de pelo se modelan mediante este modelo de
+pelos dispersos, interacciones entre agrupaciones de pelos m\'as
+grandes se salen de rango. Es m\'as, movimientos de cabeza suaves
+o fuerzas externas, no cambian radicalmente el estilo del pelo,
+esto es debido, principalmente a que cada mech\'on tiene definidas
+sus fuerzas internas. Sin embargo, la capacidad de recuperaci\'on
+del estado inicial de cada pelo esta especialmente limitada para
+cabellos largos. El efecto "v\'inculo" entre pelos juega un papel
+muy importante. Los movimientos bruscos pueden romper estos
+v\'inculos creados por un estilo de pelo, cargas est\'aticas o
+movimientos ondulatorios.
+
+Para modelar de un modo efectivo el efecto "v\'inculo",
+deber\'iamos ver el pelo como un volumen el\'asticamente
+deformable. Los modelos tradicionales para cuerpos deformables
+incluyen enrejados tridimensionales, diferencias finitas, y el
+m\'etodo de elemento finito. Estos modelos aproximan la
+desviaci\'on de un cuerpo cont\'inuo de su forma estable. Bajo
+fuerzas externas fuertes, el volumen cont\'inuo del pelo puede
+romperse en pedazos, que puede traducirse en transformaciones
+globales entre ellos. As\'i pues, utilizar el sistema de
+coordenadas de del cuerpo para todo el cabello es una t\'ecnica
+err\'onea.
+
+Se propone construir conexiones no definitivas, llamadas \emph{uniones est\'aticas}, entre
+mechones de pelo para simular el movimiento lateral el\'astico y la recuperaci\'on del estilo.
+Estas conexiones se eligen inicialmente y representan l\'imites espec\'ificos de cada
+estilo de pelo, pues cada estilo tiene una configuraci\'on adyacente distinta. Estas uniones
+est\'aticas refuerzan las acciones adyacentes ejerciendo fuerzas externas en otros mechones.
+Intuitivamente utilizar\'iamos las caracter\'isticas de tensi\'on, doblado y torsi\'on para
+preservar las posiciones relativas de los mechones, sin embargo, en la pr\'actica se opta
+por una t\'ecnica mucho m\'as simple y m\'as eficiente: el uso de coordenadas locales.
+
+Se introduce el sistema de coordenadas locales para cada segmento
+de cada mech\'on de pelo. Para cada segmento, se establecen un
+n\'umero de finito de los mechones m\'as cercanos al mismo como
+puntos de referencia. Para mejorar el rendimiento, se puede
+utilizar un \'arbol octario para almacenar los segmentos vecinos
+para una b\'usqueda m\'as r\'apida. Se transforman estos puntos ,
+correspondientes al mundo exterior, a coordenadas locales de los
+segmentos (figura 7 a). Las coordenadas iniciales locales de estos
+puntos de referencia, se almacenan como parte de un proceso de
+inicializaci\'on. Una vez que los mechones tienen un movimiento
+relativo, las coordinadas locales de los puntos de referencia
+cambian y se ejercen fuerzas externas en estos mechones para
+recuperar el estado inicial de las posiciones relativas (figura 7
+b). La ventaja de utilizar fuerzas externas es la eliminaci\'on de
+tener en cuenta los factores de doblado y torsi\'on. Sea \emph{h}
+un segmento de un pelo simple, con \emph{m} puntos de referencia.
+Las coordinadas locales de estos puntos de referencia son
+representadas por $ p_{h,i}^{o}, i = 1, \ldots, m $, mientras que
+las nuevas coordenadas vienen representadas por: $ p_{h,i}^{n}, i
+= 1, \ldots, m $. La fuerza acumulada que recibe este segmento se
+debe a las uniones est\'aticas, que pueden formularse como sigue:
+
+\begin{equation}
+    f_{h} = \sum_{i} \left[ k_{h,i}^{s} \left| l_{i} \right|
+    - k^{d}\frac{v_{i} l_{i}}{\left|l_{i}\right|} \right]
+    \frac{l_{i}}{\left|l_{i}\right|}
+\end{equation}
+
+Hacemos un c\'omputo de la fuerza mediante la ley de Hook, donde $ k_{h,i}^{s} $, es la constante i-\'esima
+del punto de referencia del segmento \emph{h}, y $ k^{d}$ es la constante universal.
+
+Igualmente, para los l\'imites de un pelo no natural las uniones
+est\'aticas pueden romperse debido a fuerzas excesivas.
+Configuramos un umbral para cada uni\'on est\'atica. Si la
+magnitud del cambio es mayor que el umbral, la uni\'on est\'atica
+se rompe (figura 7 c). Una vez que la uni\'on se ha roto, el daño
+es permanente; la uni\'on permanecer\'a rota hasta el final de la
+simulaci\'on.
+
+Cuando la fuerza exterior cesa, el estilo del pelo de la situaci\'on original puede que no se recupere
+si se ha roto alg\'un enlace. Puede que se formen nuevas uniones est\'aticas debido al nuevo
+estilo de pelo resultante de la modificaciones de los mechones vecinos.
+
+\textbf{Aitor, aqu\'i va la figura 8}
+
+\subsubsection{Interacciones din\'amicas}
+
+La deformaci\'on el\'astica solo introduce interacciones entre
+pelos. Los pelos tambi\'en interact\'uan entre ellos en forma de
+colisi\'on. Para simular con eficiencia la colisi\'on y fricci\'on
+entre pelos utilizando el modelo de pelos disperso, necesitamos
+tener un modelo din\'amico que imagine el espacio entre el
+conjunto de pelos dispersos entre la densidad del resto. La
+detecci\'on de colisi\'on entre gu\'ias de pelos es mucho menos
+exacta. Supongamos un par de gu\'ias de pelos cercanas. El espacio
+entre ellas puede ser rellenado con algunos pelos del modelo
+denso, as\'i no cabr\'a la posibilidad de que otros mechones se
+interpongan sin que reciban ning\'un tipo de resistencia. Para
+modelar este efecto, podemos considerar la gu\'ia de pelos como
+dos cilindros generalizados con suficiente radio como para
+rellenar el hueco entre las gu\'ias, o construir un tri\'angulo
+auxiliar como una capa densa entre pelos para conectar los
+v\'ertices que correspondan. Este mech\'on triangular puede
+autom\'aticamente cambiar de  tamaño al mismo tiempo que la gu\'ia
+de pelos se mueve, pero el truco se mejora si son los cilindros
+los que cambian de tamaño. As\'i pues se llega a la conclusi\'on
+de que es mejor construir mechones triangulares de pelo entre
+parejas de gu\'ias de pelo para aproximar esta construcci\'on a
+una distribuci\'on densa de pelo. Si consideramos el conjunto de
+pelo denso como un volumen, un mech\'on triangular representa una
+secci\'on muy pequeña de todo el volumen. Un n\'umero considerable
+de estas secciones puede representar aproximadamente la
+distribuci\'on de densidad del volumen original del cabello.
+
+Puesto que la distancia entre un par de v\'ertices de dos pelos puede cambiar durante la
+simulaci\'on, se decide utilizar la distancia entre ra\'ices del pelo. Se encontrar\'a siempre
+un mech\'on triangular entre dos gu\'ias de pelo que tengan ra\'ices vecinas.  Cada tri\'angulo
+solo conecta dos v\'ertices de dos gu\'ias de pelo, se puede decir que dichos v\'ertices son casi paralelos.
+Cabe notar tambi\'en que los tri\'angulos de mechones pueden intersectar. Esto no complica
+las cosas pues cada tri\'angulo se trata de forma independiente durante la detecci\'on de colisi\'on.
+Los tri\'angulos definidos s\'olo sirven para  ayudar a detectar la colisi\'on, no se
+consideran parte de la geometr\'ia real durante el render final. No tienen elementos
+din\'amicos que puedan influenciar en el movimiento del pelo. Sin embargo, algunos tri\'angulos pueden
+tener uniones est\'aticas muy pr\'oximas que puedan ayudar a que cierta parte del pelo no
+pueda llegar a deformarse. Los bordes de los trin\'angulos no se construyen directamente
+uniones est\'aticas porque las uniones est\'aticas conectan segmentos de pelos pro\'ximos, mientras
+que no todos los segmentos est\'an conectados por trin\'angulos que est\'an pr\'oximos entre s\'i.
+
+Al igual que en la detecci\'on de colisiones en las superficies
+est\'andar, se consideran dos tipos de colisiones, una
+\emph{colisiones entre dos segmentos de pelo}, y otra
+\emph{colisiones entre v\'ertices de pelos en la cara triangular}.
+Como cada gu\'ia representa una agrupaci\'on local de pelos con
+cierto grosor, una colisi\'on se detecta tan pronto como la
+distancia entre dos elementos del pelo est\'e por debajo de un
+umbral no nulo. Una vez que la colisi\'on se ha detectado, se
+generar\'a una fuerza muy fuerte para alejar el par de elementos.
+Mientras, una fuerza de fricci\'on se generar\'a para
+contraponerse al movimiento tangencial. Estos tri\'angulos de
+mechones redistribuyen las fuerzas que reciben sus v\'ertices como
+fuerzas externas adicionales. Tanto el mech\'on como las fuerzas
+de fricci\'on desaparecen cuando la distancia entre dos elementos
+colindantes superan el umbral antes definido. La fuerza del
+mech\'on, por otro lado, mantiene a otros segmentos de pelo lejos
+de penetrar otra capa que corresponda a otro tri\'angulo de
+mechones. Se utiliza un \'arbol octario para detectar la
+colisi\'on lo m\'as r\'apido posible. Todo segmento de pelo y
+tri\'angulo de mechones que se mueva, ser\'a añadido al \'arbol en
+cada paso del algoritmo. Esta estructura octaria tendr\'a la lista
+de segmentos de pelo que intersecten entre ellos.
+
+El pelo tambi\'en contiene fuertes propiedades din\'amicas anis\'otropas. Dependiendo de la
+orientaci\'on del v\'ertice de pelo penetrante y de la cara triangular, la fuerza de repulsi\'on
+entre mechones puede que var\'ie. Por ejemplo, segmentos de pelo que tengan una orientaci\'on
+similar a la del tri\'angulo de mechones deber\'ia experimentar fuerzas menores. La f\'ormula que
+describe la fuerza de repulsi\'on entre mechones se define como:
+
+\begin{equation}
+    f_{r} = \lambda(1-\left|{a b}\right|)f_{s}
+\end{equation}
+
+La fuerza original $f_{s}$ se dimensiona en la ecuaci\'on anterior, donde \emph{a}
+es el vector tangente normalizado del pelo en el v\'ertice penetrante, \emph{b} es la
+interpolaci\'on de la orientaci\'on del pelo sobre la cara triangular de su segmento de pelos,
+y $\lambda$ es el factor de escala. Cuando \emph{a} y \emph{b} est\'en perfectamente alineados
+, la fuerza $f_{s}$ pasa a ser nula. Por el contrario, cuando sean perpendiculares, esta fuerza
+pasa a tener su m\'aximo. La fuerza de colisi\'on entre dos segmentos de pelo puede definirse
+del mismo modo.
+
+La densidad en cada mech\'on de pelo tambi\'en se modela como un cont\'inuo. Puede ser din\'amicamente
+ajustada durante la simulaci\'on. Si no hay suficientes pelos en un mech\'on, el mech\'on puede
+romperse. Esto permitir\'ia que otros mechones atraviesen estas regiones de pelo m\'as d\'ebiles.
+Este fen\'omeno es comprensible porque a veces no existe pelo entre agrupaciones, mientras que
+otras veces, nos podemos encontrar con distribuciones de pelo muy densas. En esta implementaci\'on
+, la longitud de los bordes de los tri\'angulos de pelo sirven de indicador para cuando sea
+necesario ajustar la densidad de pelo en esa misma regi\'on. Si un tri\'angulo pasa a ser
+muy grande, se dice que esta roto. Si el tri\'angulo no est\'a roto, la magnitud de la fuerza de
+colisi\'on es exactamente la descrita en la ecuaci\'on anterior, que se adaptar\'a con el
+factor $\lambda$ a la anchura local del tri\'angulo del mech\'on para contemplar el cambio
+de densidad de dicho tri\'angulo. Este proceso es irreversible, al contrario que el utilizado para
+las uniones est\'aticas. Una vez que dos gu\'ias de pelo se muevan para acercarse una a la otra,
+ser\'a indicativo de que la densidad entre esas dos gu\'ias est\'a aumentando, por lo que
+la fuerza de colisi\'on entre ellas aumentar\'a y el tri\'angulo de mechones se recuperar\'a
+si su estado anterior fu\'e "roto".
+
+\textbf{Aitor, aqu\'i va la figura 9}
+
+Puede que no sea necesario construir tri\'angulos de mechones sobre todos las parejas de
+mechones que est\'en cercanas. Por ejemplo, en el cepillo de la figura anterior, s\'olo
+se pueden introducir tri\'angulos de mechones entre pelos adyacentes horizontal y verticalmente.
+Para pelo humano, algunas veces encontramos que es eficiente construir tri\'angulos de mechones
+entre gu\'ias de pelo con ra\'ices adyacentes (figura 9b). Esto es debido a que el pelo cae
+por la fuerza de la gravedad, y el grosor del volumen del pelo es normalmente mucho menor
+que las dimensiones de la superficie exterior del volumen del pelo. En esta situaci\'on,
+el utilizar tri\'angulos para completar huecos horizontales sobre una gu\'ia de pelo
+se convierte en una tarea mucho m\'as importante.
+
+\subsubsection{Gu\'ia adaptativa para generaci\'on de pelo}
+
+Inicialemente, se selecciona una gu\'ia de pelos uniforme sobre el
+cuero cabelludo. Sin embargo, no es siempre la mejor idea el
+seleccionar dicha gu\'ia de pelos uniformemente. Durante el tiempo
+de la simulaci\'on, una parte del pelo puede que sea m\'as activa
+que otras. Por ejemplo, cuando sopla el viento de un lado, la otra
+parte del pelo pasa a ser mucho menos activa. Como resultado
+inmediato, encontramos que una parte del c\'alculo computacional
+se pierde en esas regiones no tan activas. En este lado donde el
+pelo es mucho menos activo, ser\'ia suficiente combinar
+interpolaci\'on sobre algunas gu\'ias de pelo. Sin embargo, para
+regiones m\'as activas, es deseable utilizar m\'as gu\'ias de pelo
+y menos interpolaci\'on para obtener mejores resultados. Se diseña
+pues un m\'etodo de generaci\'on adaptativa para complementar el
+modelo disperso inicial.
+
+Se generar\'an gu\'ias de pelos adaptadas durante la simulaci\'on
+para cubrir todas las regiones interpoladas. Esta distribuci\'on y
+el n\'umero inicial de gu\'ias de pelos se determinan antes de la
+simulaci\'on. Sin embargo, cuando llegamos a la simulaci\'on,
+puede que tengamos que añadir m\'as mechones. El modelo del pelo
+puede convertirse computacionalmente en algo muy pesado si los
+pelos simplemente se pudiesen añadir. Se sabe que, los pelos que
+se van insertando pasan a una inactividad total durante la
+simulaci\'on. As\'i pues, tambi\'en dejaremos la posibilidad de
+que se eliminen durante dicha simulaci\'on. Para mantener los
+mechones relativamente dispersos, se pondr\'a un l\'imite en
+cu\'antos mechones de pelo adaptativos pueden existir al mismo
+tiempo. Tambi\'en ser\'a importante escoger el lugar id\'oneo para
+generar las gu\'ias de pelo adaptativas.
+
+Se utiliza una t\'ecnica muy simple para detectar d\'onde añadir y
+quitar gu\'ias de pelos adaptativas. Para cada pareja de mechones
+de pelo, se mide la distancia entre todos los pelos
+correspondientes a los v\'ertices de dichos mechones. Si alguna
+pareja pasa a estar m\'as distante que lo que marca el umbral,
+implicar\'a que esas dos gu\'ias de mechones de pelo est\'an
+absorbiendo demasiado a la interpolaci\'on. Entonces se añade otra
+gu\'ia de pelo adaptativa entre medio. Al mismo tiempo se examina
+la situaci\'on de todas las gu\'ias de pelo adaptativas del paso
+anterior. Si alguna de las gu\'ias del paso anterior es superflua,
+se elimina y se guarda por si acaso es necesaria en un paso
+posterior. Cuando se genera una nueva gu\'ia adaptativa, la
+posici\'on de su v\'ertice inicial y su velocidad se obtienen
+interpolando las dos gu\'ias adaptativas que han hecho que nazca
+esta tercera. Desde aqu\'i esta gu\'ia adaptativa seguir\'a su
+propia din\'amica, colindando con mechones cercanos y tri\'angulos
+de mechones. Para evitar movimientos discont\'inuos en el resto de
+los pelos, un nuevo pelo adaptativo no establecer\'a uniones
+est\'aticas con otros mechones.
+
+\subsubsection{Adaptaciones para pelo rizado}
+
+En este art\'iculo se ha modelado el efecto rizado en el \'ultimo paso del render. Las gu\'ias
+de pelo de un modelo de pelo rizado son en realidad bastante rectas excepto para
+deformaciones de pelo a gran escala. Las interacciones entre gu\'ias de pelos deber\'ian reflejar
+las caracter\'isticas finales del modelo denso de pelo pues la parte del movimiento de las gu\'ias
+de pelo se va a utilizar posteriormente en el render incluso si el rizado del pelo se cambia
+a posteriori. En el caso del pelo rizado, deber\'ian existir uniones entre pelos mucho m\'as fuertes,
+pues los pelos rizados tienen un efecto ondulatorio mucho m\'as marcado, y menos colisiones pues
+el rizo amortigua dicho efecto. En la pr\'actica se siguen este tipo de intuiciones para
+configurar la fuerza de las interacciones entre pelos.
+
+\subsection{Modelo di\'amico de pelo denso}
+\label{sdyn2}
+
+La animaci\'on del pelo se genera en dos fases seg\'un este modelo. En el primer paso, el
+conjunto de gu\'as de pelos se simula de frame a frame con todas las fuerzas externas inclu\'idas
+y las interacciones entre pelos descritas en la secci\'on 3.2. Durante la simulaci\'on de
+cada gu\'ia de pelos individuales descrita en la secci\'on 3.1., fuerza a tratar las interacciones
+entre pelos como fuerzas externas. La detecci\'on de colisiones tambi\'en se realiza durante la simulaci\'on.
+Al final del primer paso, obtenemos las posiciones y velocidades de cada gu\'ia de pelo para cada
+frame.
+
+En el segundo paso, se genera un modelo denso de pelo para cada frame en consecuencia con las posiciones
+de las gu\'ias de pelo. El rizado se modela con la funci\'on offset descrita en la secci\'on
+2.4 si fuese necesario. Para mantener la consistencia de frame a frame, cada pelo del modelo denso
+es asignado a una funci\'on de offset fija durante toda la secuencia. As\'i pues en cada frame,
+meramente se modela el mismo offset en la punta de la capa subyacente que se deforma para conseguir
+el rizado deseado. Sin embargo la funci\'on de offset puede que var\'ie de mech\'on a mech\'on.
+
+Puede darse una situaci\'on en la que un objeto pequeño colisione
+contra el modelo, y no note la presencia de todas las gu\'ias de
+pelo, pero puede encontrase con algunos de los mechones del modelo
+denso, entonces se decide aplicar el modelo de detecci\'on de
+colisiones a cada rizo del modelo denso de pelo. Aunque esto
+suponga una gran cantidad de operaciones, la potencia de c\'alculo
+de las m\'aquinas de hoy en d\'ia es suficiente para efectuar esta
+tarea en un tiempo razonable. Si un pelo penetra un objeto, se
+seguir\'a el esquema descrito en la secci\'on 3.1.3 para ajustar
+dicho pelo.
+
+\section{Render del pelo}
+\label{srender}
+
+Aunque el objetivo inicial de este documento es modelar y animar pelo, se reserva una secci\'on
+para explicar c\'omo hacer un render del pelo realista. El fen\'omeno f\'isico que se considera
+aqu\'i incluye sombras y dispersi\'on de la luz. Los mechones de pelo no son del todo opacos, as\'i pues
+la interacci\'on entre la luz y el pelo desemboca en una relfexi\'on y en una transmisi\'on.
+B\'asicamente podemos ver el pelo como una funci\'on densidad con magnitudes y estructuras distintas
+en cada parte. La densidad del pelo est\'a directamente relacionada con el coeficiente de atenuaci\'on de la luz
+local, mientras que las estructuras (incluyendo la orientaci\'on del pelo) est\'an relacionadas
+a la funci\'on de fase de la dispersi\'on. En esta secci\'on, se discute como renderizar de manera
+efectiva las secuencias de pelo con una calidad de visualizaci\'on muy alta considerando los
+factores anteriores.
+
+Mientas que la dispersi\'on secundaria puede mejorar la calidad
+del renderizado, la dispersi\'on primaria y las sombras son mucho
+m\'as importantes. Como buscamos la mejora del render al generar
+animci\'on de pelo, se decide simular \'unicamente estos dos
+\'ultimos factores m\'as importantes. Esto es el equivalente a
+resolver la ecuaci\'on que viene:
+
+\begin{equation}
+    L(x,\overrightarrow{\omega}) = \int_{x_{0}}^{x}
+    \tau(x',x)\sigma(x')\sum_{l} f(x',
+    \overrightarrow{\omega_{l}}, \overrightarrow{\omega})
+    I_{l}(x')dx'
+\end{equation}
+
+donde $L(x,\overrightarrow{\omega}$, representa la luminosidad
+final en \emph{x} en la direcci\'on de X,
+$f(x',\overrightarrow{\omega_{l}}, \overrightarrow{\omega})$ es la
+funci\'on normalizada para la dispersi\'on, $I_{l}(x')$ es la
+intensidad de la luz atenuada de la l-\'esima fuente de luz, y
+$\tau(x',x) = exp (- \int_{x'}^{x}(\alpha(\xi)+\sigma{\xi}))d\xi$
+donde $\alpha{x}$ es el coeficiente de absorci\'on y $\sigma{x}$
+es el coeficiente de dispersi\'on. Igual que en el render
+volum\'etrico, el color final de cada pixel puede ser aproximado
+al canal alfa de algunos puntos clave del rayo trazado que pasa
+por dicho pixel. Para detectar el canal alfa correctamente, el
+conjunto de puntos clave podr\'ia ser la intersecci\'on entre el
+rayo trazado y el segmento de pelo. Cabe destacar que la entrada
+de esta fase de render es el n\'umero de mechones resultante de
+discretizar todos los esplines interpolados del modelo denso. Para
+obtener un conjunto de intersecciones en cada pixel
+eficientemente, se aplica una conversi\'on total a los segmentos,
+y cada segmento se añade a la lista de intersecciones en un pixel
+una vez que se ha contemplado dicho pixel. Si se aplica
+anti-aliasing y supersampleo se pueden conseguir resultados m\'as
+suaves.
+
+Para acabar con el render, todav\'ia se necesita un color en el
+canal alfa para cada intersecci\'on. Deber\'ia ser reflejado el
+color en cada intersecci\'on. El modelo de reflectancia que se
+utiliza normalmente proviene de \emph{D.Goldman. Fake fur
+rendering. De SIGGRAPH 97, p\'aginas de la 127-134, 1997.}. Se
+utiliza una versi\'on modificada. B\'asicamente el algoritmo
+selecciona un conjunto discreto de mapas planos perpendiculares a
+la direcci\'on de la luz. Estos mapas se distribuyen uniformemente
+a trav\'es del volumen que se quiere renderizar. Cada mapa
+contiene una funci\'on aproximada de transmisi\'on del volumen
+parcial que se sit\'ua en frente de dicho mapa. La transmisi\'on
+aproximada de volumen en cualquier punto puede obtenerse
+interpolando la transmisi\'on  de dos puntos cuyos mapas
+correspondientes est\'an cercanos uno del otro. En esta
+implemetaci\'on se utiliza la interpolaci\'on exponencial pues la
+atenuaci\'on de la luz a trav\'es de un volumen es exponencial.
+Esta interpoalci\'on exponencial puede ser descrita por:
+
+\begin{equation}
+    exp(-\alpha_{1}\frac{d_{2}}{d_{1}+d_{2}}-\alpha{2}\frac{d_{1}}{d_{1}+d_{2}})
+\end{equation}
+
+donde $exp(-\alpha_{1})$ y $exp(-\alpha_{2}) $ son atenuaciones de los dos mapas m\'as pr\'oximos,
+y $d_{1}, d_{2}$ son la distancia del punto a los dos mapas respectivamente.
+
+Cuando se renderiza el pelo junto con otros objetos s\'olidos, como la cabeza o la ropa, que asumimos
+que son completamente opacos, el color de los objetos s\'olidos necesita ser agrupado con el
+color del pelo durante el render volum\'etrico. Los objetos s\'olidos tambi\'en tienen su b\'ufer
+ de sombras para cada fuente de luz. Cualquier sombra de s\'olidos no recibe luz mientras que
+ esos s\'olidos pueden estar recibiendo luz atenuada bajo la sombra de uno de los pelos.
+
+\section{Resultados}
+\label{sresults}
+\subsection{Modelado del pelo}
+
+Se ha aplicado en este modelo a varios estilos de pelo con diferentes grados de rizado, y se han
+obtenido resultados satisfactorios. Alguno de los estilos de pelo se muestran en la figura 10.
+Resultan ser naturales y realistas. Las primitivas del vector de campos pueden ser ajustadas por
+el usuario o generadas aleatoriamente. T\'ipicamente, se necesitan unas 10 primitivas para
+crear un estilo de pelo definido. El tiempo para el ajuste manual suele ser de una a dos horas.
+Por otro lado, la figura 10 (d) utiliza 273 primitivas generadas aleatoriamente y distribu\'idas
+por todo el cuero cabelludo.
+
+Para cada agrupaci\'on de pelos locales, los par\'ametros de la ecuaci\'on (2) se generan
+aleatoriamente. La media y la desviaci\'on t\'ipica para estos par\'ametros es fija para
+todos los pelos y son especificados por el usuario. Las ondulaciones finales en la figura 10 (a)
+y la figura 6(d) tienen la misma media de 5mm. Sin embargo las ondulaciones de la figura 6 (d)
+parecen ser mas aleatorias porque tienen un periodo mucho m\'as corto y una desviaci\'on mucho
+m\'as grande para la fase inicial de las ondas. Los pelos de la figura 10 (c) tienen una
+magnitud media de 1mm para dar un toque m\'as suave.
+
+\subsection{Animaci\'on del pelo}
+
+Este modelo tambi\'en ha sido testeado en algunas animaciones. Se
+utilizaron unas 200 gu\'ias de pelos inicialmente con 15 segmentos
+cada una. Cada mech\'on se interpola en cada paso con un espl\'in
+Hermite y discretizado con 50 segmentos m\'as pequeños. Basado en
+este conjunto de pelos dispersos, se genera un modelo denso de
+unos 50.000 mechones generados al vuelo en cada frame para el
+render final. La animaci\'on de cada gu\'ia cuesta un segundo por
+frame en un Pentium III a 800MHz. La interpolaci\'on, detecci\'on
+de colisiones y renderizado con antialiasing cuesta otros 20
+segundos por frame en un Pentium IV a 2GHz. Las figuras 11(a) y
+11(b) muestran un modelo disperso con uniones est\'aticas y una
+interpolaci\'on del modelo denso. Las uniones est\'aticas
+previenen excesivos cambios al estilo del pelo durante el
+movimiento, al igual que provee al estilo del pelo de una
+recuperaci\'on del estado inicial. La figura 12 muestra dos
+renders sint\'eticos de una animaci\'on de pelo.
+
+\textbf{Aitor, aqu\'i va la figura 10.}
+
+\subsubsection{Comparaci\'on con el mundo real}
+
+La secuencia de agitaci\'on de una cabeza se compara con una
+secuencia real en la figura 13. Los mechones de pelo, en la
+secuencia real, obviamente tienen conexiones m\'utuas pues se
+mueven conjuntamente. Se utilizar\'an uniones est\'aticas
+relativamente fuertes para poder simular este efecto. El
+movimiento de la cabeza en la secuencia sint\'etica se produjo
+manualmente para aproximarlo lo m\'aximo posible al movimiento
+real. Sin embargo, el movimiento del pelo sint\'etico coincide
+razonablemente con el movimiento real.
+
+\subsubsection{Colisi\'on din\'amica}
+
+Para demostrar la efectividad de la estrategia de colisi\'on que
+se ha seguido hasta ahora, se construye un modelo de pelo trenzado
+simple, y se deja destrenzar por la acci\'on natural de la fuerza
+gravitatoria. Existen b\'asicamente dos gu\'ias de mechones en
+este modelo; las uniones est\'aticas y tri\'angulos de mechones se
+construyen entre pelos del mismo conjunto de gu\'ias. As\'i pues,
+dos gu\'ias pueden alejarse una de la otra. En la figura 14 se
+analiza la comparaci\'on entre el movimiento generado sin y con
+detecci\'on de colisiones. En la simulaci\'on con detecci\'on de
+colisiones cada mech\'on se libera por su cuenta, mientras que en
+la que no se tiene en cuenta la detecci\'on de colisiones, los
+mechones se deshacen mediante un movimiento en espiral.
+
+\subsubsection{Interacci\'on del pelo con el viento}
+
+Las interacciones entre pelo y viento tradicionalmente se modelan
+como si s\'olo existiese la acci\'on del viento sobre el pelo. Sin
+embargo, la velocidad de campo del viento tambi\'en se ve
+influenciada por el pelo. El viento se simula como un fluido que
+genera una velocidad de campo. Cada v\'ertice recibe una fuerza
+exterior adicional que proviene del viento. Esta fuerza puede ser
+modelada como una fuerza resultante de restar la velocidad del
+v\'ertice del pelo a la velocidad del viento sobre el v\'ertice.
+La fuerza generada de la parte de atr\'as del pelo sobre el viento
+puede modelarse de forma similar. Si el viento se simula
+utilizando un grid voxel \footnote{R.Fedwik, J.Stam y H.W. Jensen.
+Visual simulation of smoke. En SIGGRAPH 01. Conference
+Preceedings, p\'aginas 15-22, 2001.}, la velocidad del pelo en
+cada punto puede aproximarse utilizando las velocidades de los
+v\'ertices de pelos m\'as pr\'oximos y de los tri\'angulos
+auxiliares.
+
+\textbf{Aqu\'i va la figura 11}
+
+\subsubsection{Simluaci\'on del cepillado}
+
+Podemos añadir a las interacciones entre pelos en el ser humano,
+la din\'amica provocada por el cepillado. La figura 16 muestra la
+secuencia de im\'agenes de una esfera colindando con un cepillo
+sint\'etico. Las acciones m\'utuas son \'infimas cuando s\'olo un
+n\'umero pequeño de pelos caen por detr\'as de dicha esfera. Sin
+embargo, cuando este n\'umero aumenta, se estabiliza m\'as
+r\'apido debido a las colisiones.
+\subsection{Render del pelo}
+
+Puede añadirse un toque especial a las im\'agenes mediante el
+renderizado del pelo si se le incrementa la caracter\'istica de
+transl\'ucido y especularidad. La figura 15 (abajo) muestra
+algunas im\'agenes renderizadas dos veces de otra con secuencias
+de viento soplando con m\'as especularidad. La figura 17 muestra
+una comparaci\'on entre pelo renderizado normalmente y pelo con
+alto grado de translucidez.
+
+\textbf{Aitor, aqu\'i van las figuras 12, 13, 14}
+
+
+\section{Conclusiones}
+
+Se ha presentado una framework unificada del modelado y
+animaci\'on del pelo. Tanto el modelado como la animaci\'on
+comienzan desde una gu\'ia dispersa de pelos. El objetivo de
+modelado propuesto puede generar estilos de pelo ondulado muy
+realista a base de editar un modelo b\'asico de pelo a
+trasquilones con una funci\'on offset para generar el rizado.
+Tambi\'en se ha presentado un modelo integrado para la animaci\'on
+del pelo. M\'as concretamente el modelo din\'amico puede conseguir
+las siguientes funciones: uniones est\'aticas y actuador de
+fuerzas entre uniones para habilitar la recuperaci\'on al estado
+de reposo del estilo del pelo inicial; la colisi\'on entre pelos
+es m\'as precisa debido a la inserci\'on de mechones triangulares
+auxiliares para detectar la colisi\'on entre mechones al igual que
+la colisi\'on entre mechones auxiliares; simulaci\'on estable de
+mechones individuales debido a la formulaci\'on de cadenas
+abiertas multicuerpo. Tambi\'en este modelo, se puede decir que no
+est\'a originalmente pensado para pelos sin  efectos de cl\'uster
+obvios, con este esquema de interpolaci\'on m\'ultiple, los
+efectos visuales para este tipo de pelos, resulta ser medianamente
+razonable.
+
+\textbf{Aitor, aqu\'i van las figuras 15, 16 y 17}
+
+\section{\¿Qu\'e hay sobre Sulley?}
+
+\textbf{Aitor, mete aqu\'i la foto de Sulley!!}
+
+Pixar Animation Studios, ha estado a la cabeza de la tecnolog\'ia
+de animaci\'on por ordenador durante 15 años.
+
+Los realizadores siguen añadiendo niveles de dificultad y mayores
+retos que requieren que el equipo t\'ecnico se mejore
+constantemente y reinvente la forma en la que se ve la pel\'icula.
+
+En "Monstruos S.A." el mayor logro fu\'e crear el pelo y la piel
+junto con el vestuario y los efectos ambientales. Monstruos S.A.
+siempre ha sido una pel\'icula sobre un gran monstruo peludo que
+se relaciona con una niña. La niña lleva una camiseta durante la
+mayor\'ia del tiempo. De repente, se dieron cuenta de que ten\'ian
+que encargarse del pelo y la ropa - dos cosas con las que el
+diseño por ordenador no se hab\'ia enfrentado en el pasado. Su
+objetivo era evitar que los animadores tuviesen que  detallar el
+movimiento de cada pelo individual y el movimiento de las arrugas
+de en la ropa. Se propusieron incluir inteligencia en los modelos
+para mover din\'amicamente el pelo y la ropa de acuerdo con la
+animaci\'on del personaje que hab\'ia sido creado. Esta
+situaci\'on produjo un mont'on de preguntas para el equipo
+t\'ecnico: ¿c\'omo unir el pelaje al cuerpo, ¿c\'omo se arruga la
+piel?, ¿c\'omo se mueve el pelo?, ¿c\'omo lo sit\'uan? ¿se quiere
+animar la camiseta?, ¿tiene la camiseta la forma del cuerpo de
+manera que sigue los movimientos de su cuerpo o se quiere dar ese
+movimiento din\'amico en el que s\'olo se anima el pecho y se deja
+que la camiseta se mueva con el cuerpo?.
+
+En Toy Story 2, la ropa de los humanos se ajustaba toda de forma
+est\'andar y se mov\'ia autom\'aticamente con los personajes. En
+Monstruos S.A. la ropa se mueve de forma independiente añadiendo
+un nivel m\'as de realismo. Todos estos detalles supon\'ian un
+gran reto para el equipo t\'ecnico de Pixar. Los cient\'ificos
+creaban la simulaci\'on f\'isica perfecta, pero a\'un se ten\'ian
+que asegurar que se daba a los directores los movimientos que
+deseaban.
+
+Los cient\'ificos de Pixar crearon un nuevo sistema din\'amico
+para poder entender la f\'isica de cada situaci\'on y simular los
+movimientos del pelo y de la ropa. El objetivo era facilitar el
+trabajo de los animadores para que pudiesen concentrarse en las
+actuaciones y no tuviesen que preocuparse de los movimientos del
+pelo o de la ropa. Los animadores normalmente trabajan en una
+versi\'on calva o sin pelo de Sulley y las otras bestias peludas.
+En el caso de Boo, la animaci\'on se hizo primero y la camiseta se
+añadi\'o m\'as tarde por el equipo t\'ecnico.
+
+Para Sulley no s\'olo se tuvieron que modelar y crear cada pelo -
+casi 3 millones en total - sino que tambi\'en tuvieron que darle
+movimiento como si estuviese en el mundo real. Simular
+din\'amicamente el movimiento, es adaptar todas las situaciones de
+iluminaci\'on posibles desde habitaciones oscuras hasta salas bien
+iluminadas y bajo una gran variedad de condiciones ambientales
+incluyendo niebla, nieve y lluvia. Otro gran problema fueron las
+colisiones. Una de las novedades que se descubrieron les di\'o la
+oportunidad de controlar la direcci\'on y el flujo del pelo al
+igual que la largura. En vez de simular cada pelo individualmente,
+se descubri\'o la manera de indicar el movimiento en los pelos
+m\'as significativos o en muestras representativas. Los pelos de
+alrededor imitaban a sus vecinos. As\'i se cre\'o el diseño del
+movimiento deseado. El pelo ten\'ia que tener algunas sombras si
+se quer\'ia añadir realismo, se cre\'o un programa espec\'ifico
+para ello: Deep Shadowing.
+
+Iluminar un personaje peludo es mucho m\'as complicado y
+totalmente diferente que iluminar un muñeco de pl\'astico. Por
+naturaleza es plano y lo que lo hace tridimensional son sus
+sombras. Se busc\'o la forma de crear una sombra individual para
+que cada pelo estuviese reflejado en el pelo de al lado.
+
+\'Estas y muchas otras t\'ecnicas sobre distintos aspectos (color,
+iluminaci\'on, control de elementos, efectos ambientales...) se
+desarrollaron expl\'icitamente para obtener, a mi gusto, una de
+las mejores pel\'iculas animadas jam\'as hechas..., menos mal que
+a\'un queda por venir...
+
+\begin{thebibliography}{99}
+\addcontentsline{toc}{section}{References}
+    \bibitem{Art\'iculo 1}  Yizhou Yu, Johnny T.Chang, Jingyi Jin,
+    \emph{Efficient and Realistic Hair Modeling and Animation Using Sparse Guide Hairs}.
+    \bibitem{Pixar web}  \emph{Avances tecnol\'ogicos al servicio de las historias}.
+    \bibitem{Art\'iculo 2} Tae-Young Kim, Ulrich Neumann
+    \emph{Modeling, Rendering and
+    Animatin Human Hair}, Universidad de Southern California.
+    \bibitem{Art\'iculo 3} Chuan Koon Koh y Zhiyoung Huang
+    \emph{Modeling and Animation
+    of Human Hair in Strips} National University of Singapore.
+\end{thebibliography}
+
+\end{document}
