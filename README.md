@@ -1,10 +1,10 @@
-# unizar
+# UNIZAR (University of Zaragoza)
 This repository contains my college practices and the last final college project that I made when I was student. Probably some dates are wrong so do not take them like they are.
 
 I include some .tex files, if you want to compile LaTeX files to generate a PDF (or other format) you have to install TeTeX system on your platform.
 I use pdflatex tool to generate PDF files from .tex sources on Debian GNU/Linux.
 
-## -=EUPLA=-
+## EUPLA
 2001 -> COMPILADORES
 
 2000 -> INFORMATICA INDUSTRIAL
@@ -15,7 +15,7 @@ I use pdflatex tool to generate PDF files from .tex sources on Debian GNU/Linux.
 
 2000 -> ELECTRONICA DIGITAL
 
-## -=CPS=-
+## CPS
 2003 -> SISTEMAS EMPOTRADOS
 
 2003 -> CONCEPTOS AVANZADOS DE SISTEMAS OPERATIVOS
