@@ -1,0 +1,534 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<title>
+		SS7 Telephony Tutorial by Performance Technologies
+	</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="keywords" content="tutorials, SS7 Tutorials, ss7, SS7, definitions, acronyms, MTP, SCCP, TCAP, ISUP, stack, Common Channel Signaling System No. 7, Signaling standard, Signaling System 7" />
+
+	<script language="JavaScript">
+	<!-- Begin
+		function changepic(img_name,img_src) {
+			document[img_name].src=img_src;
+		}
+	// End -->
+	</script>
+
+	<link rel="stylesheet" href="/stylesheets/mainstyle.css">
+
+</head>
+<a name="TopOfPage"/>
+
+<body bgcolor="white">
+<table width="763" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#ffffff">
+	<tr>
+		<td>
+
+<!-- Page Header -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr valign="bottom" bgcolor="white" NOWRAP>
+	<td align="left" valign="bottom"><img src="/images/masthead_wave1.gif" border="0"><a href="/" onmouseover="changepic('home', '/images/masthead_wave2_on.gif')" onmouseout="changepic('home', '/images/masthead_wave2.gif')"><img src="/images/masthead_wave2_on.gif" name="home" border="0"></a><a href="/site_map.html" onmouseover="changepic('index', '/images/masthead_wave3_on.gif')" onmouseout="changepic('index', '/images/masthead_wave3.gif')"><img name="index" src="/images/masthead_wave3.gif" name="index" border="0"></a><a href="/search.html" onmouseover="changepic('search', '/images/masthead_wave4_on.gif')" onmouseout="changepic('search', '/images/masthead_wave4.gif')"><img src="/images/masthead_wave4.gif" name="search" border="0"></a></td>
+</tr>
+</table>
+<!-- End of Page Header -->
+
+<!-- Page Menu -->
+
+<!-- End of Page Menu -->
+<table cellpadding="0" cellspacing="0" background="" width="100%" border="0">
+	<tr>
+		<td valign="top" width="20">
+
+<!-- Page NavBar -->
+<!--Nav Table-->
+<table border="0" cellpadding="0" cellspacing="0" width="165">
+  <tr> 
+    <td align="center"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td><a href="/products/" onmouseover="changepic('products', '/images/masthead_products_on.gif')" onmouseout="changepic('products', '/images/masthead_products.gif')"><img name="products" src="/images/masthead_products.gif" width="150" alt="Product Datasheets, Specs and Downloads" border="0" height="30"></a></td>
+        </tr>
+        <tr> 
+          <td valign="bottom"><a href="/cpsb/" onmouseover="changepic('cpsb', '/images/masthead_picmg_on.gif')" onmouseout="changepic('cpsb', '/images/masthead_picmg.gif')"><img name="cpsb" src="/images/masthead_picmg.gif" width="150" alt="PICMG 2.16 CompactPCI Packet Switching Backplane Information" border="0" height="30"></a></td>
+        </tr>
+        <tr> 
+          <td valign="bottom"><a href="/support/" onmouseover="changepic('support', '/images/masthead_support_on.gif')" onmouseout="changepic('support', '/images/masthead_support.gif')"><img name="support" src="/images/masthead_support.gif" width="150" alt="Customer Technical Support - Installation and Configuration Guides, Manuals and Driver Downloads" border="0" height="30"></a></td>
+        </tr>
+        <tr> 
+          <td valign="bottom"><a href="/applications/" onmouseover="changepic('applications', '/images/masthead_applications_on.gif')" onmouseout="changepic('applications', '/images/masthead_applications.gif')"><img name="applications" src="/images/masthead_applications.gif" width="150" alt="Network Application Examples and Diagrams" border="0" height="30"></a></td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> 
+            <div align="left"> <a href="/about_pti/" onmouseover="changepic('about', '/images/masthead_about_on.gif')" onmouseout="changepic('about', '/images/masthead_about.gif')"><img name="about" src="/images/masthead_about.gif" width="150" alt="Company Background, Partnerships, Career Opportunities, and More..." border="0" height="30"></a></div>
+          </td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> <a href="/news/" onmouseover="changepic('newsroom', '/images/masthead_news_on.gif')" onmouseout="changepic('newsroom', '/images/masthead_news.gif')"><img name="newsroom" src="/images/masthead_news.gif" width="150" border="0" alt="Articles, Press Releases, eLetter Archives, and Event/Seminar Listings" height="30"></a></td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> 
+            <div align="left"> <a href="/investrelations/" onmouseover="changepic('investors', '/images/masthead_investors_on.gif')" onmouseout="changepic('investors', '/images/masthead_investors.gif')"><img name="investors" src="/images/masthead_investors.gif" width="150" alt="Annual Reports, PTIX Stock Info, Financial News, Executive Profiles, and More..." border="0" height="30"></a></div>
+          </td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> 
+            <div align="left"><a href="/learning.html" onmouseover="changepic('learning', '/images/masthead_learning_on.gif')" onmouseout="changepic('learning', '/images/masthead_learning.gif')"><img name="learning" src="/images/masthead_learning.gif" width="150" alt="Tutorials, Reference Guides, Presentations, and Industry Site Listings" border="0" height="30"></a></div>
+          </td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> 
+            <div align="left"> <a href="/contact/" onmouseover="changepic('contact', '/images/masthead_contact_on.gif')" onmouseout="changepic('contact', '/images/masthead_contact.gif')"><img src="/images/masthead_contact.gif" name='contact' alt="Contact Numbers for Sales, Head Office, Engineering Facilities and Technical Support " border="0" width="150" height="30"></a></div>
+          </td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> 
+            <div align="left"> <a href="/" onmouseover="changepic('home_left', '/images/masthead_home_on.gif')" onmouseout="changepic('home_left', '/images/masthead_home.gif')"><img name="home_left" src="/images/masthead_home.gif" width="150" alt="Home" border="0" height="30"></a></div>
+          </td>
+        </tr>
+        <tr> 
+          <td valign="bottom"> 
+            <div align="left"> 
+              <table width="150" border="0" cellspacing="0" cellpadding="0" align="left" vspace="0" hspace="0">
+                <tr bgcolor="#FFCF00"> 
+                  <td> <br>
+                    <hr width="20" color="#CC9900">
+                    <p><a href="/telco_area.html"><img src="/images/icon_carrier_resource.gif" width="150" height="84" border="0" alt="Telecom Carrier Resource Area"></a></p>
+                    <hr width="20" color="#CC9900">
+                    <p align="center"> <a href="/mailing.html"><img src="/images/signup_newsletter_v2.gif" width="150" height="63" alt="Subscribe to our Packets &amp; Signals eLetter" border="0"></a></p>
+                    <form method="post" action="/forms/form2.html">
+                      <div align="center"> 
+                        <input type="text" name="email" value="Type e-mail here" size="7">
+                        <br>
+                        <br>
+                      </div>
+                      <div align="center"> 
+                        <input type="radio" name="preferred format" value="html">
+                        <small>HTML</small> 
+                        <input type="radio" name="preferred format" value="text">
+                        <small>Text</small><br>
+                        <small>(Choose Format)<br>
+                        <br>
+                        </small></div>
+                      <div align="center"> 
+                        <input type="hidden" name="form" value="eLetter Sign-Up">
+                        <input type="submit" value="submit" name="submit">
+                      </div>
+                    </form>
+                    <br>
+                    <hr width="20" color="#CC9900">
+                    <p align="center"><a href="/comment_form.html"><small>Comments?<br>
+                      Suggestion?</small></a></p>
+                    <hr width="20" color="#CC9900">
+                    <p align="center"><small><a href="/privacystmt.html">Web 
+                      Site<br>
+                      Privacy Policy</a></small> </p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+   
+</table>
+<!-- End of Page NavBar -->
+
+		</td>
+		<td width="3">
+			&nbsp;
+		</td>
+		<td width="100%" valign="top">
+
+<!-- Page Right Hand Menu -->
+<br><table align="right" valign="top" border="0" cellpadding="8" cellspacing="0">
+	<tr>
+		<td>
+<table width="70" border="0" bgcolor="#f2f2f2" cellpadding="0" cellspacing="0">
+	<tr>
+		<td>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f2f2f2">
+	<tr bgcolor="#000099">
+		<td align="center">
+			<b><font color="white">Tutorial</font></b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="#f2f2f2">
+	<tr>
+		<td align="center">
+			<br>
+			<b><small>Overview</small></b>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7/stack.html">SS7 Stack</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7/mtp.html">MTP</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7/isup.html">ISUP</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7/isup_page2.html">ISUP  (p. 2)</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7/sccp.html">SCCP</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7/tcap.html">TCAP</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7/ss7info.html">Other Info</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+		</td>
+	</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f2f2f2">
+	<tr bgcolor="#000099">
+		<td align="center">
+			<b><font color="white">&nbsp;Documents&nbsp;</font></b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="#f2f2f2">
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/tutorials/ss7_tutorial_05_07_01.pdf">Printer Friendly PDF</a><br>
+			336.8 KB</small>
+			<br>
+			<br>
+		</td>
+	</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f2f2f2">
+	<tr bgcolor="#000099">
+		<td align="center">
+			<b><font color="white">Links</font></b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="#f2f2f2">
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/products/prod_signaling_gateways.html">Signaling Gateways</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/products/prod_segway_ntwksolution.html">SS7 over IP Link Replacement</a></small>
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<br>
+			<small><a href="/recommend.html?page=/tutorials/ss7/index.html">Recommend to a Friend</a></small>
+			<br><br>
+		</td>
+	</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+		</td>
+	</tr>
+	<tr bgcolor="#000099">
+		<td>
+			&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#ffffff">
+			<img src="/images/shadowr.gif" align="right" width="70">
+		</td>
+	</tr>
+</table>
+		</td>
+	</tr>
+</table>
+<!-- End of Page Right Hand Menu -->
+
+<!--  Page Content -->
+<BR><h2 align="left">SS7 Tutorial</h2>
+
+<h3 align="left">Overview</h3>
+
+<p><b>Common Channel Signaling System No. 7</b> (i.e., <b>SS7</b> or <b>C7</b>) 
+ is a global standard for telecommunications defined by the <a href="http://www.itu.int/">International 
+ Telecommunication Union</a> (ITU) <a href="http://www.itu.int/ITU-T/">Telecommunication 
+ Standardization Sector</a> (ITU-T). The standard defines the procedures and protocol 
+ by which network elements in the public switched telephone network (PSTN) exchange 
+ information over a digital signaling network to effect wireless (cellular) and 
+ wireline call setup, routing and control. The ITU definition of SS7 allows for 
+ national variants such as the <a href="http://www.ansi.org/">American National 
+ Standards Institute</a> (ANSI) and <a href="http://www.telcordia.com/">Bell Communications 
+ Research</a> (Telcordia Technologies) standards used in North America and the 
+ <a href="http://www.etsi.org/">European Telecommunications Standards Institute</a> 
+ (ETSI) standard used in Europe.</p>
+<p>The SS7 network and protocol are used for:</p>
+<ul>
+ <li>basic call setup, management, and tear down 
+ <li>wireless services such as personal communications services (PCS), wireless 
+  roaming, and mobile subscriber authentication 
+ <li>local number portability (LNP) 
+ <li>toll-free (800/888) and toll (900) wireline services 
+ <li>enhanced call features such as call forwarding, calling party name/number 
+  display, and three-way calling 
+ <li>efficient and secure worldwide telecommunications 
+</ul>
+<img src="/images/handright.gif" width="33" height="14"> Learn about our SS7/IP 
+<a href="/products/prodgroup_signaling.html">signaling products</a>. 
+<h3>Signaling Links</h3>
+<p>SS7 messages are exchanged between network elements over 56 
+  or 64 kilobit per second (kbps) bidirectional channels called 
+  <b>signaling links</b>. Signaling occurs <b>out-of-band</b> 
+  on dedicated channels rather than <b>in-band</b> on voice channels. 
+  Compared to in-band signaling, out-of-band signaling provides: 
+</p>
+<ul>
+ <li>faster call setup times (compared to in-band signaling using multi-frequency 
+  (MF) signaling tones)</li>
+ <li>more efficient use of voice circuits</li>
+  <li>support for Intelligent Network (IN) services which require 
+    signaling to network elements without voice trunks (e.g., 
+    database systems)</li>
+ <li>improved control over fraudulent network usage </li>
+</ul>
+<img src="/images/handright.gif" width="33" height="14"> Save network operating 
+costs by <a href="/products/prod_segway_ntwksolution.html">reducing SS7 links</a>. 
+<h3>Signaling Points</h3>
+<p> Each signaling point in the SS7 network is uniquely identified 
+  by a numeric <b>point code</b>. Point codes are carried in signaling 
+  messages exchanged between signaling points to identify the 
+  source and destination of each message. Each signaling point 
+  uses a routing table to select the appropriate signaling path 
+  for each message. </p>
+<p>There are three kinds of signaling points in the SS7 network 
+  (Fig. 1): </p>
+<ul>
+  <li><b>SSP</b> (Service Switching Point)</li>
+  <li><b><a href="/products/prod_gateway_sep_stpconfig.html">STP</a></b> (Signal 
+    Transfer Point)</li>
+  <li><b>SCP</b> (Service Control Point)</li>
+</ul>
+<p align="center"><img src="/tutorials/ss7/gif/ss7-sp.gif" width=500 height=195 alt="SS7 Signaling Points" border="0"> 
+<p align="CENTER"><font face="Arial,Helvetica" size=-1><b>Figure 1</b>. SS7 Signaling 
+ Points</font> 
+<p><b><a name="ssp"></a><a name="scp"></a>SSPs</b> are switches 
+  that originate, terminate, or tandem calls. An SSP sends signaling 
+  messages to other SSPs to setup, manage, and release voice circuits 
+  required to complete a call. An SSP may also send a query message 
+  to a centralized database (an <b>SCP</b>) to determine how to 
+  route a call (e.g., a toll-free 1-800/888 call in North America). 
+  An SCP sends a response to the originating SSP containing the 
+  routing number(s) associated with the dialed number. An alternate 
+  routing number may be used by the SSP if the primary number 
+  is busy or the call is unanswered within a specified time. Actual 
+  call features vary from network to network and from service 
+  to service.</p>
+<p><a name="STP"></a>Network traffic between signaling points may be routed via 
+  a packet switch called an <b>STP</b>. An STP routes each incoming message to 
+  an outgoing signaling link based on routing information contained in the SS7 
+  message. Because it acts as a network hub, an STP provides improved utilization 
+  of the SS7 network by eliminating the need for direct links between signaling 
+  points. An STP may perform <b>global title translation</b>, a procedure by which 
+  the destination signaling point is determined from digits present in the signaling 
+  message (e.g., the dialed 800 number, calling card number, or mobile subscriber 
+  identification number). An STP can also act as a "firewall" to screen SS7 messages 
+  exchanged with other networks. </p>
+<p>Because the SS7 network is critical to call processing, SCPs and STPs are usually 
+  deployed in mated pair configurations in separate physical locations to ensure 
+  network-wide service in the event of an isolated failure. Links between signaling 
+  points are also provisioned in pairs. Traffic is shared across all links in 
+  the linkset. If one of the links fails, the signaling traffic is rerouted over 
+  another link in the <b>linkset</b>. The SS7 protocol provides both error correction 
+  and retransmission capabilities to allow continued service in the event of signaling 
+  point or link failures.</p>
+<p><img src="/images/handright.gif" width="33" height="14"> Signaling gateways 
+  can be configured as an <a href="/products/prod_gateway_sep_stpconfig.html">STP 
+  or SEP</a> (Signaling End Point).</p>
+<h3>SS7 Signaling Link Types</h3>
+<p>Signaling links are logically organized by link type (&quot;A&quot; 
+  through &quot;F&quot;) according to their use in the SS7 signaling 
+  network.</p>
+<p align="center"><img src="/tutorials/ss7/gif/linktype.gif" width=400 height=232 alt="SS7 Signaling Link Types" border="0"></p>
+<p align="center"><b>Figure 2.</b> SS7 Signaling Link Types</p>
+<!--===================NESTED TABLE=====================--> 
+<table border=1 cellspacing=0 cellpadding=4>
+  <tr> 
+  <td valign=TOP width=90><font face="Arial,Helvetica" size=-1><b>A</b> Link:</font></td>
+  <td><font face="Arial,Helvetica" size=-1>An &quot;A&quot; (access) link connects 
+   a signaling end point (e.g., an SCP or SSP) to an STP. Only messages originating 
+   from or destined to the signaling end point are transmitted on an &quot;A&quot; 
+   link. <br>
+   &nbsp;</font></td>
+ </tr>
+ <tr> 
+  <td valign=TOP><font face="Arial,Helvetica" size=-1><b>B</b> Link:</font></td>
+  <td><font face="Arial,Helvetica" size=-1>A &quot;B&quot; (bridge) link connects 
+   an STP to another STP. Typically, a quad of &quot;B&quot; links interconnect 
+   peer (or primary) STPs (e.g., the STPs from one network to the STPs of another 
+   network). The distinction between a &quot;B&quot; link and a &quot;D&quot; 
+   link is rather arbitrary. For this reason, such links may be referred to as 
+   &quot;B/D&quot; links.<br>
+   &nbsp;</font></td>
+ </tr>
+ <tr> 
+  <td valign=TOP><font face="Arial,Helvetica" size=-1><b>C</b> Link:</font></td>
+  <td><font face="Arial,Helvetica" size=-1>A &quot;C&quot; (cross) link connects 
+   STPs performing identical functions into a <b>mated pair</b>. A &quot;C&quot; 
+   link is used only when an STP has no other route available to a destination 
+   signaling point due to link failure(s). Note that SCPs may also be deployed 
+   in pairs to improve reliability; unlike STPs, however, mated SCPs are not interconnected 
+   by signaling links.<br>
+   &nbsp;</font></td>
+ </tr>
+ <tr> 
+  <td valign=TOP><font face="Arial,Helvetica" size=-1><b>D</b> Link:</font></td>
+  <td><font face="Arial,Helvetica" size=-1>A &quot;D&quot; (diagonal) link connects 
+   a secondary (e.g., local or regional) STP pair to a primary (e.g., inter-network 
+   gateway) STP pair in a quad-link configuration. Secondary STPs within the same 
+   network are connected via a quad of &quot;D&quot; links. The distinction between 
+   a &quot;B&quot; link and a &quot;D&quot; link is rather arbitrary. For this 
+   reason, such links may be referred to as &quot;B/D&quot; links.<br>
+   &nbsp;</font></td>
+ </tr>
+ <tr> 
+  <td valign=TOP><font face="Arial,Helvetica" size=-1><b>E</b> Link:</font></td>
+  <td><font face="Arial,Helvetica" size=-1>An &quot;E&quot; (extended) link connects 
+   an SSP to an alternate STP. &quot;E&quot; links provide an alternate signaling 
+   path if an SSP's &quot;home&quot; STP cannot be reached via an &quot;A&quot; 
+   link. &quot;E&quot; links are not usually provisioned unless the benefit of 
+   a marginally higher degree of reliability justifies the added expense.<br>
+   &nbsp;</font></td>
+ </tr>
+ <tr> 
+  <td valign=TOP><font face="Arial,Helvetica" size=-1><b>F</b> Link:</font></td>
+  <td><font face="Arial,Helvetica" size="-1">An &quot;F&quot; (fully associated) 
+   link connects two signaling end points (i.e., SSPs and SCPs). &quot;F&quot; 
+   links are not usually used in networks with STPs. In networks without STPs, 
+   &quot;F&quot; links directly connect signaling points.</font> 
+   <p>&nbsp; 
+  </td>
+ </tr>
+</table>
+<p>&nbsp;</p>
+<p align="center"><a href="stack.html">Continue</a> with SS7 Stack...<a href="/tutorials/ss7/stack.html"><img src="/images/arrow_forw_small.gif" width="25" height="24" border="0" alt="Next Page"></a></p><!-- End of Page Content -->
+
+<!--  Support FAQ -->
+<!-- End of Support FAQ -->
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" align="right">
+			<br>
+			<a href="#TopOfPage">Return to Top</a>
+			<br><br>
+		</td>
+	</tr>
+</table>
+<!-- Page Footer -->
+<table width="752">
+<tr>
+<td>
+<hr width="100%" bordercolor="#000080">
+
+<br>
+
+	<div align="center">
+		<font face="Verdana, Helvetica, Arial" size="2">
+			<a href="/">Home</a> |
+			<a href="/products/">Products</a> |
+			<a href="/cpsb/">PICMG 2.16</a> |
+			<a href="/support/">Tech Support</a> |
+			<a href="/applications/">Applications</a> |
+			<a href="/about_pti/">About Us</a> |
+			<a href="/news/">Newsroom</a> |
+			<a href="/investrelations/">Investors</a> |
+			<a href="/careers/">Careers</a> |
+			<a href="/learning.html">Learning</a> |		
+			<a href="/contact/">Contact Us</a> |
+			<a href="/search.html">Search</a> |
+			<a href="/site_map.html">Site Index</a>
+		</font>
+	</div>
+
+      <br>
+      Questions? Suggestions? Send e-mail to <a href="mailto:webmaster@pt.com">webmaster@pt.com</a>.<br>
+<br>
+   <table border=0 width=100%><tr><td 80%>
+      <small>&copy;2002 Performance Technologies, Inc. All rights 
+      reserved
+      <a href="/legal.html"><small>Legal Notices</small></a> 
+      <a href="/privacystmt.html"><small>Privacy 
+      Policy</small></a></small> </td>
+   <td valign=top align=right><font color=#B0B0B0>
+[k]</font></td></tr>
+   </table>
+</td></tr>
+</table>
+<!-- End of Page Footer -->
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>

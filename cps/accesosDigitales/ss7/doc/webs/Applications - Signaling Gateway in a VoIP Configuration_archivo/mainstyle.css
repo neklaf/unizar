@@ -1,0 +1,45 @@
+UL {
+	FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: arial, helvetica, sans-serif
+}
+LI {
+	FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: arial, helvetica, sans-serif; BACKGROUND-COLOR: #ffffff
+}
+TH {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; FONT-FAMILY: arial, helvetica, sans-serif; TEXT-ALIGN: center
+}
+SMALL {
+	FONT-SIZE: 8pt; FONT-FAMILY: arial, helvetica, sans-serif
+}
+P {
+	FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: arial, helvetica, sans-serif
+}
+TD {
+	FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: arial, helvetica, sans-serif
+}
+H4 {
+	FONT-WEIGHT: normal; FONT-SIZE: 12pt; COLOR: #1e1e1e; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+H3 {
+	BACKGROUND-POSITION: left center; WORD-SPACING: normal; FONT: bold 13pt Arial, Helvetica, sans-serif; COLOR: #000057; LETTER-SPACING: normal
+}
+H2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 16pt; COLOR: #000099; LINE-HEIGHT: normal; FONT-STYLE: normal; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+INPUT {
+	FONT-SIZE: 10pt; COLOR: #000000; FONT-FAMILY: arial, helvetica, sans-serif; BACKGROUND-COLOR: #ffffff
+}
+B {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; FONT-STYLE: normal; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+OL {
+	FONT-WEIGHT: normal; FONT-SIZE: 10pt; FONT-STYLE: normal; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+PRE {
+	FONT-WEIGHT: normal; FONT-SIZE: 10pt; FONT-STYLE: normal; FONT-FAMILY: Courier
+}
+H5 {
+	FONT-WEIGHT: normal; FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+BLOCKQUOTE {
+	FONT-WEIGHT: normal; FONT-SIZE: 10pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}

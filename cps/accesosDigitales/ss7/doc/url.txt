@@ -1,0 +1,12 @@
+Direcciones donde hay informacion de SS7:
+
+http://www.pt.com/tutorials/ss7/
+
+http://www.c7.com/ss7/ss7_tutorials.htm
+
+http://www.ericsson.com/about/telecom/part-e/e-2-2.shtml
+
+www.bittech.co.uk/pdf/1Day_SS7_CourseOutlineV2_2.pdf
+
+www.mobilein.com/Tech_Intro_SS7_in_GSM.pdf
+

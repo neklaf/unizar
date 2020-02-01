@@ -1,0 +1,21 @@
+.verdana {
+	FONT-SIZE: 10pt; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+.verdana_pequeña {
+	FONT-SIZE: xx-small; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+.justificar {
+	TEXT-ALIGN: justify
+}
+.subrayar {
+	TEXT-DECORATION: underline
+}
+.verdana_negrita {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+.verdana_negrita_peq {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+BODY {
+	SCROLLBAR-FACE-COLOR: #5c80b4; SCROLLBAR-HIGHLIGHT-COLOR: #ccffff; SCROLLBAR-SHADOW-COLOR: #000000; SCROLLBAR-3DLIGHT-COLOR: #ccffff; SCROLLBAR-ARROW-COLOR: #ffffff; SCROLLBAR-TRACK-COLOR: #000000; SCROLLBAR-DARKSHADOW-COLOR: #ffffff
+}

@@ -1,0 +1,57 @@
+BODY {
+	FONT-SIZE: 13px
+}
+.f0 {
+	FONT-SIZE: 7px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f1 {
+	FONT-SIZE: 9px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f2 {
+	FONT-SIZE: 10px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f3 {
+	FONT-SIZE: 11px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f4 {
+	FONT-SIZE: 12px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f5 {
+	FONT-SIZE: 13px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f6 {
+	FONT-SIZE: 14px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f7 {
+	FONT-SIZE: 15px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f8 {
+	FONT-SIZE: 16px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f9 {
+	FONT-SIZE: 17px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+.f10 {
+	FONT-SIZE: 18px; FONT-FAMILY: verdana,Arial, Helvetica, sans-seri
+}
+P {
+	FONT-SIZE: 15px
+}
+INPUT {
+	FONT-SIZE: 10px; LINE-HEIGHT: 11px; FONT-FAMILY: verdana,arial,helvetica
+}
+SELECT {
+	FONT-SIZE: 10px; LINE-HEIGHT: 11px; FONT-FAMILY: verdana,arial,helvetica
+}
+TEXTAREA {
+	FONT-SIZE: 10px; LINE-HEIGHT: 11px; FONT-FAMILY: verdana,arial,helvetica
+}
+BUTTON {
+	FONT-SIZE: 10px; LINE-HEIGHT: 11px; FONT-FAMILY: verdana,arial,helvetica
+}
+.noiHead {
+	FONT-WEIGHT: bold; FONT-SIZE: 13px; FONT-FAMILY: Arial,Helvetica
+}
+.noiDeck {
+	FONT-WEIGHT: normal; FONT-SIZE: 12px; FONT-FAMILY: Arial,Helvetica
+}

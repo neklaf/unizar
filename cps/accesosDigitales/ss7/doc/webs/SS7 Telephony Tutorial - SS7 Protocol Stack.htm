@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0042)http://www.pt.com/tutorials/ss7/stack.html -->
+<HTML><HEAD><TITLE>SS7 Telephony Tutorial - SS7 Protocol Stack</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<SCRIPT language=JavaScript>
+	<!-- Begin
+		function changepic(img_name,img_src) {
+			document[img_name].src=img_src;
+		}
+	// End -->
+	</SCRIPT>
+<LINK href="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/mainstyle.css" 
+rel=stylesheet>
+<META content="MSHTML 6.00.2600.0" name=GENERATOR></HEAD>
+<BODY bgColor=white><A name=TopOfPage>
+<TABLE cellSpacing=0 cellPadding=0 width=763 align=center bgColor=#ffffff 
+border=0>
+  <TBODY>
+  <TR>
+    <TD><!-- Page Header -->
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR vAlign=bottom bgColor=white NOWRAP>
+          <TD vAlign=bottom align=left><IMG 
+            src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_wave1.gif" 
+            border=0><A 
+            onmouseover="changepic('home', '/images/masthead_wave2_on.gif')" 
+            onmouseout="changepic('home', '/images/masthead_wave2.gif')" 
+            href="http://www.pt.com/"><IMG 
+            src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_wave2_on.gif" 
+            border=0 name=home></A><A 
+            onmouseover="changepic('index', '/images/masthead_wave3_on.gif')" 
+            onmouseout="changepic('index', '/images/masthead_wave3.gif')" 
+            href="http://www.pt.com/site_map.html"><IMG 
+            src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_wave3.gif" 
+            border=0 name=index></A><A 
+            onmouseover="changepic('search', '/images/masthead_wave4_on.gif')" 
+            onmouseout="changepic('search', '/images/masthead_wave4.gif')" 
+            href="http://www.pt.com/search.html"><IMG 
+            src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_wave4.gif" 
+            border=0 name=search></A></TD></TR></TBODY></TABLE><!-- End of Page Header --><!-- Page Menu --><!-- End of Page Menu -->
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" 
+      background="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/ss7.htm" 
+      border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top width=20><!-- Page NavBar --><!--Nav Table-->
+            <TABLE cellSpacing=0 cellPadding=0 width=165 border=0>
+              <TBODY>
+              <TR>
+                <TD align=middle>
+                  <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                    <TBODY>
+                    <TR>
+                      <TD><A 
+                        onmouseover="changepic('products', '/images/masthead_products_on.gif')" 
+                        onmouseout="changepic('products', '/images/masthead_products.gif')" 
+                        href="http://www.pt.com/products/"><IMG height=30 
+                        alt="Product Datasheets, Specs and Downloads" 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_products.gif" 
+                        width=150 border=0 name=products></A></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom><A 
+                        onmouseover="changepic('cpsb', '/images/masthead_picmg_on.gif')" 
+                        onmouseout="changepic('cpsb', '/images/masthead_picmg.gif')" 
+                        href="http://www.pt.com/cpsb/"><IMG height=30 
+                        alt="PICMG 2.16 CompactPCI Packet Switching Backplane Information" 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_picmg.gif" 
+                        width=150 border=0 name=cpsb></A></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom><A 
+                        onmouseover="changepic('support', '/images/masthead_support_on.gif')" 
+                        onmouseout="changepic('support', '/images/masthead_support.gif')" 
+                        href="http://www.pt.com/support/"><IMG height=30 
+                        alt="Customer Technical Support - Installation and Configuration Guides, Manuals and Driver Downloads" 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_support.gif" 
+                        width=150 border=0 name=support></A></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom><A 
+                        onmouseover="changepic('applications', '/images/masthead_applications_on.gif')" 
+                        onmouseout="changepic('applications', '/images/masthead_applications.gif')" 
+                        href="http://www.pt.com/applications/"><IMG height=30 
+                        alt="Network Application Examples and Diagrams" 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_applications.gif" 
+                        width=150 border=0 name=applications></A></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom>
+                        <DIV align=left><A 
+                        onmouseover="changepic('about', '/images/masthead_about_on.gif')" 
+                        onmouseout="changepic('about', '/images/masthead_about.gif')" 
+                        href="http://www.pt.com/about_pti/"><IMG height=30 
+                        alt="Company Background, Partnerships, Career Opportunities, and More..." 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_about.gif" 
+                        width=150 border=0 name=about></A></DIV></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom><A 
+                        onmouseover="changepic('newsroom', '/images/masthead_news_on.gif')" 
+                        onmouseout="changepic('newsroom', '/images/masthead_news.gif')" 
+                        href="http://www.pt.com/news/"><IMG height=30 
+                        alt="Articles, Press Releases, eLetter Archives, and Event/Seminar Listings" 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_news.gif" 
+                        width=150 border=0 name=newsroom></A></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom>
+                        <DIV align=left><A 
+                        onmouseover="changepic('investors', '/images/masthead_investors_on.gif')" 
+                        onmouseout="changepic('investors', '/images/masthead_investors.gif')" 
+                        href="http://www.pt.com/investrelations/"><IMG height=30 
+                        alt="Annual Reports, PTIX Stock Info, Financial News, Executive Profiles, and More..." 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_investors.gif" 
+                        width=150 border=0 name=investors></A></DIV></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom>
+                        <DIV align=left><A 
+                        onmouseover="changepic('learning', '/images/masthead_learning_on.gif')" 
+                        onmouseout="changepic('learning', '/images/masthead_learning.gif')" 
+                        href="http://www.pt.com/learning.html"><IMG height=30 
+                        alt="Tutorials, Reference Guides, Presentations, and Industry Site Listings" 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_learning.gif" 
+                        width=150 border=0 name=learning></A></DIV></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom>
+                        <DIV align=left><A 
+                        onmouseover="changepic('contact', '/images/masthead_contact_on.gif')" 
+                        onmouseout="changepic('contact', '/images/masthead_contact.gif')" 
+                        href="http://www.pt.com/contact/"><IMG height=30 
+                        alt="Contact Numbers for Sales, Head Office, Engineering Facilities and Technical Support " 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_contact.gif" 
+                        width=150 border=0 name=contact></A></DIV></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom>
+                        <DIV align=left><A 
+                        onmouseover="changepic('home_left', '/images/masthead_home_on.gif')" 
+                        onmouseout="changepic('home_left', '/images/masthead_home.gif')" 
+                        href="http://www.pt.com/"><IMG height=30 alt=Home 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/masthead_home.gif" 
+                        width=150 border=0 name=home_left></A></DIV></TD></TR>
+                    <TR>
+                      <TD vAlign=bottom>
+                        <DIV align=left>
+                        <TABLE cellSpacing=0 cellPadding=0 width=150 align=left 
+                        border=0 hspace="0" vspace="0">
+                          <TBODY>
+                          <TR bgColor=#ffcf00>
+                            <TD><BR>
+                              <HR width=20 color=#cc9900>
+
+                              <P><A 
+                              href="http://www.pt.com/telco_area.html"><IMG 
+                              height=84 alt="Telecom Carrier Resource Area" 
+                              src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/icon_carrier_resource.gif" 
+                              width=150 border=0></A></P>
+                              <HR width=20 color=#cc9900>
+
+                              <P align=center><A 
+                              href="http://www.pt.com/mailing.html"><IMG 
+                              height=63 
+                              alt="Subscribe to our Packets &amp; Signals eLetter" 
+                              src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/signup_newsletter_v2.gif" 
+                              width=150 border=0></A></P>
+                              <FORM action=/forms/form2.html method=post>
+                              <DIV align=center><INPUT size=7 
+                              value="Type e-mail here" name=email> 
+<BR><BR></DIV>
+                              <DIV align=center><INPUT type=radio value=html 
+                              name="preferred format"> <SMALL>HTML</SMALL> 
+                              <INPUT type=radio value=text 
+                              name="preferred format"> 
+                              <SMALL>Text</SMALL><BR><SMALL>(Choose 
+                              Format)<BR><BR></SMALL></DIV>
+                              <DIV align=center><INPUT type=hidden 
+                              value="eLetter Sign-Up" name=form> <INPUT type=submit value=submit name=submit> 
+                              </DIV></FORM><BR>
+                              <HR width=20 color=#cc9900>
+
+                              <P align=center><A 
+                              href="http://www.pt.com/comment_form.html"><SMALL>Comments?<BR>Suggestion?</SMALL></A></P>
+                              <HR width=20 color=#cc9900>
+
+                              <P align=center><SMALL><A 
+                              href="http://www.pt.com/privacystmt.html">Web 
+                              Site<BR>Privacy Policy</A></SMALL> </P>
+                              <P>&nbsp;</P>
+                              <P>&nbsp;</P>
+                              <P>&nbsp;</P>
+                              <P>&nbsp;</P>
+                              <P>&nbsp;</P>
+                              <P>&nbsp;</P>
+                              <P>&nbsp;</P></TD></TR></TBODY></TABLE></DIV></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><!-- End of Page NavBar --></TD>
+          <TD width=3>&nbsp; </TD>
+          <TD vAlign=top width="100%"><!-- Page Right Hand Menu --><BR>
+            <TABLE cellSpacing=0 cellPadding=8 align=right border=0 
+valign="top">
+              <TBODY>
+              <TR>
+                <TD>
+                  <TABLE cellSpacing=0 cellPadding=0 width=70 bgColor=#f2f2f2 
+                  border=0>
+                    <TBODY>
+                    <TR>
+                      <TD>
+                        <TABLE cellSpacing=0 cellPadding=0 width="100%" 
+                        bgColor=#f2f2f2 border=0>
+                          <TBODY>
+                          <TR bgColor=#000099>
+                            <TD align=middle><B><FONT 
+                              color=white>Tutorial</FONT></B> </TD></TR>
+                          <TR>
+                            <TD>
+                              <TABLE cellSpacing=0 cellPadding=3 width="100%" 
+                              bgColor=#f2f2f2 border=0>
+                                <TBODY>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/tutorials/ss7/index.html">Overview</A></SMALL> 
+                                <BR></TD></TR>
+                                <TR>
+                                <TD align=middle><BR><B><SMALL>SS7 
+                                Stack</SMALL></B> <BR></TD></TR>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/tutorials/ss7/mtp.html">MTP</A></SMALL> 
+                                <BR></TD></TR>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/tutorials/ss7/isup.html">ISUP</A></SMALL> 
+                                <BR></TD></TR>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/tutorials/ss7/isup_page2.html">ISUP 
+                                (p. 2)</A></SMALL> <BR></TD></TR>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/tutorials/ss7/sccp.html">SCCP</A></SMALL> 
+                                <BR></TD></TR>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/tutorials/ss7/tcap.html">TCAP</A></SMALL> 
+                                <BR></TD></TR>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/tutorials/ss7/ss7info.html">Other 
+                                Info</A></SMALL> <BR></TD></TR>
+                                <TR>
+                                <TD 
+                          align=middle><BR></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+                        <TABLE cellSpacing=0 cellPadding=0 width="100%" 
+                        bgColor=#f2f2f2 border=0>
+                          <TBODY>
+                          <TR bgColor=#000099>
+                            <TD align=middle><B><FONT 
+                              color=white>Links</FONT></B> </TD></TR>
+                          <TR>
+                            <TD>
+                              <TABLE cellSpacing=0 cellPadding=3 width="100%" 
+                              bgColor=#f2f2f2 border=0>
+                                <TBODY>
+                                <TR>
+                                <TD align=middle><BR><SMALL><A 
+                                href="http://www.pt.com/recommend.html?page=/tutorials/ss7/stack.html">Recommend 
+                                to a Friend</A></SMALL> 
+                                <BR><BR></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR>
+                    <TR bgColor=#000099>
+                      <TD>&nbsp; </TD></TR>
+                    <TR>
+                      <TD bgColor=#ffffff><IMG 
+                        src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/shadowr.gif" 
+                        width=70 align=right> 
+            </TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><!-- End of Page Right Hand Menu --><!--  Page Content --><BR>
+            <H2>SS7 Protocol Stack</H2>
+            <P><A name=S>The hardware</A> and software functions of the SS7 
+            protocol are divided into functional abstractions called "levels". 
+            These levels map loosely to the <B>Open Systems Interconnect</B> 
+            (OSI) 7-layer model defined by the <A 
+            href="http://www.iso.ch/">International Standards Organization</A> 
+            (ISO). 
+            <P align=center><IMG height=349 
+            alt="Figure 3.  The OSI Reference Model and the SS7 Protocol Stack" 
+            src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/ss7stack2.gif" 
+            width=300></P>
+            <P align=center><B>Figure 3</B>. The OSI Reference Model and the SS7 
+            Protocol Stack</P>
+            <H3>Message Transfer Part</H3>
+            <P>The Message Transfer Part (MTP) is divided into three levels. The 
+            lowest level, <B>MTP Level 1</B>, is equivalent to the OSI Physical 
+            Layer. MTP Level 1 defines the physical, electrical, and functional 
+            characteristics of the digital signaling link. Physical interfaces 
+            defined include <B>E-1</B> (2048 kb/s; 32 64 kb/s channels), 
+            <B>DS-1</B> (1544 kb/s; 24 64kb/s channels), <B>V.35</B> (64 kb/s), 
+            <B>DS-0</B> (64 kb/s), and <B>DS-0A</B> (56 kb/s). </P>
+            <P><B>MTP Level 2</B> ensures accurate end-to-end transmission of a 
+            message across a signaling link. Level 2 implements flow control, 
+            message sequence validation, and error checking. When an error 
+            occurs on a signaling link, the message (or set of messages) is 
+            retransmitted. MTP Level 2 is equivalent to the OSI Data Link 
+            Layer.</P>
+            <P><B>MTP Level 3</B> provides message routing between signaling 
+            points in the SS7 network. MTP Level 3 re-routes traffic away from 
+            failed links and signaling points and controls traffic when 
+            congestion occurs. MTP Level 3 is equivalent to the OSI Network 
+            Layer. </P>
+            <H3>ISDN User Part (ISUP)</H3>
+            <P>The ISDN User Part (ISUP) defines the protocol used to set-up, 
+            manage, and release trunk circuits that carry voice and data between 
+            terminating line exchanges (e.g., between a calling party and a 
+            called party). ISUP is used for both ISDN and non-ISDN calls. 
+            However, calls that originate and terminate at the same switch do 
+            not use ISUP signaling.</P>
+            <H3>Telephone User Part (TUP) </H3>
+            <P>In some parts of the world (e.g., China, Brazil), the Telephone 
+            User Part (TUP) is used to support basic call setup and tear-down. 
+            TUP handles analog circuits only. In many countries, ISUP has 
+            replaced TUP for call management.</P>
+            <H3>Signaling Connection Control Part (SCCP)</H3>
+            <P>SCCP provides connectionless and connection-oriented network 
+            services and <B>global title translation</B> (GTT) capabilities 
+            above MTP Level 3. A <B>global title</B> is an address (e.g., a 
+            dialed 800 number, calling card number, or mobile subscriber 
+            identification number) which is translated by SCCP into a 
+            destination point code and <B>subsystem number</B>. A subsystem 
+            number uniquely identifies an application at the destination 
+            signaling point. SCCP is used as the transport layer for TCAP-based 
+            services.</P>
+            <H3>Transaction Capabilities Applications Part (TCAP) </H3>
+            <P>TCAP supports the exchange of non-circuit related data between 
+            applications across the SS7 network using the SCCP connectionless 
+            service. Queries and responses sent between SSPs and SCPs are 
+            carried in TCAP messages. For example, an SSP sends a TCAP query to 
+            determine the routing number associated with a dialed 800/888 number 
+            and to check the personal identification number (PIN) of a calling 
+            card user. In mobile networks (<B>IS-41</B> and <A 
+            href="http://www.pt.com/products/gsmintro.html">GSM</A>), TCAP 
+            carries <B>Mobile Application Part</B> (MAP) messages sent between 
+            mobile switches and databases to support user authentication, 
+            equipment identification, and roaming.</P>
+            <H3>Operations, Maintenance and Administration Part (OMAP) and 
+            ASE</H3>
+            <P>OMAP and ASE are areas for future definition. Presently, OMAP 
+            services may be used to verify network routing databases and to 
+            diagnose link problems.</P>
+            <P><IMG height=14 
+            src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/handright.gif" 
+            width=33> The <A 
+            href="http://www.pt.com/products/prod_signaling_gateways.html">SEGway™ 
+            Signaling Gateway</A> supports MTP Level 1, 2, and 3, and SCCP 
+            layers of the SS7 Protocol Stack.</P>
+            <P align=center><A 
+            href="http://www.pt.com/tutorials/ss7/mtp.html">Continue</A> with 
+            MTP...<A href="http://www.pt.com/tutorials/ss7/mtp.html"><IMG 
+            height=24 alt="Next Page" 
+            src="SS7 Telephony Tutorial - SS7 Protocol Stack_archivos/arrow_forw_small.gif" 
+            width=25 border=0></A></P><!-- End of Page Content --><!--  Support FAQ --><!-- End of Support FAQ --></TD></TR>
+        <TR>
+          <TD align=right colSpan=3><BR><A 
+            href="http://www.pt.com/tutorials/ss7/stack.html#TopOfPage">Return 
+            to Top</A> <BR><BR></TD></TR></TBODY></TABLE><!-- Page Footer -->
+      <TABLE width=752>
+        <TBODY>
+        <TR>
+          <TD>
+            <HR width="100%" bordercolor="#000080">
+            <BR>
+            <DIV align=center><FONT face="Verdana, Helvetica, Arial" size=2><A 
+            href="http://www.pt.com/">Home</A> | <A 
+            href="http://www.pt.com/products/">Products</A> | <A 
+            href="http://www.pt.com/cpsb/">PICMG 2.16</A> | <A 
+            href="http://www.pt.com/support/">Tech Support</A> | <A 
+            href="http://www.pt.com/applications/">Applications</A> | <A 
+            href="http://www.pt.com/about_pti/">About Us</A> | <A 
+            href="http://www.pt.com/news/">Newsroom</A> | <A 
+            href="http://www.pt.com/investrelations/">Investors</A> | <A 
+            href="http://www.pt.com/careers/">Careers</A> | <A 
+            href="http://www.pt.com/learning.html">Learning</A> | <A 
+            href="http://www.pt.com/contact/">Contact Us</A> | <A 
+            href="http://www.pt.com/search.html">Search</A> | <A 
+            href="http://www.pt.com/site_map.html">Site Index</A> 
+            </FONT></DIV><BR>Questions? Suggestions? Send e-mail to <A 
+            href="mailto:webmaster@pt.com">webmaster@pt.com</A>.<BR><BR>
+            <TABLE width="100%" border=0>
+              <TBODY>
+              <TR>
+                <TD 80%><SMALL>©2002 Performance Technologies, Inc. All rights 
+                  reserved <A href="http://www.pt.com/legal.html"><SMALL>Legal 
+                  Notices</SMALL></A> <A 
+                  href="http://www.pt.com/privacystmt.html"><SMALL>Privacy 
+                  Policy</SMALL></A></SMALL> </TD>
+                <TD vAlign=top align=right><FONT 
+              color=#b0b0b0>[k]</FONT></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><!-- End of Page Footer --></TD></TR></TBODY></TABLE></A></BODY></HTML>
