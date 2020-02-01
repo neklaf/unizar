@@ -1,0 +1,3801 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./codigo_archivos/filelist.xml">
+<title>Palm.- C&oacute;digo para dise&ntilde;o GTK</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Fernando</o:Author>
+  <o:LastAuthor>Fernando</o:LastAuthor>
+  <o:Revision>1</o:Revision>
+  <o:TotalTime>2</o:TotalTime>
+  <o:Created>2003-06-12T15:53:00Z</o:Created>
+  <o:LastSaved>2003-06-12T15:55:00Z</o:LastSaved>
+  <o:Pages>25</o:Pages>
+  <o:Words>6818</o:Words>
+  <o:Characters>38867</o:Characters>
+  <o:Company>Negre S.A</o:Company>
+  <o:Lines>323</o:Lines>
+  <o:Paragraphs>77</o:Paragraphs>
+  <o:CharactersWithSpaces>47731</o:CharactersWithSpaces>
+  <o:Version>9.2812</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:HyphenationZone>21</w:HyphenationZone>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:70.85pt 3.0cm 70.85pt 3.0cm;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+</head>
+
+<body lang=ES style='tab-interval:35.4pt'>
+
+<div class=Section1>
+
+<p class=MsoNormal>######################################################################</p>
+
+<p class=MsoNormal>#Fichero: <span style="mso-spacerun: yes"> </span>interface.c<span
+style='mso-tab-count:1'>        </span><span style='mso-tab-count:2'>                        </span><span
+style='mso-tab-count:1'>            </span>PALM GESTION DE RESTAURANTE</p>
+
+<p class=MsoNormal>#</p>
+
+<p class=MsoNormal>######################################################################</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#ifdef
+HAVE_CONFIG_H<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#<span
+style="mso-spacerun: yes">  </span>include &lt;config.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#endif<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;stdlib.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;sys/types.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;sys/stat.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;unistd.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;string.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;stdio.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;gdk/gdkkeysyms.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&lt;gtk/gtk.h&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&quot;callbacks.h&quot;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&quot;interface.h&quot;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>#include
+&quot;support.h&quot;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span></span>char *precio;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>char c[20];//sino
+no funciona.no se pq es<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>FILE *mi_file;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>int
+carta,pcomb,menu,cafe,bebida,primera;<span style='mso-tab-count:1'>          </span><o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>float
+precio_total;<span style="mso-spacerun: yes">  </span><o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>float
+*precio_puntero;<o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>GtkWidget *window1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *fixed1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button2;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button3;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator2;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button5;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button7;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button8;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button11;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button12;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *button13;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *hseparator3;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator4;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *hseparator1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *hseparator4;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator6;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator7;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator5;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>//<span
+style="mso-spacerun: yes">  </span>GtkWidget *button14;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label8;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *hseparator5;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo3;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo3_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry3;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *hseparator2;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label3;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label6;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo6;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo6_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry6;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label11;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label10;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label9;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo11;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo11_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry11;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator3;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *vseparator8;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *hseparator6;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo13;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo13_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry13;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo4;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo4_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry4;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo5;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo5_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry5;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label4;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label5;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo7;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo7_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry7;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo8;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo8_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry8;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo9;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo9_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry9;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo10;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo10_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry10;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo12;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo12_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry12;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo1_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label2;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo2;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GList *combo2_items = NULL;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *combo_entry2;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *label7;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>GtkWidget *entry4;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>GtkWidget*<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>create_window1
+(void)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>window1 = gtk_window_new
+(GTK_WINDOW_TOPLEVEL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data (GTK_OBJECT (window1),
+&quot;window1&quot;, window1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_window_set_title (GTK_WINDOW (window1),
+&quot;window1&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>fixed1 = gtk_fixed_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (fixed1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;fixed1&quot;, fixed1,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (fixed1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_container_add (GTK_CONTAINER (window1),
+fixed1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button1 = gtk_button_new_with_label
+(&quot;Grabar&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button1&quot;, button1,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button1,
+200, 352);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button1, 200,
+352);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button1, 61, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button2 = gtk_button_new_with_label
+(&quot;Parar&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button2&quot;, button2,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button2,
+264, 352);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button2, 264,
+352);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button2, 61, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button3 = gtk_button_new_with_label
+(&quot;Enviar&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button3&quot;, button3,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button3,
+176, 384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button3, 176,
+384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button3, 61, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator2 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator2&quot;, vseparator2,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+vseparator2, 8, 8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator2, 8,
+8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator2, 16, 480);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button5 = gtk_button_new_with_label
+(&quot;Menu&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button5&quot;, button5,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button5,
+176, 104);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button5, 176,
+104);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button5, 61, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button7 = gtk_button_new_with_label
+(&quot;Plato Combinado&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button7&quot;, button7,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button7,
+176, 72);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button7, 176, 72);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button7, 136, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button8 = gtk_button_new_with_label
+(&quot;Carta&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button8&quot;, button8,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button8,
+248, 104);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button8, 248,
+104);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button8, 61, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button11 = gtk_button_new_with_label
+(&quot;Bebidas&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button11&quot;, button11,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button11,
+328, 72);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button11, 328,
+72);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button11, 70, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button12 = gtk_button_new_with_label
+(&quot;Cafes&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button12&quot;, button12,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button12,
+328, 104);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button12, 328,
+104);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button12, 70, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>/*<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button14 = gtk_button_new_with_label
+(&quot;Ayuda&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button14);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button14&quot;, button14,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                  </span><span style="mso-spacerun:
+yes">          </span>(GtkDestroyNotify) gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button14);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button14,
+328, 425);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button14, 328,
+425);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button14, 70, 26);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>*/<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>hseparator3 = gtk_hseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (hseparator3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;hseparator3&quot;, hseparator3,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (hseparator3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+hseparator3, 24, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (hseparator3, 24,
+16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (hseparator3, 384, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator4 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator4&quot;, vseparator4,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+vseparator4, 400, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator4, 400,
+24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator4, 16, 392);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>hseparator1 = gtk_hseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (hseparator1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;hseparator1&quot;, hseparator1,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (hseparator1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+hseparator1, 16, 0);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (hseparator1, 16,
+0);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (hseparator1, 400, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>hseparator4 = gtk_hseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (hseparator4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;hseparator4&quot;, hseparator4,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (hseparator4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+hseparator4, 16, 480);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (hseparator4, 16,
+480);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (hseparator4, 400, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label1 = gtk_label_new
+(&quot;Camarero&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label1&quot;, label1,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">          </span><span style="mso-spacerun:
+yes">                  </span>(GtkDestroyNotify) gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label1,
+32, 40);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label1, 32, 40);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label1, 72, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator6 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator6&quot;, vseparator6,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), vseparator6,
+392, 64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator6, 392,
+64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator6, 16, 72);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator7 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator7&quot;, vseparator7,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+vseparator7, 312, 64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator7, 312,
+64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator7, 16, 72);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator5 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator5&quot;, vseparator5,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+vseparator5, 160, 64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator5, 160,
+64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator5, 16, 72);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>button13 = gtk_button_new_with_label
+(&quot;Confirmar&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (button13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;button13&quot;, button13,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (button13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), button13,
+80, 384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (button13, 80,
+384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (button13, 80, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label8 = gtk_label_new (&quot;- - - - - - -
+- - -\n- - - - - - -\n- - -&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label8&quot;, label8,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label8,
+136, 416);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label8, 136, 416);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label8, 128, 56);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>hseparator5 = gtk_hseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (hseparator5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;hseparator5&quot;, hseparator5,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (hseparator5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+hseparator5, 168, 128);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (hseparator5, 168,
+128);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (hseparator5, 232, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo3 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo3&quot;, combo3,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo3,
+120, 144);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo3, 120, 144);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo3, 224, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo3_items = g_list_append (combo3_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo3_items = g_list_append (combo3_items,
+(gpointer) &quot;Paella&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo3_items = g_list_append (combo3_items,
+(gpointer) &quot;Macarrones&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo3_items = g_list_append (combo3_items,
+(gpointer) &quot;Revuelto de setas&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo3), combo3_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo3_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry3 = GTK_COMBO (combo3)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry3&quot;, combo_entry3,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY (combo_entry3),
+FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>hseparator2 = gtk_hseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (hseparator2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;hseparator2&quot;, hseparator2,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (hseparator2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+hseparator2, 24, 408);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (hseparator2, 24,
+408);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (hseparator2, 384, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator1 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator1&quot;, vseparator1,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+vseparator1, 16, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator1, 16,
+24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator1, 16, 392);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label3 = gtk_label_new (&quot;1\272&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label3&quot;, label3,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label3,
+72, 144);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label3, 72, 144);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label3, 42, 20);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span></span>label6 = gtk_label_new
+(&quot;Peticiones Especiales&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>gtk_widget_ref (label6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label6&quot;, label6,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label6,
+32, 352);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label6, 32, 352);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label6, 160, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo6 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo6&quot;, combo6,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span><span
+style="mso-spacerun: yes">      </span>(GtkDestroyNotify) gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo6,
+152, 320);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo6, 152, 320);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo6, 240, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo6_items = g_list_append (combo6_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo6_items = g_list_append (combo6_items,
+(gpointer) &quot;Plato Combinado 1&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo6_items = g_list_append (combo6_items,
+(gpointer) &quot;Plato Combinado 2&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo6_items = g_list_append (combo6_items,
+(gpointer) &quot;Plato Combinado 3&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo6_items = g_list_append (combo6_items,
+(gpointer) &quot;Plato Combinado 4&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo6), combo6_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo6_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry6 = GTK_COMBO (combo6)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry6&quot;, combo_entry6,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry6), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label11 = gtk_label_new (&quot;Pl
+Combinados&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label11&quot;, label11,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label11,
+32, 328);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label11, 32, 328);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label11, 112, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label10 = gtk_label_new
+(&quot;Caf\351s&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label10&quot;, label10,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label10,
+32, 288);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label10, 32, 288);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label10, 48, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span></span>label9 = gtk_label_new
+(&quot;Bebidas&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>gtk_widget_ref (label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label9&quot;, label9,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label9,
+32, 256);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label9, 32, 256);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label9, 64, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo11&quot;, combo11,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo11,
+104, 280);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo11, 104,
+280);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo11, 240, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11_items = g_list_append
+(combo11_items, (gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11_items = g_list_append
+(combo11_items, (gpointer) &quot;Cortado&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11_items = g_list_append
+(combo11_items, (gpointer) &quot;Cortado con Hielo&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11_items = g_list_append
+(combo11_items, (gpointer) &quot;Solo&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11_items = g_list_append
+(combo11_items, (gpointer) &quot;Solo con Hielo&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11_items = g_list_append
+(combo11_items, (gpointer) &quot;Cafe con leche&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo11_items = g_list_append
+(combo11_items, (gpointer) &quot;Bomb\363n&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo11), combo11_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo11_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry11 = GTK_COMBO
+(combo11)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry11&quot;, combo_entry11,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY (combo_entry11),
+FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator3 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator3&quot;, vseparator3,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+vseparator3, 400, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator3, 400,
+24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator3, 16, 376);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>vseparator8 = gtk_vseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (vseparator8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;vseparator8&quot;, vseparator8,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (vseparator8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+vseparator8, 408, 8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (vseparator8, 408,
+8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (vseparator8, 16, 480);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>hseparator6 = gtk_hseparator_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (hseparator6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;hseparator6&quot;, hseparator6,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (hseparator6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1),
+hseparator6, 168, 56);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (hseparator6, 168,
+56);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (hseparator6, 232, 16);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo13&quot;, combo13,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo13,
+352, 280);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo13, 352,
+280);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo13, 48, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;1&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append (combo13_items,
+(gpointer) &quot;2&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;3&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;4&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;5&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append (combo13_items,
+(gpointer) &quot;6&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;7&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;8&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;9&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append (combo13_items,
+(gpointer) &quot;10&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;11&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;12&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;13&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;14&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo13_items = g_list_append
+(combo13_items, (gpointer) &quot;15&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo13), combo13_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo13_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry13 = GTK_COMBO
+(combo13)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry13&quot;, combo_entry13,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY (combo_entry13),
+FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo4 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo4&quot;, combo4,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo4,
+120, 176);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo4, 120, 176);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo4, 224, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo4_items = g_list_append (combo4_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo4_items = g_list_append (combo4_items,
+(gpointer) &quot;Lomo&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo4_items = g_list_append (combo4_items,
+(gpointer) &quot;Ternera&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo4_items = g_list_append (combo4_items,
+(gpointer) &quot;Trucha&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo4), combo4_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo4_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry4 = GTK_COMBO (combo4)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry4&quot;, combo_entry4,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo5 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo5&quot;, combo5,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo5,
+120, 208);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo5, 120, 208);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo5, 224, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo5_items = g_list_append (combo5_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo5_items = g_list_append (combo5_items,
+(gpointer) &quot;Helado&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo5_items = g_list_append (combo5_items,
+(gpointer) &quot;Fruta&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo5_items = g_list_append (combo5_items,
+(gpointer) &quot;Sorbete limon&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo5_items = g_list_append (combo5_items,
+(gpointer) &quot;Sorbete Mango&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo5), combo5_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo5_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry5 = GTK_COMBO (combo5)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry5&quot;, combo_entry5,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry5), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label4 = gtk_label_new (&quot;2\272&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label4&quot;, label4,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span><span
+style="mso-spacerun: yes">      </span>(GtkDestroyNotify) gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label4,
+72, 176);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label4, 72, 176);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label4, 42, 20);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label5 = gtk_label_new (&quot;3\272&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label5&quot;, label5,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label5,
+72, 208);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label5, 72, 208);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label5, 42, 20);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo7&quot;, combo7,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo7,
+128, 144);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo7, 128, 144);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo7, 224, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Esparragos Trigueros&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Revuelto de setas con gambas&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Coctel de mariscos&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Ensaladilla italiana&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Ensalada Campera&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Raviolis a los 4 quesos&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Arroz Negro&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo7_items = g_list_append (combo7_items,
+(gpointer) &quot;Paella&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo7), combo7_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo7_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry7 = GTK_COMBO (combo7)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry7&quot;, combo_entry7,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry7), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo8&quot;, combo8,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo8,
+128, 176);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo8, 128, 176);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo8, 224, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8_items = g_list_append (combo8_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8_items = g_list_append (combo8_items,
+(gpointer) &quot;Rodaballo al licor&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8_items = g_list_append (combo8_items,
+(gpointer) &quot;Ri\361ones al Jerez&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8_items = g_list_append (combo8_items,
+(gpointer) &quot;Solomillo a la pimienta&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8_items = g_list_append (combo8_items,
+(gpointer) &quot;Mero a las finas hierbas&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8_items = g_list_append (combo8_items,
+(gpointer) &quot;Codornices en su jugo&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo8_items = g_list_append (combo8_items,
+(gpointer) &quot;Ternasco con patatas a lo pobre&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo8), combo8_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo8_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry8 = GTK_COMBO (combo8)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry8&quot;, combo_entry8,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry8), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT (window1),
+&quot;combo9&quot;, combo9,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo9,
+128, 208);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo9, 128, 208);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo9, 224, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9_items = g_list_append (combo9_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9_items = g_list_append (combo9_items,
+(gpointer) &quot;Fresas con Nata&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9_items = g_list_append (combo9_items,
+(gpointer) &quot;Nueces con miel&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9_items = g_list_append (combo9_items,
+(gpointer) &quot;Cuajada&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9_items = g_list_append (combo9_items,
+(gpointer) &quot;Sorbete al limon&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9_items = g_list_append (combo9_items,
+(gpointer) &quot;Pudding de coco&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo9_items = g_list_append (combo9_items,
+(gpointer) &quot;Pijama&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo9), combo9_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo9_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry9 = GTK_COMBO (combo9)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry9&quot;, combo_entry9,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry9), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo10&quot;, combo10,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo10,
+104, 248);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo10, 104,
+248);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo10, 240, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;Agua&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;Gaseosa&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;Cerveza&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;Vino&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;Coca Cola&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append (combo10_items,
+(gpointer) &quot;Limonada &quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;Naranjada&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo10_items = g_list_append
+(combo10_items, (gpointer) &quot;Zumo&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo10), combo10_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo10_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry10 = GTK_COMBO
+(combo10)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry10&quot;, combo_entry10,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry10), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo12&quot;, combo12,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo12,
+352, 248);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo12, 352,
+248);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo12, 48, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;1&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;2&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;3&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;4&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;5&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;6&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;7&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;8&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;9&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;10&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;11&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>combo12_items
+= g_list_append (combo12_items, (gpointer) &quot;12&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;13&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;14&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo12_items = g_list_append
+(combo12_items, (gpointer) &quot;15&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo12), combo12_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo12_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry12 = GTK_COMBO
+(combo12)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry12&quot;, combo_entry12,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry12), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo1 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo1&quot;, combo1,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo1,
+120, 32);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo1, 120, 32);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo1, 240, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo1_items = g_list_append (combo1_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo1_items = g_list_append (combo1_items,
+(gpointer) &quot;1.- </span>Negre Ramos, Fernando&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>combo1_items = g_list_append (combo1_items,
+(gpointer) &quot;2.- Mart\355n Casamayor, Jorge&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo1_items = g_list_append (combo1_items,
+(gpointer) &quot;3.- </span>Mateo Lopez, Sergio&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>combo1_items = g_list_append (combo1_items,
+(gpointer) &quot;4.- </span>Olivan Garcia, Laura&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo1), combo1_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo1_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry1 = GTK_COMBO (combo1)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry1&quot;, combo_entry1,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">      </span><span style="mso-spacerun:
+yes">                      </span>(GtkDestroyNotify) gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_entry_set_editable (GTK_ENTRY
+(combo_entry1), FALSE);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label2 = gtk_label_new (&quot;Mesa&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label2&quot;, label2,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label2,
+56, 64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label2, 56, 64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label2, 42, 20);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2 = gtk_combo_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo2&quot;, combo2,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), combo2,
+120, 64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (combo2, 120, 64);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (combo2, 40, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;1&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;2&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;3&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;4&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;5&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;6&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;7&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;8&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;9&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;10&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;11&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;12&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;13&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;14&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo2_items = g_list_append (combo2_items,
+(gpointer) &quot;15&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_combo_set_popdown_strings (GTK_COMBO
+(combo2), combo2_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>g_list_free (combo2_items);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>combo_entry2 = GTK_COMBO (combo2)-&gt;entry;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (combo_entry2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;combo_entry2&quot;, combo_entry2,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (combo_entry2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>label7 = gtk_label_new
+(&quot;Factura:&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (label7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT
+(window1), &quot;label7&quot;, label7,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (label7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), label7,
+256, 384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (label7, 256, 384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (label7, 72, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>entry4 = gtk_entry_new ();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_ref (entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_object_set_data_full (GTK_OBJECT (window1),
+&quot;entry4&quot;, entry4,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                            </span>(GtkDestroyNotify)
+gtk_widget_unref);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_show (entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_fixed_put (GTK_FIXED (fixed1), entry4,
+328, 384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_uposition (entry4, 328, 384);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_widget_set_usize (entry4, 64, 24);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button1),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button1_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button2),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">               </span><span style="mso-spacerun:
+yes">       </span>GTK_SIGNAL_FUNC (on_button2_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button3),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button3_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button5),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button5_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button7),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button7_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button8),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button8_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button11),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button11_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun:
+yes">                     </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button12),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button12_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>NULL);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>gtk_signal_connect (GTK_OBJECT (button13),
+&quot;clicked&quot;,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span>GTK_SIGNAL_FUNC
+(on_button13_clicked),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                      </span></span>NULL);<o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal>//---------LO QUE HE TRAIDO DESDE EL
+CALLBACKS.C----------------------------<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span></span>//Ficheros-----------------------------------------------------<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span>mi_file=fopen(&quot;factura&quot;,&quot;w&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">        </span><o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span>//booleanas-------------------------------------------------------<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span>carta=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span>pcomb=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span>menu=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span>cafe=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span>bebida=0;<span
+style='mso-tab-count:1'>       </span><o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'>primera=1;<span style='mso-tab-count:
+1'>       </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>return window1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void
+on_button1_clicked (GtkButton *button,gpointer user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal>{<o:p></o:p></p>
+
+<p class=MsoNormal>printf(&quot;GRABANDO PETICIONES ESPECIALES....\n&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void
+on_button2_clicked(GtkButton *button,gpointer<span style="mso-spacerun:
+yes">         </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal>{<o:p></o:p></p>
+
+<p class=MsoNormal>printf(&quot;PETICION ESPECIAL GRABADA\n&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>on_button3_clicked<span
+style="mso-spacerun: yes">                     </span>(GtkButton<span
+style="mso-spacerun: yes">       </span>*button,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                                        </span>gpointer<span
+style="mso-spacerun: yes">         </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal>{<o:p></o:p></p>
+
+<p class=MsoNormal>printf(&quot;ENVIANDO SOLICITUD DE COMIDA....\n&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal>fprintf(mi_file,&quot;\n<span style='mso-tab-count:1'>          </span>Factura
+= %.2f E\n&quot;,precio_total);<o:p></o:p></p>
+
+<p class=MsoNormal>precio_total=precio_total*1.16;<o:p></o:p></p>
+
+<p class=MsoNormal>fprintf(mi_file,&quot;\n<span style='mso-tab-count:1'>          </span>Total
+Factura (incluido iva 16%)= %.2f E\n&quot;,precio_total);<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>fprintf(mi_file,&quot;____________________________________________________________\n&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>fclose(mi_file);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>//
+*char&lt;----float<span style="mso-spacerun: yes"> 
+</span>sprintf(c,&quot;%f%&quot;,float)<o:p></o:p></span></p>
+
+<p class=MsoNormal>//Me vuelca la salida del printf en la variable C.<o:p></o:p></p>
+
+<p class=MsoNormal>//Los cast sirven para tipos de variables parecidos.<o:p></o:p></p>
+
+<p class=MsoNormal>//OJO la variable c[20] acotarla en posiciones.<o:p></o:p></p>
+
+<p class=MsoNormal>printf(&quot;precio=%2.2f\n&quot;,precio_total);<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>sprintf(c,&quot;%.2f&quot;,precio_total);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_show(entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_entry_set_text(entry4,c);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>on_button5_clicked<span
+style="mso-spacerun: yes">                     </span>(GtkButton<span
+style="mso-spacerun: yes">       </span>*button,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                                        </span>gpointer<span
+style="mso-spacerun: yes">        </span><span style="mso-spacerun:
+yes"> </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_show(combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_show(combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_show(combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_show(label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_show(label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_show(label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>gtk_widget_hide(entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal>carta=0;<o:p></o:p></p>
+
+<p class=MsoNormal>pcomb=0;<o:p></o:p></p>
+
+<p class=MsoNormal>menu=1;<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>cafe=0;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>bebida=0;<span
+style='mso-tab-count:1'>        </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>on_button7_clicked<span
+style="mso-spacerun: yes">                     </span>(GtkButton<span
+style="mso-spacerun: yes">       </span>*button,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                                        </span>gpointer<span
+style="mso-spacerun: yes">         </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal>carta=0;<o:p></o:p></p>
+
+<p class=MsoNormal>pcomb=1;<o:p></o:p></p>
+
+<p class=MsoNormal>menu=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>cafe=0;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>bebida=0;<span
+style='mso-tab-count:1'>        </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>on_button8_clicked<span
+style="mso-spacerun: yes">                     </span>(GtkButton<span
+style="mso-spacerun: yes">       </span>*button,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span><span style="mso-spacerun:
+yes">                                      </span>gpointer<span
+style="mso-spacerun: yes">         </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal>carta=1;<o:p></o:p></p>
+
+<p class=MsoNormal>pcomb=0;<o:p></o:p></p>
+
+<p class=MsoNormal>menu=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>cafe=0;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>bebida=0;<span
+style='mso-tab-count:1'>        </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>on_button9_clicked<span
+style="mso-spacerun: yes">                     </span>(GtkButton<span
+style="mso-spacerun: yes">       </span>*button,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                                        </span>gpointer<span
+style="mso-spacerun: yes">         </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>on_button11_clicked<span
+style="mso-spacerun: yes">                     </span>(GtkButton<span
+style="mso-spacerun: yes">       </span>*button,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                                        </span>gpointer<span
+style="mso-spacerun: yes">         </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal>carta=0;<o:p></o:p></p>
+
+<p class=MsoNormal>pcomb=0;<o:p></o:p></p>
+
+<p class=MsoNormal>menu=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>cafe=0;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>bebida=1;<span
+style='mso-tab-count:1'>        </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>on_button12_clicked<span
+style="mso-spacerun: yes">                     </span>(GtkButton<span
+style="mso-spacerun: yes">       </span>*button,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">                                        </span>gpointer<span
+style="mso-spacerun: yes">         </span>user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(combo12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(combo13);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_show(label10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(label11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span>gtk_widget_hide(entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal>carta=0;<o:p></o:p></p>
+
+<p class=MsoNormal>pcomb=0;<o:p></o:p></p>
+
+<p class=MsoNormal>menu=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>cafe=1;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>bebida=0;<span
+style='mso-tab-count:1'>        </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void
+on_button13_clicked(GtkButton *button,gpointer user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>char
+*text_mesa,*text_camarero,*text_plcomb,*text_bebida,*text_bebida_num,*text_cafe,*text_cafe_num;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>char
+*text_menu1,*text_menu2,*text_menu3,*text_carta1,*text_carta2,*text_carta3;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>char
+text_plcomb_char,*text_plcomb_ok,*kk;<o:p></o:p></span></p>
+
+<p class=MsoNormal>float
+precio_menu,precio_plcomb,precio_carta1,precio_carta2,precio_carta3;<o:p></o:p></p>
+
+<p class=MsoNormal>float precio_bebida,precio_bebida2,precio_cafe,precio_cafe2;<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>int
+num_bebida,num_cafe;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_camarero =
+gtk_entry_get_text(combo_entry1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_mesa =
+gtk_entry_get_text(combo_entry2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_menu1 =
+gtk_entry_get_text(combo_entry3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_menu2 =
+gtk_entry_get_text(combo_entry4);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_menu3 = gtk_entry_get_text(combo_entry5);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_plcomb =
+gtk_entry_get_text(combo_entry6);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_carta1 =
+gtk_entry_get_text(combo_entry7);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_carta2 =
+gtk_entry_get_text(combo_entry8);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_carta3 =
+gtk_entry_get_text(combo_entry9);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_bebida = gtk_entry_get_text(combo_entry10);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_cafe =
+gtk_entry_get_text(combo_entry11);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_bebida_num =
+gtk_entry_get_text(combo_entry12);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>text_cafe_num =
+gtk_entry_get_text(combo_entry13);<o:p></o:p></span></p>
+
+<p class=MsoNormal>num_bebida=atoi(text_bebida_num);<o:p></o:p></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>num_cafe=atoi(text_cafe_num);<o:p></o:p></span></p>
+
+<p class=MsoNormal>if (primera==1){<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>fprintf(mi_file,&quot;MESA: %s (Camarero: %s
+)---------------------\n&quot;,text_mesa,text_camarero);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>primera=0;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>if
+(pcomb==1){<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>precio_plcomb=0;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>if (strncmp(text_plcomb,&quot;Plato
+Combinado 1&quot;,17)==0){<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span><span style="mso-spacerun: yes"> 
+</span></span>printf(&quot;el 1&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span><span
+style="mso-spacerun: yes">  </span>precio_plcomb=3.5;}<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>if (strncmp(text_plcomb,&quot;Plato Combinado
+2&quot;,17)==0) precio_plcomb=4;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>if (strncmp(text_plcomb,&quot;Plato
+Combinado 3&quot;,17)==0) precio_plcomb=4.5;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span>if (strncmp(text_plcomb,&quot;Plato
+Combinado 4&quot;,17)==0){<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style='mso-tab-count:1'>            </span><span style="mso-spacerun: yes"> 
+</span></span>printf(&quot;el 4&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style='mso-tab-count:1'>            </span><span
+style="mso-spacerun: yes">  </span>precio_plcomb=5;}<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>precio_total=precio_total+precio_plcomb;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> 
+</span>fprintf(mi_file,&quot; Plato combinado: (%.2f E)\n&quot;,precio_plcomb);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>fprintf(mi_file,&quot;<span
+style="mso-spacerun: yes">  </span>%s\n&quot;,text_plcomb);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">  </span></span>//pcomb=0; Por si quiero repetir
+peticiones sobre platos combinados<o:p></o:p></p>
+
+<p class=MsoNormal>}<o:p></o:p></p>
+
+<p class=MsoNormal>if (carta==1){<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>precio_carta1=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>precio_carta2=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>precio_carta3=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Esparragos Trigueros&quot;,19)==0) precio_carta1=5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Revuelto de setas con
+gambas&quot;,27)==0)precio_carta1=5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Coctel de mariscos&quot;,17)==0) precio_carta1=5.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Ensaladilla italiana&quot;,19)==0) precio_carta1=4;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Ensalada Campera&quot;,15)==0) precio_carta1=4;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Raviolis a los 4 quesos&quot;,22)==0)
+precio_carta1=4.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Arroz Negro&quot;,10)==0) precio_carta1=4;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta1,&quot;Paella&quot;,5)==0) precio_carta1=5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta2,&quot;Rodaballo al licor&quot;,17)==0) precio_carta2=5.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta2,&quot;Riñones al Jerez&quot;,15)==0) precio_carta2=6;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta2,&quot;Mero a las finas hierbas&quot;,23)==0)
+precio_carta2=6;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta2,&quot;Codornices en su jugo&quot;,20)==0) precio_carta2=6;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta2,&quot;Ternasco con patatas a lo pobre&quot;,30)==0)
+precio_carta2=5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if (strncmp(text_carta3,&quot;Fresas
+con Nata&quot;,14)==0) precio_carta3=3;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta3,&quot;Nueces con miel&quot;,14)==0) precio_carta3=3;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta3,&quot;Cuajada&quot;,6)==0) precio_carta3=2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta3,&quot;Sorbete al limon&quot;,15)==0) precio_carta3=2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta3,&quot;Pudding de coco&quot;,14)==0) precio_carta3=3;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>if
+(strncmp(text_carta3,&quot;Pijama&quot;,5)==0) precio_carta3=2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> 
+</span>precio_total=precio_total+precio_carta1+precio_carta2+precio_carta3;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> 
+</span>fprintf(mi_file,&quot; Carta:\n&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> 
+</span>fprintf(mi_file,&quot;<span style="mso-spacerun: yes">  </span>%s (%.2f
+E)\n&quot;,text_carta1,precio_carta1);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> 
+</span>fprintf(mi_file,&quot;<span style="mso-spacerun: yes">  </span>%s (%.2f
+E)\n&quot;,text_carta2,precio_carta2);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> 
+</span>fprintf(mi_file,&quot;<span style="mso-spacerun: yes">  </span>%s (%.2f
+E)\n&quot;,text_carta3,precio_carta3);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>//carta=0;<o:p></o:p></p>
+
+<p class=MsoNormal>}<o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal>if (menu==1){<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>precio_menu=8.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>fprintf(mi_file,&quot; Menu: (precio fijo %.1f E)\n&quot;,precio_menu);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>fprintf(mi_file,&quot;<span
+style="mso-spacerun: yes">  </span>%s\n&quot;,text_menu1);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>fprintf(mi_file,&quot;<span
+style="mso-spacerun: yes">  </span>%s\n&quot;,text_menu2);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span>fprintf(mi_file,&quot;<span
+style="mso-spacerun: yes">  </span>%s\n&quot;,text_menu3);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><span
+style="mso-spacerun: yes">   </span></span>precio_total=precio_total+precio_menu;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>//menu=0;<o:p></o:p></p>
+
+<p class=MsoNormal>}<o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal>if (bebida==1){<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>precio_bebida=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_bebida,&quot;Agua&quot;,3)==0) precio_bebida=0.8;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_bebida,&quot;Gaseosa&quot;,6)==0) precio_bebida=0.8;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_bebida,&quot;Cerveza&quot;,6)==0) precio_bebida=1.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_bebida,&quot;Vino&quot;,3)==0) precio_bebida=2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if (strncmp(text_bebida,&quot;Coca
+Cola&quot;,8)==0) precio_bebida=1.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_bebida,&quot;Limonada&quot;,7)==0) precio_bebida=1.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_bebida,&quot;Naranjada&quot;,8)==0) precio_bebida=1.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_bebida,&quot;Zumo&quot;,3)==0) precio_bebida=1.5;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>precio_bebida2=precio_bebida
+* num_bebida; <o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>precio_total=precio_total+precio_bebida2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>fprintf(mi_file,&quot; Bebidas:\n&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>fprintf(mi_file,&quot;<span style="mso-spacerun: yes">  </span>%s x %s
+unidades (%.2f x %i = %.2f E
+)\n&quot;,text_bebida,text_bebida_num,precio_bebida,num_bebida,precio_bebida2);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>//bebida=0;<o:p></o:p></p>
+
+<p class=MsoNormal>}<o:p></o:p></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal>if (cafe==1){<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>precio_cafe=0;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_cafe,&quot;Cortado&quot;,6)==0) precio_cafe=1.2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_cafe,&quot;Cortado con Hielo&quot;,16)==0) precio_cafe=1.4;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_cafe,&quot;Solo&quot;,3)==0) precio_cafe=1.2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_cafe,&quot;Solo con Hielo&quot;,13)==0) precio_cafe=1.4;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_cafe,&quot;Cafe con leche&quot;,13)==0) precio_cafe=1.2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>if
+(strncmp(text_cafe,&quot;Bombón&quot;,5)==0) precio_cafe=2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>precio_cafe2=precio_cafe * num_cafe; <o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>precio_total=precio_total + precio_cafe2;<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>fprintf(mi_file,&quot; Cafes:\n&quot;);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  
+</span>fprintf(mi_file,&quot;<span style="mso-spacerun: yes">  </span>%s x %s
+unidades (%.2f x %i = %.2f E
+)\n&quot;,text_cafe,text_cafe_num,precio_cafe,num_cafe,precio_cafe2);<o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>//cafe=0;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>/*<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>void
+on_button14_clicked(GtkButton *button,gpointer user_data)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>system(&quot;ls&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'>system(&quot;sh&lt;mozilla
+file:/home/nacs/Projects/Ok_project/web/int-h-m/palm/ayuda.htm&quot;);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-GB style='mso-ansi-language:EN-GB'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal>}<o:p></o:p></p>
+
+<p class=MsoNormal>*/</p>
+
+</div>
+
+</body>
+
+</html>

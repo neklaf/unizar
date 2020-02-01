@@ -1,0 +1,951 @@
+<?xml version="1.0"?>
+<GTK-Interface>
+
+<project>
+  <name>Ok_project</name>
+  <program_name>ok_project</program_name>
+  <directory></directory>
+  <source_directory>src</source_directory>
+  <pixmaps_directory>pixmaps</pixmaps_directory>
+  <language>C</language>
+  <gnome_support>False</gnome_support>
+  <gettext_support>False</gettext_support>
+</project>
+
+<widget>
+  <class>GtkWindow</class>
+  <name>window1</name>
+  <title>window1</title>
+  <type>GTK_WINDOW_TOPLEVEL</type>
+  <position>GTK_WIN_POS_NONE</position>
+  <modal>False</modal>
+  <allow_shrink>False</allow_shrink>
+  <allow_grow>True</allow_grow>
+  <auto_shrink>False</auto_shrink>
+
+  <widget>
+    <class>GtkFixed</class>
+    <name>fixed1</name>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button1</name>
+      <x>200</x>
+      <y>352</y>
+      <width>61</width>
+      <height>26</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button1_clicked</handler>
+	<last_modification_time>Fri, 23 May 2003 17:04:36 GMT</last_modification_time>
+      </signal>
+      <label>Grabar</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button2</name>
+      <x>264</x>
+      <y>352</y>
+      <width>61</width>
+      <height>26</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button2_clicked</handler>
+	<last_modification_time>Fri, 23 May 2003 18:07:58 GMT</last_modification_time>
+      </signal>
+      <label>Parar</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button3</name>
+      <x>176</x>
+      <y>384</y>
+      <width>61</width>
+      <height>26</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button3_clicked</handler>
+	<last_modification_time>Fri, 23 May 2003 18:08:02 GMT</last_modification_time>
+      </signal>
+      <label>Enviar</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator2</name>
+      <x>8</x>
+      <y>8</y>
+      <width>16</width>
+      <height>480</height>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button5</name>
+      <x>176</x>
+      <y>104</y>
+      <width>61</width>
+      <height>26</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button5_clicked</handler>
+	<last_modification_time>Sat, 24 May 2003 12:08:15 GMT</last_modification_time>
+      </signal>
+      <label>Menu</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button7</name>
+      <x>176</x>
+      <y>72</y>
+      <width>136</width>
+      <height>24</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button7_clicked</handler>
+	<last_modification_time>Sat, 24 May 2003 12:08:19 GMT</last_modification_time>
+      </signal>
+      <label>Plato Combinado</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button8</name>
+      <x>248</x>
+      <y>104</y>
+      <width>61</width>
+      <height>26</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button8_clicked</handler>
+	<last_modification_time>Sat, 24 May 2003 12:08:22 GMT</last_modification_time>
+      </signal>
+      <label>Carta</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button11</name>
+      <x>328</x>
+      <y>72</y>
+      <width>70</width>
+      <height>26</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button11_clicked</handler>
+	<last_modification_time>Sun, 01 Jun 2003 17:24:23 GMT</last_modification_time>
+      </signal>
+      <label>Bebidas</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button12</name>
+      <x>328</x>
+      <y>104</y>
+      <width>70</width>
+      <height>26</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button12_clicked</handler>
+	<last_modification_time>Sun, 01 Jun 2003 17:24:20 GMT</last_modification_time>
+      </signal>
+      <label>Cafes</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkHSeparator</class>
+      <name>hseparator3</name>
+      <x>24</x>
+      <y>16</y>
+      <width>384</width>
+      <height>16</height>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator4</name>
+      <x>400</x>
+      <y>24</y>
+      <width>16</width>
+      <height>392</height>
+    </widget>
+
+    <widget>
+      <class>GtkHSeparator</class>
+      <name>hseparator1</name>
+      <x>16</x>
+      <y>0</y>
+      <width>400</width>
+      <height>16</height>
+    </widget>
+
+    <widget>
+      <class>GtkHSeparator</class>
+      <name>hseparator4</name>
+      <x>16</x>
+      <y>480</y>
+      <width>400</width>
+      <height>16</height>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label1</name>
+      <x>32</x>
+      <y>40</y>
+      <width>72</width>
+      <height>16</height>
+      <label>Camarero</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator6</name>
+      <x>392</x>
+      <y>64</y>
+      <width>16</width>
+      <height>72</height>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator7</name>
+      <x>312</x>
+      <y>64</y>
+      <width>16</width>
+      <height>72</height>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator5</name>
+      <x>160</x>
+      <y>64</y>
+      <width>16</width>
+      <height>72</height>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>button13</name>
+      <x>80</x>
+      <y>384</y>
+      <width>80</width>
+      <height>24</height>
+      <can_focus>True</can_focus>
+      <signal>
+	<name>clicked</name>
+	<handler>on_button13_clicked</handler>
+	<last_modification_time>Sat, 24 May 2003 17:21:27 GMT</last_modification_time>
+      </signal>
+      <label>Confirmar</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label8</name>
+      <x>136</x>
+      <y>416</y>
+      <width>128</width>
+      <height>56</height>
+      <label>- - - - - - - - - -
+- - - - - - -
+- - -</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkHSeparator</class>
+      <name>hseparator5</name>
+      <x>168</x>
+      <y>128</y>
+      <width>232</width>
+      <height>16</height>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo3</name>
+      <x>120</x>
+      <y>144</y>
+      <width>224</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Paella
+Macarrones
+Revuelto de setas
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry3</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkHSeparator</class>
+      <name>hseparator2</name>
+      <x>24</x>
+      <y>408</y>
+      <width>384</width>
+      <height>16</height>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator1</name>
+      <x>16</x>
+      <y>24</y>
+      <width>16</width>
+      <height>392</height>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label3</name>
+      <x>72</x>
+      <y>144</y>
+      <width>42</width>
+      <height>20</height>
+      <label>1º</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label6</name>
+      <x>32</x>
+      <y>352</y>
+      <width>160</width>
+      <height>24</height>
+      <label>Peticiones Especiales</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo6</name>
+      <x>152</x>
+      <y>320</y>
+      <width>240</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Plato Combinado 1
+Plato Combinado 2
+Plato Combinado 3
+Plato Combinado 4
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry6</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label11</name>
+      <x>32</x>
+      <y>328</y>
+      <width>112</width>
+      <height>16</height>
+      <label>Pl Combinados</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label10</name>
+      <x>32</x>
+      <y>288</y>
+      <width>48</width>
+      <height>16</height>
+      <label>Cafés</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label9</name>
+      <x>32</x>
+      <y>256</y>
+      <width>64</width>
+      <height>16</height>
+      <label>Bebidas</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo11</name>
+      <x>104</x>
+      <y>280</y>
+      <width>240</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Cortado
+Cortado con Hielo
+Solo
+Solo con Hielo
+Cafe con leche
+Bombón
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry11</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator3</name>
+      <x>400</x>
+      <y>24</y>
+      <width>16</width>
+      <height>376</height>
+    </widget>
+
+    <widget>
+      <class>GtkVSeparator</class>
+      <name>vseparator8</name>
+      <x>408</x>
+      <y>8</y>
+      <width>16</width>
+      <height>480</height>
+    </widget>
+
+    <widget>
+      <class>GtkHSeparator</class>
+      <name>hseparator6</name>
+      <x>168</x>
+      <y>56</y>
+      <width>232</width>
+      <height>16</height>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo13</name>
+      <x>352</x>
+      <y>280</y>
+      <width>48</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry13</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo4</name>
+      <x>120</x>
+      <y>176</y>
+      <width>224</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Lomo
+Ternera
+Trucha
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry4</name>
+	<can_focus>True</can_focus>
+	<editable>True</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo5</name>
+      <x>120</x>
+      <y>208</y>
+      <width>224</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Helado
+Fruta
+Sorbete limon
+Sorbete Mango
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry5</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label4</name>
+      <x>72</x>
+      <y>176</y>
+      <width>42</width>
+      <height>20</height>
+      <label>2º</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label5</name>
+      <x>72</x>
+      <y>208</y>
+      <width>42</width>
+      <height>20</height>
+      <label>3º</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo7</name>
+      <x>128</x>
+      <y>144</y>
+      <width>224</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Esparragos Trigueros
+Revuelto de setas con gambas
+Coctel de mariscos
+Ensaladilla italiana
+Ensalada Campera
+Raviolis a los 4 quesos
+Arroz Negro
+Paella
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry7</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo8</name>
+      <x>128</x>
+      <y>176</y>
+      <width>224</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Rodaballo al licor
+Riñones al Jerez
+Solomillo a la pimienta
+Mero a las finas hierbas
+Codornices en su jugo
+Ternasco con patatas a lo pobre
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry8</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo9</name>
+      <x>128</x>
+      <y>208</y>
+      <width>224</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Fresas con Nata
+Nueces con miel
+Cuajada
+Sorbete al limon
+Pudding de coco
+Pijama
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry9</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo10</name>
+      <x>104</x>
+      <y>248</y>
+      <width>240</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+Agua
+Gaseosa
+Cerveza
+Vino
+Coca Cola
+Limonada 
+Naranjada
+Zumo
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry10</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo12</name>
+      <x>352</x>
+      <y>248</y>
+      <width>48</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry12</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo1</name>
+      <x>120</x>
+      <y>32</y>
+      <width>240</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+1.- Negre Ramos, Fernando
+2.- Martín Casamayor, Jorge
+3.- Mateo Lopez, Sergio
+4.- Olivan Garcia, Laura
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry1</name>
+	<can_focus>True</can_focus>
+	<editable>False</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label2</name>
+      <x>56</x>
+      <y>64</y>
+      <width>42</width>
+      <height>20</height>
+      <label>Mesa</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkCombo</class>
+      <name>combo2</name>
+      <x>120</x>
+      <y>64</y>
+      <width>40</width>
+      <height>24</height>
+      <value_in_list>False</value_in_list>
+      <ok_if_empty>True</ok_if_empty>
+      <case_sensitive>False</case_sensitive>
+      <use_arrows>True</use_arrows>
+      <use_arrows_always>False</use_arrows_always>
+      <items>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</items>
+
+      <widget>
+	<class>GtkEntry</class>
+	<child_name>GtkCombo:entry</child_name>
+	<name>combo-entry2</name>
+	<can_focus>True</can_focus>
+	<editable>True</editable>
+	<text_visible>True</text_visible>
+	<text_max_length>0</text_max_length>
+	<text></text>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkLabel</class>
+      <name>label7</name>
+      <x>256</x>
+      <y>384</y>
+      <width>72</width>
+      <height>24</height>
+      <label>Factura:</label>
+      <justify>GTK_JUSTIFY_CENTER</justify>
+      <wrap>False</wrap>
+      <xalign>0.5</xalign>
+      <yalign>0.5</yalign>
+      <xpad>0</xpad>
+      <ypad>0</ypad>
+    </widget>
+
+    <widget>
+      <class>GtkEntry</class>
+      <name>entry4</name>
+      <x>328</x>
+      <y>384</y>
+      <width>64</width>
+      <height>24</height>
+      <can_focus>True</can_focus>
+      <editable>True</editable>
+      <text_visible>True</text_visible>
+      <text_max_length>0</text_max_length>
+      <text></text>
+    </widget>
+  </widget>
+</widget>
+
+</GTK-Interface>

@@ -1,0 +1,12 @@
+<mm:style name="ko" format="pre" apply="replace" size="4" color="#330099" underline />
+<mm:style name="mio_texto" apply="replace" font="Arial, Helvetica, sans-serif" size="2" />
+<mm:style name="mio_titulo" align="center" apply="replace" font="Arial, Helvetica, sans-serif" size="5" color="#000066" bold underline />
+<mm:style name="Negrita" type="char" apply="add" bold />
+<mm:style name="sin nombre1" type="char" apply="replace" color="#FFFFFF" />
+<mm:style name="Texto" format="p" align="center" apply="replace" font="Arial, Helvetica, sans-serif" size="2" color="#808080" bold italic />
+<mm:style name="Copyright" format="p" align="center" apply="replace" font="Georgia, Times New Roman, Times, serif" size="1" italic />
+<mm:style name="Énfasis, sans-serif" type="char" apply="replace" font="Verdana, Arial, Helvetica, sans-serif" bold />
+<mm:style name="Ancho fijo" type="char" apply="replace" font="Courier New, Courier, mono" />
+<mm:style name="Titular" align="left" apply="replace" font="Verdana, Arial, Helvetica, sans-serif" size="+2" bold />
+<mm:style name="Normal" apply="replace" font="Georgia, Times New Roman, Times, serif" size="+1" />
+<mm:style name="Rojo" type="char" apply="add" color="#FF0000" />

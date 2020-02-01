@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>TRABAJO.PALM PARA UN RESTAURANTE</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="JavaScript">
+<!--
+function MM_findObj(n, d) { //v3.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document); return x;
+}
+
+function MM_showHideLayers() { //v3.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+
+function MM_timelinePlay(tmLnName, myID) { //v1.2
+  //Copyright 1997 Macromedia, Inc. All rights reserved.
+  var i,j,tmLn,props,keyFrm,sprite,numKeyFr,firstKeyFr,propNum,theObj,firstTime=false;
+  if (document.MM_Time == null) MM_initTimelines(); //if *very* 1st time
+  tmLn = document.MM_Time[tmLnName];
+  if (myID == null) { myID = ++tmLn.ID; firstTime=true;}//if new call, incr ID
+  if (myID == tmLn.ID) { //if Im newest
+    setTimeout('MM_timelinePlay("'+tmLnName+'",'+myID+')',tmLn.delay);
+    fNew = ++tmLn.curFrame;
+    for (i=0; i<tmLn.length; i++) {
+      sprite = tmLn[i];
+      if (sprite.charAt(0) == 's') {
+        if (sprite.obj) {
+          numKeyFr = sprite.keyFrames.length; firstKeyFr = sprite.keyFrames[0];
+          if (fNew >= firstKeyFr && fNew <= sprite.keyFrames[numKeyFr-1]) {//in range
+            keyFrm=1;
+            for (j=0; j<sprite.values.length; j++) {
+              props = sprite.values[j]; 
+              if (numKeyFr != props.length) {
+                if (props.prop2 == null) sprite.obj[props.prop] = props[fNew-firstKeyFr];
+                else        sprite.obj[props.prop2][props.prop] = props[fNew-firstKeyFr];
+              } else {
+                while (keyFrm<numKeyFr && fNew>=sprite.keyFrames[keyFrm]) keyFrm++;
+                if (firstTime || fNew==sprite.keyFrames[keyFrm-1]) {
+                  if (props.prop2 == null) sprite.obj[props.prop] = props[keyFrm-1];
+                  else        sprite.obj[props.prop2][props.prop] = props[keyFrm-1];
+        } } } } }
+      } else if (sprite.charAt(0)=='b' && fNew == sprite.frame) eval(sprite.value);
+      if (fNew > tmLn.lastFrame) tmLn.ID = 0;
+  } }
+}
+
+function MM_initTimelines() {
+    //MM_initTimelines() Copyright 1997 Macromedia, Inc. All rights reserved.
+    var ns = navigator.appName == "Netscape";
+    document.MM_Time = new Array(1);
+    document.MM_Time[0] = new Array(19);
+    document.MM_Time["Timeline1"] = document.MM_Time[0];
+    document.MM_Time[0].MM_Name = "Timeline1";
+    document.MM_Time[0].fps = 2;
+    document.MM_Time[0][0] = new String("behavior");
+    document.MM_Time[0][0].frame = 1;
+    document.MM_Time[0][0].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','hide','Layer7','','hide','Layer4','','hide','Layer2','','hide','Layer1','','show')";
+    document.MM_Time[0][1] = new String("behavior");
+    document.MM_Time[0][1].frame = 7;
+    document.MM_Time[0][1].value = "MM_showHideLayers('Layer5','','hide','Layer3','','hide','Layer6','','show','Layer7','','hide','Layer4','','hide','Layer2','','hide','Layer1','','hide')";
+    document.MM_Time[0][2] = new String("behavior");
+    document.MM_Time[0][2].frame = 10;
+    document.MM_Time[0][2].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','show','Layer7','','show','Layer4','','show','Layer2','','hide','Layer1','','show')";
+    document.MM_Time[0][3] = new String("behavior");
+    document.MM_Time[0][3].frame = 17;
+    document.MM_Time[0][3].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','show','Layer7','','show','Layer4','','show','Layer1','','show')";
+    document.MM_Time[0][4] = new String("behavior");
+    document.MM_Time[0][4].frame = 4;
+    document.MM_Time[0][4].value = "MM_showHideLayers('Layer5','','hide','Layer3','','hide','Layer6','','hide','Layer7','','show','Layer4','','show','Layer2','','hide','Layer1','','hide')";
+    document.MM_Time[0][5] = new String("behavior");
+    document.MM_Time[0][5].frame = 5;
+    document.MM_Time[0][5].value = "MM_showHideLayers('Layer5','','hide','Layer3','','hide','Layer6','','hide','Layer7','','show','Layer4','','show','Layer2','','hide','Layer1','','hide')";
+    document.MM_Time[0][6] = new String("behavior");
+    document.MM_Time[0][6].frame = 8;
+    document.MM_Time[0][6].value = "MM_showHideLayers('Layer5','','hide','Layer3','','hide','Layer6','','show','Layer7','','hide','Layer4','','hide','Layer2','','hide','Layer1','','hide')";
+    document.MM_Time[0][7] = new String("behavior");
+    document.MM_Time[0][7].frame = 9;
+    document.MM_Time[0][7].value = "MM_showHideLayers('Layer5','','hide','Layer3','','hide','Layer6','','show','Layer7','','hide','Layer4','','hide','Layer1','','hide')";
+    document.MM_Time[0][8] = new String("behavior");
+    document.MM_Time[0][8].frame = 13;
+    document.MM_Time[0][8].value = "MM_showHideLayers('Layer5','','show','Layer3','','hide','Layer6','','hide','Layer7','','hide','Layer4','','hide','Layer2','','hide','Layer1','','hide')";
+    document.MM_Time[0][9] = new String("behavior");
+    document.MM_Time[0][9].frame = 11;
+    document.MM_Time[0][9].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','show','Layer7','','show','Layer4','','show','Layer2','','hide','Layer1','','show')";
+    document.MM_Time[0][10] = new String("behavior");
+    document.MM_Time[0][10].frame = 12;
+    document.MM_Time[0][10].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','show','Layer7','','show','Layer4','','show','Layer1','','show')";
+    document.MM_Time[0][11] = new String("behavior");
+    document.MM_Time[0][11].frame = 14;
+    document.MM_Time[0][11].value = "MM_showHideLayers('Layer5','','show','Layer3','','hide','Layer6','','hide','Layer4','','hide','Layer1','','hide')";
+    document.MM_Time[0][12] = new String("behavior");
+    document.MM_Time[0][12].frame = 16;
+    document.MM_Time[0][12].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','show','Layer7','','show','Layer4','','show','Layer1','','show')";
+    document.MM_Time[0][13] = new String("behavior");
+    document.MM_Time[0][13].frame = 18;
+    document.MM_Time[0][13].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','show','Layer7','','show','Layer4','','show','Layer1','','show')";
+    document.MM_Time[0][14] = new String("behavior");
+    document.MM_Time[0][14].frame = 19;
+    document.MM_Time[0][14].value = "MM_showHideLayers('Layer5','','show','Layer3','','hide','Layer6','','hide','Layer7','','hide','Layer4','','hide','Layer2','','show','Layer1','','hide')";
+    document.MM_Time[0][15] = new String("behavior");
+    document.MM_Time[0][15].frame = 15;
+    document.MM_Time[0][15].value = "MM_showHideLayers('Layer5','','show','Layer3','','hide','Layer6','','hide','Layer7','','hide','Layer4','','hide','Layer2','','hide','Layer1','','hide')";
+    document.MM_Time[0][16] = new String("behavior");
+    document.MM_Time[0][16].frame = 2;
+    document.MM_Time[0][16].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','hide','Layer7','','hide','Layer4','','hide','Layer2','','hide','Layer1','','show')";
+    document.MM_Time[0][17] = new String("behavior");
+    document.MM_Time[0][17].frame = 3;
+    document.MM_Time[0][17].value = "MM_showHideLayers('Layer5','','hide','Layer3','','show','Layer6','','hide','Layer7','','hide','Layer4','','hide','Layer2','','hide','Layer1','','show')";
+    document.MM_Time[0][18] = new String("behavior");
+    document.MM_Time[0][18].frame = 6;
+    document.MM_Time[0][18].value = "MM_showHideLayers('Layer5','','hide','Layer3','','hide','Layer6','','hide','Layer7','','show','Layer4','','show','Layer2','','hide','Layer1','','hide')";
+    document.MM_Time[0].lastFrame = 19;
+    for (i=0; i<document.MM_Time.length; i++) {
+        document.MM_Time[i].ID = null;
+        document.MM_Time[i].curFrame = 0;
+        document.MM_Time[i].delay = 1000/document.MM_Time[i].fps;
+    }
+}
+//-->
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" background="PhotoNo211.jpg" onLoad="MM_timelinePlay('Timeline1')">
+<div id="Layer5" style="position:absolute; width:488px; height:310px; z-index:3; left: 226px; top: 177px; visibility: hidden"><a href="ppal.htm"><img src="restaurante3.jpg" width="491" height="408" border="0"></a></div>
+<div id="Layer3" style="position:absolute; width:200px; height:115px; z-index:6; left: 10px; top: 66px; visibility: hidden"><img src="palm4.gif" width="149" height="200"></div>
+<div id="Layer6" style="position:absolute; width:200px; height:115px; z-index:7; left: 292px; top: 148px; visibility: hidden"><img src="palm5.jpg" width="300" height="348"></div>
+<div id="Layer7" style="position:absolute; width:200px; height:115px; z-index:8; left: 749px; top: 46px; visibility: hidden"><img src="palm3.jpg" width="170" height="230"></div>
+<div id="Layer4" style="position:absolute; width:79px; height:115px; z-index:5; left: 25px; top: 411px; visibility: hidden"><img src="palm1.jpg" width="170" height="221"></div>
+<div id="Layer2" style="position:absolute; width:555px; height:114px; z-index:4; left: 183px; top: 25px; visibility: hidden"> 
+  <p align="center"><u><b><font face="Arial, Helvetica, sans-serif" size="5" color="#000066"><a href="ppal.htm">TRABAJO. 
+    PALM PARA UN RESTARANTE</a></font></b></u></p>
+</div>
+<div id="Layer1" style="position:absolute; width:173px; height:197px; z-index:1; left: 767px; top: 373px; visibility: hidden"> 
+  <img src="palm2.jpg" width="159" height="198"> </div>
+</body>
+</html>
