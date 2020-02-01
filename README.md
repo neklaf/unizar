@@ -16,6 +16,8 @@ I use pdflatex tool to generate PDF files from .tex sources on Debian GNU/Linux.
 2000 -> ELECTRONICA DIGITAL
 
 ## CPS
+2002 -> ACCESOS DIGITALES
+
 2003 -> SISTEMAS EMPOTRADOS
 
 2003 -> CONCEPTOS AVANZADOS DE SISTEMAS OPERATIVOS
