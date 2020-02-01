@@ -1,0 +1,487 @@
+/*
+ * Pedidos.java
+ *
+ * Created on 14 de febrero de 2005, 21:23
+ */
+
+package MantenimientoDB;
+
+import java.util.*;
+import ConexionBD.*;
+import PuntoDeVenta.PVPedidos;
+import PuntoDeVenta.PVDetallePedidos;
+import PuntoDeVenta.PVPuntoDistribucion;
+import PuntoDeVenta.PVVehiculos;
+import PuntoDeVenta.PVEmpleados;
+import PuntoDeVenta.PVClientes;
+import javax.jdo.*;
+
+/**
+ *Método de inserción de los pedidos
+ *
+ *@param matricula: si matricula=="-1" insertará como vehículo un null
+ *
+ * @author  Ignacio Carcas
+ */
+public class Pedidos {
+    
+    /** Creates a new instance of Pedidos */
+    public Pedidos() {
+    }
+    
+    
+    public int insertar(String id_pedido,Date fechaRealizacion,int estado,Date fechaEnvio, String matricula, String nifVendedor, String cifComprador, ArrayList detallePedidos){
+        int ok = 1;
+        
+        PersistenceManager[] conexiones = null;
+        PersistenceManager conexion = null;
+        
+        try{
+            Object objPedido = null;
+            conexiones = new Utilities().obtenerConexiones(null);
+            
+            //Comprobar que el id_pedido no lo tiene ningún pèdido de ninguna base de datos, 
+            int i=1;
+            int numConexiones = new Utilities().obtenNumeroDB();
+            while (i<numConexiones){
+                objPedido = new Utilities().obtenIdObjeto(PVPedidos.class,"this.id_pedido==\""+id_pedido+"\"", i+1);
+                if (objPedido==null){
+                    i++;
+                }else{
+                    i=numConexiones;
+                }
+            }
+            // Finalizamos las conexiones
+            new Utilities().ejecutaFinally(conexiones);
+            
+            // Procedemos a insertar el pedido
+            if (objPedido == null){ // Si no existe ningún pedido con ese identificador de pedido
+                conexion = new Utilities().obtenerConexiones(constantes.NODO_PROPIO);
+                conexion.currentTransaction().begin();
+
+                // obtenemos el punto de vetna
+                Object obj = new Utilities().obtenIdObjeto(PVPuntoDistribucion.class,"this.zona=="+constantes.NODO_PROPIO,constantes.NODO_PROPIO);
+                PVPuntoDistribucion departamentoVendedor = (PVPuntoDistribucion) conexion.getObjectById(obj,false);
+
+                // obtenemos el vehiculo de transporte
+                PVVehiculos vehiculo;
+                if (matricula.equals("-1")){
+                    vehiculo = null;
+                }else{
+                    obj = new Utilities().obtenIdObjeto(PVVehiculos.class,"this.matricula==\""+matricula+"\"",constantes.NODO_PROPIO);
+                    vehiculo = (PVVehiculos) conexion.getObjectById(obj, false);    
+                }
+                
+                // obtenemos el empleado vendedor
+                obj = new Utilities().obtenIdObjeto(PVEmpleados.class,"this.nif==\""+nifVendedor+"\"",constantes.NODO_PROPIO);
+                PVEmpleados vendedor = (PVEmpleados) conexion.getObjectById(obj, false);
+
+                // obtenemos el cliente comprador
+                obj = new Utilities().obtenIdObjeto(PVClientes.class,"this.cif==\""+cifComprador+"\"",constantes.NODO_PROPIO);
+                PVClientes comprador = (PVClientes) conexion.getObjectById(obj, false);
+               
+                //PVPedidos pedido = new PVPedidos(id_pedido,fechaRealizacion,estado,fechaEnvio,vehiculo, vendedor, comprador, departamentoVendedor, detallePedidos);
+                PVPedidos pedido = new PVPedidos(id_pedido,fechaRealizacion,estado,fechaEnvio,vehiculo, vendedor, comprador, departamentoVendedor, null);
+                                
+                comprador.addPedido(pedido);
+                vendedor.addPedido(pedido);
+                vehiculo.addPedido(pedido);
+                
+                conexion.makePersistent(pedido);
+                
+                Iterator it = detallePedidos.iterator();
+                PVDetallePedidos detalle;
+                while (it.hasNext()){
+                    detalle = (PVDetallePedidos) it.next();
+                    obj = this.creaDetPedToBD(detalle.getUnidades(), detalle.getPrecioCompra(), detalle.getProducto().getRef(),constantes.NODO_PROPIO);
+                    pedido.addDetallePedidos( (PVDetallePedidos)conexion.getObjectById(obj, false) );
+                }
+                
+                conexion.currentTransaction().commit();
+            }else{
+                throw new Exception("Ese identificador de pedido ya existía");
+            }
+        }catch(Exception e){
+            conexion.currentTransaction().rollback();
+            ok = 0;
+            System.out.println("Fallo al insertar pedidos de clientes: "+e.getMessage());
+        }finally{
+            new Utilities().ejecutaFinally(conexiones);
+            if (!conexion.isClosed()){
+                conexion.close();
+            }
+        }
+        
+        return ok;
+    }
+    
+    
+    /**
+     *Método para eliminar un pedido
+     *
+     *
+     *Author: Ignacio Carcas
+     */
+    public int eliminar(String id_pedido){
+        int ok = 1;
+        
+        PersistenceManager conexion = null;
+        try{
+            conexion = new Utilities().obtenerConexiones(constantes.NODO_PROPIO);
+
+            // obtenemos el pedido
+            Object obj = new Utilities().obtenIdObjeto(PVPedidos.class,"this.id_pedido==\""+id_pedido+"\"",constantes.NODO_PROPIO);
+            PVPedidos pedido = (PVPedidos) conexion.getObjectById(obj, false);
+            
+            conexion.currentTransaction().begin();
+            
+            //Lo eliminamos de vehiculo
+            if (pedido.getVehiculo()!=null){
+                pedido.getVehiculo().deletePedido(pedido);
+            }
+            
+            //Lo eliminamos de empleados
+            if (pedido.getVendedor()!=null){
+                pedido.getVendedor().deletePedido(pedido);
+            }
+            
+            //Lo eliminamos de clientes
+            if (pedido.getComprador()!=null){
+                pedido.getComprador().deletePedido(pedido);
+            }
+            
+            // Eliminamos el pedido
+            ArrayList misdetalles = pedido.getAllPedidos();
+            Iterator i = misdetalles.iterator();
+            PVDetallePedidos detalle = null;
+            while (i.hasNext()){
+                detalle = (PVDetallePedidos) i.next();
+                conexion.deletePersistent(detalle);
+            }
+            conexion.deletePersistent(pedido);
+            
+            conexion.currentTransaction().commit();
+            
+        }catch(Exception e){
+            ok = 0;
+            System.out.println("Fallo al eliminar pedidos de clientes");
+            conexion.currentTransaction().rollback();
+        }finally{
+            if (!conexion.isClosed()){
+                conexion.close();
+            }
+        }
+        
+        return ok;
+    }
+    
+    
+    /*Modifica el pedido
+     *
+     *
+     */
+    public int modificar(String antigua_id_pedido, String nueva_id_pedido,Date fechaRealizacion,int estado,Date fechaEnvio, String matricula, String nifVendedor, String cifComprador, ArrayList detallePedidos){
+        int ok = 1;
+        
+        PersistenceManager[] conexiones = null;
+        PersistenceManager conexion = null;
+        try{
+            Object objPedido = null;
+            conexiones = new Utilities().obtenerConexiones(null);
+            
+            //Comprobar que el id_pedido no lo tiene ningún pèdido de ninguna base de datos
+            if (!antigua_id_pedido.equals(nueva_id_pedido)){
+                int i=1;
+                int numConexiones = new Utilities().obtenNumeroDB();
+                while (i<numConexiones){
+                    objPedido = new Utilities().obtenIdObjeto(PVPedidos.class,"this.id_pedido==\""+nueva_id_pedido+"\"", i+1);
+                    if (objPedido==null){
+                        i++;
+                    }else{
+                        i=numConexiones;
+                    }
+                }
+            }
+            
+            // Finalizamos las conexiones
+            new Utilities().ejecutaFinally(conexiones);
+           
+            // Procedemos a modificar el pedido antiguo
+            if (objPedido == null){ // Si no existe ningún pedido con ese identificador de pedido
+                
+                conexion = new Utilities().obtenerConexiones(constantes.NODO_PROPIO);
+                
+                conexion.currentTransaction().begin();
+
+                // obtenemos el pedido
+                Object obj = new Utilities().obtenIdObjeto(PVPedidos.class,"this.id_pedido==\""+antigua_id_pedido+"\"",constantes.NODO_PROPIO);
+                PVPedidos pedido = (PVPedidos) conexion.getObjectById(obj, false);
+                
+                // obtenemos el vehiculo de transporte
+                PVVehiculos vehiculo = null;
+
+                if ( (pedido.getVehiculo()!=null) && (!matricula.equals(pedido.getVehiculo().getMatricula()))){
+                    // Cambia el vehiculo
+                    obj = new Utilities().obtenIdObjeto(PVVehiculos.class,"this.matricula==\""+matricula+"\"",constantes.NODO_PROPIO);
+                    vehiculo = (PVVehiculos) conexion.getObjectById(obj, false);
+                    
+                    pedido.getVehiculo().deletePedido(pedido);
+                    vehiculo.addPedido(pedido);
+                    
+                }else if ( (pedido.getVehiculo()!=null) && (matricula.equals(pedido.getVehiculo().getMatricula()))){
+                    // El vehiculo no cambia
+                    vehiculo = pedido.getVehiculo();
+                    
+                }else if ((pedido.getVehiculo()==null) && (!matricula.equals("-1")) ){
+                    // Se asigna un vehículo por primera vez
+                    obj = new Utilities().obtenIdObjeto(PVVehiculos.class,"this.matricula==\""+matricula+"\"",constantes.NODO_PROPIO);
+                    vehiculo = (PVVehiculos) conexion.getObjectById(obj, false);
+                    
+                    vehiculo.addPedido(pedido);
+                    
+                }else if ((pedido.getVehiculo()!=null) && (matricula.equals("-1"))){
+                    // El vehiculo se desasigna al pedido
+                    vehiculo = null;
+                    pedido.getVehiculo().deletePedido(pedido);
+                }
+
+                pedido.setVehiculo(vehiculo);
+                
+
+                // obtenemos el empleado vendedor si es un vendedor distinto
+                if (!nifVendedor.equals(pedido.getVendedor().getNif())){
+                    obj = new Utilities().obtenIdObjeto(PVEmpleados.class,"this.nif==\""+nifVendedor+"\"",constantes.NODO_PROPIO);
+                    PVEmpleados vendedor = (PVEmpleados) conexion.getObjectById(obj, false);
+                    pedido.setVendedor(vendedor);
+                }
+
+                // obtenemos el cliente comprador si el comprador es distinto
+                if (!cifComprador.equals(pedido.getComprador().getCif())){
+                    obj = new Utilities().obtenIdObjeto(PVClientes.class,"this.cif==\""+cifComprador+"\"",constantes.NODO_PROPIO);
+                    PVClientes comprador = (PVClientes) conexion.getObjectById(obj, false);
+                    pedido.setComprador(comprador);
+                }
+
+                pedido.setId_pedido(nueva_id_pedido);
+                pedido.setEstado(estado);
+                pedido.setFechaRealizacion(fechaRealizacion);
+                pedido.setFechaEnvio(fechaEnvio);
+
+                
+                // eliminamos los detalles de pedido anteriores
+                Iterator it = pedido.getAllPedidos().iterator();
+
+                while (it.hasNext()){
+                    conexion.deletePersistent( (PVDetallePedidos) it.next() );
+                }
+
+                pedido.borrarAllPedidos();
+                // introducimos los nuevos detalle de pedido
+                it = detallePedidos.iterator();
+
+                PVDetallePedidos detalle;
+                while (it.hasNext()){
+                    detalle = (PVDetallePedidos) it.next();
+                    obj = this.creaDetPedToBD(detalle.getUnidades(), detalle.getPrecioCompra(), detalle.getProducto().getRef(),constantes.NODO_PROPIO);
+                    pedido.addDetallePedidos( (PVDetallePedidos)conexion.getObjectById(obj, false) );
+                }
+                
+                conexion.currentTransaction().commit();
+                
+            }else{
+                throw new Exception("Ese identificador de pedido ya existía");
+            }
+        }catch(Exception e){
+            ok = 0;
+            System.out.println("Fallo al modificar pedidos de clientes"+e.getMessage());
+            conexion.currentTransaction().rollback();
+        }finally{
+            new Utilities().ejecutaFinally(conexiones);
+            if (!conexion.isClosed()){
+                conexion.close();
+            }
+        }
+        
+        return ok;
+    }
+    
+    
+    /* Crea un detalle de pedido
+     *
+    */
+    public Object creaDetPedToBD(int unidades, double precioCompra, String ref_prod, int zona){
+        PuntoDeVenta.PVProductos prod = null;
+        PersistenceManager conexion = null;
+        PVDetallePedidos detalle = null;
+        Object obj = null;
+        try{
+            conexion= new ConexionBD.Utilities().obtenerConexiones(zona);
+            conexion.currentTransaction().begin();
+
+            Object objProducto = new ConexionBD.Utilities().obtenIdObjeto(PuntoDeVenta.PVProductos.class,"this.ref==\""+ref_prod+"\"", zona);
+            prod = (PuntoDeVenta.PVProductos) conexion.getObjectById(objProducto,false);
+
+            detalle = new PVDetallePedidos(unidades, precioCompra, prod);
+
+            conexion.makePersistent(detalle);
+
+            obj = conexion.getObjectId(detalle);
+
+            conexion.currentTransaction().commit();
+        }catch(Exception e){
+            System.out.println("Error al obtener el producto para ser asignado al objeto.");
+            conexion.currentTransaction().rollback();
+        }finally{
+            if (!conexion.isClosed()){
+                conexion.close();
+            }
+        }
+        return(obj); 
+    }
+    
+    
+    /*Modifica el detalle del pedido
+     *
+     * @param identificador del pedido a modificar
+     * @param es un arraylist que contiene los objetos de detalles de pedido.
+     */
+    public int modificarDetallePedido(String id_pedido, ArrayList detallePedidos){
+        int ok = 1;
+        
+        PersistenceManager conexion = null;
+        try{
+            
+                conexion = new Utilities().obtenerConexiones(constantes.NODO_PROPIO);
+                
+                conexion.currentTransaction().begin();
+                
+                // obtenemos el pedido
+                Object obj = new Utilities().obtenIdObjeto(PVPedidos.class,"this.id_pedido==\""+id_pedido+"\"",constantes.NODO_PROPIO);
+                PVPedidos pedido = (PVPedidos) conexion.getObjectById(obj, false);
+                
+                Iterator it = pedido.getAllPedidos().iterator();
+                while (it.hasNext()){
+                    conexion.deletePersistent( (PVDetallePedidos) it.next() );
+                }
+                
+                it = detallePedidos.iterator();
+                PVDetallePedidos detalle;
+                while (it.hasNext()){
+                    detalle = (PVDetallePedidos) it.next();
+                    obj = this.creaDetPedToBD(detalle.getUnidades(), detalle.getPrecioCompra(), detalle.getProducto().getRef(),constantes.NODO_PROPIO);
+                    pedido.addDetallePedidos( (PVDetallePedidos)conexion.getObjectById(obj, false) );
+                }
+
+                conexion.currentTransaction().commit();
+
+        }catch(Exception e){
+            ok = 0;
+            System.out.println("Fallo al modificar el detalle pedidos de clientes"+e.getMessage());
+            conexion.currentTransaction().rollback();
+        }finally{
+            if (!conexion.isClosed()){
+                conexion.close();
+            }
+        }
+        
+        return ok;
+    }
+    
+    
+    /**
+     *Se encarga de buscar los Pedidos con unos parámetros
+     *@param cif: cif de la empresa cliente de la que se quieren buscar pedidos. Si cif=="-1" busca todos los pedidos.
+     *@param idPedido: identificador del pedido a buscar, si idPedido="-1" busca todos los pedidos.
+     *@param nif: nif del vendedor del pedido. Si nif=="-1" busca todos los pedidos.
+     *@param matricula: matricula del vehículo que ha transportado el pedido. Si matricula=="-1" busca todos los pedidos.
+     * @author Ignacio Carcas
+     */
+    public Vector buscar(String cif, String idPedido, String nif, String matricula){
+        //Buscar en la BD de los nodos
+        Vector v = new Vector();
+        
+        PersistenceManager conexion = new Utilities().obtenerConexiones(constantes.NODO_PROPIO);
+        
+        if (conexion != null){
+            // Creamos un try-catch para comprobar que todo va bien en la consulta
+            Query query = null;
+            Collection result = null;
+            String consulta = "";
+            Map args = new HashMap();
+            try{ 
+                // Creamos la sentencia de consulta
+                query = conexion.newQuery(PVPedidos.class);
+
+                 if (!cif.equals("-1")){
+                    //Creamos la consulta
+                    consulta += "this.comprador.cif==cif";
+                    //Declaramos el nuevo parámetro
+                    query.declareParameters("String cif");
+                    args.put("cif", cif);
+                }
+                
+                if (!idPedido.equals("-1")){
+                    if (!consulta.equals("")){
+                        consulta += " && ";
+                    }
+                    //Creamos la consulta
+                    consulta += "this.id_pedido==idPedido";
+                    //Declaramos el nuevo parámetro
+                    query.declareParameters("String idPedido");
+                    args.put("idPedido", idPedido);
+                }
+
+                if (!nif.equals("-1")){
+                    if (!consulta.equals("")){
+                        consulta += " && ";
+                    }
+                    //Creamos la consulta
+                    consulta += "this.vendedor.nif==nif";
+                    //Declaramos el nuevo parámetro
+                    query.declareParameters("String nif");
+                    args.put("nif", nif);
+                }
+                
+                if (!matricula.equals("-1")){
+                    if (!consulta.equals("")){
+                        consulta += " && ";
+                    }
+                    //Creamos la consulta
+                    consulta += "this.vehiculo.matricula==matricula";
+                    //Declaramos el nuevo parámetro
+                    query.declareParameters("String matricula");
+                    args.put("matricula", matricula);
+                }
+                
+                //Establecemos el filtro de consulta
+                if (!consulta.equals("")){
+                    query.setFilter(consulta);
+                }
+
+                // Ejecutamos la sentencia pasándole los parámetros
+                if (args.size()>0){
+                    result = (Collection) query.executeWithMap(args);
+                }else{
+                    result = (Collection) query.execute();
+                }
+
+                v.addAll(result);
+              
+            }catch(Exception e){ 
+                System.out.println("Error consultando pedidos: " + e.getMessage());
+                v = null;
+            }finally{
+                //query.closeAll();
+                query.close(result);
+                /*if(!conexion.isClosed()){
+                    conexion.close();
+                }*/
+            }
+        }else{
+            v = null; // Fallo en la conexión. 
+            System.err.println("¿Exiten de proveedor? Fallo en la conexión a la BD");
+        }
+        return (v);
+    }
+    
+}

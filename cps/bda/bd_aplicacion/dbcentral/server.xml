@@ -1,0 +1,18 @@
+<!-- ObjectDB Server Configuration File -->
+<objectdb.com>
+	<!-- Server -->
+	<server port="6136" reload="30">
+		<data path="c:\aplicaciones\app_bda\DBCentral\data" />
+		<log path="c:\aplicaciones\app_bda\DBCentral\log" />
+		<connections max="100" user-max="100" timeout="0" />
+	 </server> 
+
+	<!-- Users -->
+	<users>
+		<user name="admin" password="admin">
+			<dir path="/">
+				<permissions access="+" modify="+" create="+" delete="+" />
+			</dir>
+		</user>
+	</users> 
+</objectdb.com>

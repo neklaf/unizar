@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - JDO Metadata
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 4 - JDO Metadata</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+A JDO metadata file is an XML file with a '.jdo' suffix, containing information about one or more persistent classes. All the persistent classes, and only them, have to be declared in a metadata file. The metadata is used first by the JDO Enhancer, and later by the JDO system. Therefore, at deployment, .jdo metadata files must be packaged with an application's .class files and the other  resources (possibly in a jar file). 
+
+<p>
+This chapter contains the following sections:
+<div class='jumpers'>
+  <p>
+  <a href='#4.1'>4.1&nbsp;&nbsp;JDO Metadata Files</a>
+  <p>
+  <a href='#4.2'>4.2&nbsp;&nbsp;Metadata for Classes</a>
+  <p>
+  <a href='#4.3'>4.3&nbsp;&nbsp;Metadata for Fields</a>
+  <p>
+  <a href='#4.4'>4.4&nbsp;&nbsp;Arrays, Collections and Maps</a>
+  <p>
+  <a href='#4.5'>4.5&nbsp;&nbsp;Index Definition</a>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='4.1'></a>
+<h2>4.1&nbsp;&nbsp;JDO Metadata Files</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+During JDO enhancement and later at runtime, ObjectDB determines whether or not each class is persistent. It searches for JDO metadata description of each class in several .jdo files in a pre defined order. If a metadata description is found, the class is persistent, and if not, the class is transient. 
+
+<p>
+Metadata for class <code>a.b.X</code> (<code>a.b</code> is the package name, <code>X</code> is the class name), whose class file is <code>a/b/X.class</code>, is searched in the following paths (in the order shown):
+
+<ul style="margin-top: 4px;">
+<li><code>META-INF/package.jdo</code></li>
+<li><code>WEB-INF/package.jdo</code></li>
+<li><code>package.jdo</code></li>
+<li><code>a/package.jdo</code></li>
+<li><code>a/b/package.jdo</code></li>
+<li><code>a/b/X.jdo</code></li>
+</ul>
+
+<p>
+Metadata for class <code>X</code> in the default package is searched in the following paths (in the order shown):
+
+<ul style="margin-top: 4px;">
+<li><code>META-INF/package.jdo</code></li>
+<li><code>WEB-INF/package.jdo</code></li>
+<li><code>package.jdo</code></li>
+<li><code>X.jdo</code></li>
+</ul>
+
+<p>
+A metadata file with the name <code>X.jdo</code> must be dedicated to a single class whose name is <code>X</code>. Metadata for multiple classes can be specified in a <code>package.jdo</code> file located in <code>META-INF</code>, <code>WEB-INF</code> or in any other path at the level of the classes or above. Determining where to put the metadata of every persistent class is your responsibility. When the metadata for a class is found, the search is stopped. Therefore, only the first metadata for a class in the search order specified above has effect.    
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='4.2'></a>
+<h2>4.2&nbsp;&nbsp;Metadata for Classes</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+We start with a basic JDO metadata file:
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+&lt;jdo&gt;
+  &lt;package name=""&gt;
+    &lt;class name="A" /&gt;
+  &lt;/package>
+  &lt;package name="test"&gt;
+    &lt;class name="B" /&gt;
+    &lt;class name="C" persistence-capable-superclass="B" /&gt;
+    &lt;class name="D" requires-extent="false" /&gt;
+  &lt;/package>
+&lt;/jdo&gt;
+</pre>
+
+<p>
+A JDO metadata file is an XML file with a single root element - <code>&lt;jdo&gt;</code>. The <code>&lt;jdo&gt;</code> root has one or more <code>&lt;package&gt;</code> sub elements. Each <code>&lt;package&gt;</code> element has one or more <code>&lt;class&gt;</code> sub elements. Both  <code>&lt;package&gt;</code> and <code>&lt;class&gt;</code> elements have a required <code>name</code> attribute. The metadata above defines class <code>A</code> (in the default package) and classes  <code>B</code>, <code>C</code> and <code>D</code> (in package <code>test</code>), as persistent. 
+
+<p>
+In addition to the required <code>name</code> attribute, a <code>&lt;class&gt;</code> element can have one or more of the following optional attributes: 
+
+<h3>persistence-capable-superclass</h3>
+<p>
+The <code>persistence-capable-superclass</code> attribute usually specifies the direct super class if it is also persistent. In the above metadata example, class <code>C</code> is probably defined as a subclass of class <code>B</code> (using <code>extends</code>). But there is also another possibility. Class <code>C</code> might be a subclass of a non persistent class <code>X</code>, which is a subclass of class <code>B</code>. That is also a valid structure because JDO enables declaring a persistent class as a subclass of a non persistent class. Of course, in that case the fields of class <code>X</code> are not persistent fields, and when an instance of class <code>C</code> is stored, only persistent fields from classes <code>B</code> and <code>C</code> are stored. The closest persistent super class in the inheritance hierarchy must be specified using the <code>persistence-capable-superclass</code> attribute. This attribute is omitted only if there is no persistent super class anywhere in the inheritance hierarchy. When the super class is in the same package the package name can be omitted. Otherwise the full name of the super class, which includes the package name, has to be specified.
+
+<h3>requires-extent (true | false)</h3>
+<p>
+By default, JDO manages an extent for every persistent class. An extent enables iteration over persistent instances of a class (including or excluding instances of subclasses) as well as execution of queries against the class instances. However, maintaining an extent for a class has some overhead in terms of time and storage space. When extent management is not needed, it can be omitted by specifying <code>requires-extent="false"</code>, as shown above for class <code>D</code>. If <code>requires-extent="false"</code> is specified for a class, it must also be specified for its super class as declared in the <code>persistence-capable-superclass</code> attribute. 
+
+<h3>identity-type and objectid-class</h3>
+<p>
+The <code>identity-type</code> and <code>objectid-class</code> attributes, which are defined in the JDO specification, are ignored by ObjectDB if specified (as a pure object database, ObjectDB always uses datastore identity with its own object-id class).
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='4.3'></a>
+<h2>4.3&nbsp;&nbsp;Metadata for Fields</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Unlike persistent classes, which must be listed in the JDO metadata, persistent field descriptions can often be omitted. In most cases, the default management of fields by ObjectDB is adequate. Metadata for fields is required only for changing the default. Therefore, only fields with modified behavior should be specified in the metadata. 
+
+<p>
+The following file demonstrates JDO metadata for fields:
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+&lt;jdo&gt;
+  &lt;package name="test"&gt;
+    &lt;class name="A"&gt;
+      &lt;field name="f0" persistence-modifier="persistent" /&gt;
+      &lt;field name="f1" persistence-modifier="none" /&gt;
+      &lt;field name="f2" persistence-modifier="transactional" /&gt;
+      &lt;field name="f3" default-fetch-group="true" /&gt;
+      &lt;field name="f4" default-fetch-group="false" /&gt;
+      &lt;field name="f5" embedded="true" /&gt;
+      &lt;field name="f6" embedded="false" /&gt;
+      &lt;field name="f7" null-value="exception" /&gt;
+      &lt;field name="f8" null-value="none" /&gt;
+      &lt;field name="f9" null-value="default" /&gt;
+    &lt;/class&gt;
+  &lt;/package&gt;
+&lt;/jdo&gt;
+</pre>
+
+<p>
+A single persistent class, <code>test.A</code>, is declared by a <code>&lt;class&gt;</code> element containing <code>&lt;field&gt;</code> sub elements for 10 of its fields (there may be also other persistent fields in class <code>A</code> that are not specified in the metadata). Every field can have zero or more <code>&lt;field&gt;</code> elements. A <code>&lt;field&gt;</code> element may have several attributes (not just two as demonstrated above), but the <code>name</code> attribute specifying a name of a field in the class is always required.  
+
+<h3>persistence-modifier (persistent | none | transactional)</h3>
+<p>
+The default rules for determining if a field is persistent are explained in
+<a href='../chapter3/index.html#3.2'>section 3.2</a>.
+The <code>persistence-modifier</code> attribute makes it possible to change the default. Specifying a <code>persistent</code> value, as demonstrated by field <code>f0</code>, changes a field that is transient by default to persistent. For example, a field with a <code>transient</code> modifier in the Java source (useful for defining fields as transient in serialization and persistent in JDO), or a field whose declared type is <code>java.lang.Object</code> or some interface, but holds at runtime only values of persistent types. Specifying a <code>none</code> value, as demonstrated by field <code>f1</code>, changes a field that is persistent by default to transient, as an alternative to the Java <code>transient</code> modifier (for example, when a field has to be persistent in serialization). A field that is declared as <code>transactional</code>, like <code>f2</code> above, has similar behavior to transient because its value is never stored in the database. The main difference is that, on transaction rollback, it returns automatically to its value at the beginning of the transaction.
+
+<h3>default-fetch-group (true | false)</h3>
+<p>
+The <code>default-fetch-group</code> attribute indicates that a field should be managed in a group with other fields. When a persistent object is retrieved from the database its fields are not ready yet. Only when the program accesses a field is the field value loaded automatically by ObjectDB from the database. If the field belongs to the default fetch group, values for all the fields in the group are also loaded. The default fetch group should include fields that are needed often and are relatively small. By default, the group contains all the fields with primitive types (e.g. int), types defined in <code>java.lang</code> (e.g. <code>String</code> and <code>Integer</code>), types defined in <code>java.math</code> (e.g. <code>BigInteger</code>), and <code>java.util.Date</code>. Collections, arrays and references to user defined classes are excluded by default. The <code>default-fetch-group</code> attribute can change the default, as demonstrated by fields <code>f3</code> and <code>f4</code>. 
+
+<h3>embedded (true | false)</h3>
+<p>
+The <code>embedded</code> attribute is relevant for persistent reference fields. It indicates whether or not the content of the referred object should be stored as part of the referring object, as an <i>embedded object</i>. Embedded objects can reduce storage space and improve efficiency, but they do not have an object ID and cannot be shared by references from multiple objects. In addition, embedded objects of persistent classes are not included in the extents of their classes, so they cannot be queried directly. When the <code>embedded</code> attribute is not specified, ObjectDB embeds objects by default, for all fields except fields whose type is a user defined persistent classes or <code>java.lang.Object</code>. To use embedded objects for fields of user defined persistent classes, a metadata has to be specified as demonstrated by field <code>f5</code>. Wrapper objects, strings, dates, collections and arrays are embedded by default. To use them as non embedded (useful when the field is very large or rarely used) a metadata has to be specified, as demonstrated by field <code>f6</code>. 
+
+<h3>null-value (exception | none | default)</h3>
+<p>
+The <code>null-value</code> attribute is also intended for persistent reference fields. It indicates whether the field can accept <code>null</code> values or not. If an <code>exception</code> value is specified, as demonstrated by field <code>f7</code>, a <code>JDOUserException</code> is thrown on any attempt to store a persistent object with a <code>null</code> value in that field. If the <code>null-value</code> attribute is not specified or specified with a <code>none</code> value, as demonstrated by field <code>f8</code>, <code>null</code> values are allowed. If a <code>default</code> value is specified, as demonstrated by field <code>f9</code>, <code>null</code> values are replaced at storage time with default values (e.g. <code>new Integer(0)</code> for a <code>java.lang.Integer</code> field, <code>""</code> for  a <code>java.lang.String</code> field, empty collection, 0 size array, and so on).    
+
+<h3>primary-key</h3>
+<p>
+The <code>primary-key</code> attribute, defined in the JDO specification, is irrelevant when using datastore identity, which is the only object identity supported by ObjectDB. To enforce unique values in a field you can define a unique index as explained in <a href='#4.5'>section 4.5</a>.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='4.4'></a>
+<h2>4.4&nbsp;&nbsp;Arrays, Collections and Maps</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Special XML sub elements are available for array, collection and map fields:
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+&lt;jdo&gt;
+  &lt;package name="test"&gt;
+    &lt;class name="B"&gt;
+      &lt;field name="f0" embedded="true"&gt;
+        &lt;array embedded-element="true" /&gt;
+      &lt;/field&gt;
+      &lt;field name="f1" embedded="true"&gt;
+        &lt;collection embedded-element="true" /&gt;
+      &lt;/field&gt;
+      &lt;field name="f2" embedded="true"&gt;
+        &lt;map embedded-key="true" embedded-value="true" /&gt;
+      &lt;/field&gt;
+    &lt;/class&gt;
+  &lt;/package&gt;
+&lt;/jdo&gt;
+</pre>
+
+<p>
+A <code>&lt;field&gt;</code> element representing a persistent field whose type is collection, map or array, can have a <code>&lt;collection&gt;</code>, <code>&lt;map&gt;</code> or <code>&lt;array&gt;</code> sub element, respectively.
+
+<h3>embedded-element, embedded-key, embedded-value (true | false)</h3>
+<p>
+The <code>embedded-element</code> attribute indicates whether objects in a collection or array should be stored as embedded objects or not. To understand the difference between <code>embedded</code> and <code>embedded-element</code>, think about a collection field containing instances of a user defined persistent class. Specifying <code>embedded=true</code> in the <code>&lt;field&gt;</code> element (which is the default for collections and arrays anyway) indicates that the contained references are embedded, but <b>not</b> the referenced objects themselves because persistent class instances are not embedded by default. Specifying <code>embedded-element=true</code> in the <code>&lt;collection&gt;</code> sub element indicates that the objects are also embedded, not just their references. If <code>embedded=false</code> is specified in the <code>&lt;field&gt;</code> element, the objects are never embedded regardless of the <code>embedded-element</code> attribute, and even the references are stored externally. System types are embedded by default, so a collection of strings or dates is fully embedded by default. Specifying <code>embedded-element=false</code> changes it in a way that every <code>String</code> or <code>Date</code> is stored as a non embedded object (with a unique object ID). The <code>embedded-key</code> and <code>embedded-value</code> indicate whether the keys and the values of a map should be stored as embedded objects or not, similar to <code>embedded-element</code>, which is only for collections and arrays. 
+
+<h3>element-type, key-type, value-type</h3>
+<p>
+The <code>key-type</code> and <code>value-type</code> attributes defined in the JDO specification for the <code>&lt;Map&gt;</code> element are ignored by ObjectDB. The <code>element-type</code> attribute of the <code>&lt;collection&gt;</code> element has effect only in index declarations, as explained in the next section.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='4.5'></a>
+<h2>4.5&nbsp;&nbsp;Index Definition</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Querying a large extent without indexes may take a significant amount of time because it requires iteration over all the class instances, one by one. Using proper indexes the iteration can be avoided, and complex queries over millions of objects can be executed quickly. Index management introduces overhead in terms of maintenance time and storage space, so deciding which fields to define with indexes should be done carefully. Indexes are not supported by the free database edition.
+
+<p>
+The JDO  specification does not define a standard method of index declaration, so the declaration syntax is specific to ObjectDB. Every <code>&lt;class&gt;</code> element can have <code>&lt;extension&gt;</code> sub elements declaring indexes. The JDO standard provides <code>&lt;extension&gt;</code> for vendor specific declarations, so the metadata file remains JDO portable. Because index declarations are specified directly in the <code>&lt;class&gt;</code> element, <code>&lt;field&gt;</code> elements are not necessarily required for the fields for which indexes are declared.  
+
+<p>
+The following metadata declares simple indexes for two fields. Field <code>f0</code> has an ordinary index and field <code>f1</code> has a unique index. A field that has a unique index must have unique values among persistent instances of the class. An exception is thrown on any attempt to store an object with a value that is the same in some other persistent instance of the same class (or its subclasses). 
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+&lt;jdo&gt;
+  &lt;package name="test"&gt;
+    &lt;class name="A"&gt;
+      &lt;extension vendor-name="objectdb" key="index" value="f0" /&gt;
+      &lt;extension vendor-name="objectdb" key="unique-index" value="f1" /&gt;
+    &lt;/class&gt;
+  &lt;/package&gt;
+&lt;/jdo&gt;
+</pre>
+
+<p style="margin-bottom: 0px;">
+Simple indexed fields (as shown above) can have any of the following types:
+<ul style="margin-top: 4px; margin-bottom: 4px;">
+<li>embedded value types:
+<ul type="square">
+<li>
+primitive type (<code>boolean</code>, <code>byte</code>, <code>short</code>, <code>char</code>, <code>int</code>, <code>long</code>, <code>float</code> or <code>double</code>)
+</li>
+<li>
+embedded wrapper (<code>Boolean</code>, <code>Byte</code>, <code>Short</code>, <code>Character</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code> or <code>Double</code>)
+<li>
+embedded <code>java.lang.String</code>
+</li>
+<li>
+embedded <code>java.util.Date</code>
+</li>
+</ul>
+<li>
+external (non embedded) reference of any type
+</li>
+</ul>
+
+<p>
+There are two types of indexes: <i>value indexes</i> for value type fields, and <i>reference indexes</i> for non embedded reference fields.
+Value indexes manage a reversed list of persistent objects for every value in the indexed field. Both equality (<code>==</code>, <code>!=</code>) and comparison (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>) queries are supported by value indexes. Reference indexes manage a reversed list of persistent objects for every reference in the indexed field. Only equality (<code>==</code>, <code>!=</code>) queries are supported by reference indexes. 
+
+<p>
+Fields of value types (primitive types, wrapper types, String and Date) are embedded by default, but if, for instance, a String field is defined as non embedded, an index on that field is a reference index. In that case equality queries will check reference equality (as <code>==</code> operator in Java) and not value equality (as the <code>equals(</code>...<code>)</code> method).  
+
+<p>
+A reference field cannot have a direct index if it is defined as embedded (because the referenced objects are embedded and do not have object IDs). However, in this case, the fields of the embedded object can have indexes, as shown in the following metadata:    
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+&lt;jdo&gt;
+  &lt;package name="test"&gt;
+    &lt;class name="B"&gt;
+      &lt;field name="f0" embedded="true" /&gt;
+      &lt;extension vendor-name="objectdb" key="index" value="f0.x" /&gt;
+      &lt;field name="f1" embedded="true" /&gt;
+      &lt;extension vendor-name="objectdb" key="index" value="f1.y.z" /&gt;
+    &lt;/class&gt;
+  &lt;/package&gt;
+&lt;/jdo&gt;
+</pre>
+
+<p>
+Field <code>f0</code> holds a reference to a persistent object containing a persistent field named <code>x</code>. Because an <code>x</code> value is stored directly in every instance of <code>B</code> (field <code>f0</code> is embedded), field <code>x</code> can have an index as a direct field of <code>B</code> (reference index or value index according to its type). This can be extended further to nested embedded objects as demonstrated by field <code>f1</code>. 
+
+<p>
+Indexes can also be applied to embedded array and collection fields to accelerate <code>contains(</code>...<code>)</code> queries. Arrays of value types (including embedded wrappers, strings and dates) get value indexes, and array of reference types get reference indexes. The same is true with collections, except that the types of the elements must be declared explicitly using <code>element-type</code> attributes because it is not specified in the Java code.    
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+&lt;jdo&gt;
+  &lt;package name="test"&gt;
+    &lt;class name="C"&gt;
+      &lt;field name="f0"&gt;
+        &lt;collection element-type="int" /&gt;
+      &lt;/field&gt;
+      &lt;extension vendor-name="objectdb" key="index" value="f0" /&gt;
+      &lt;field name="f1"&gt;
+        &lt;collection element-type="java.lang.String" /&gt;
+      &lt;/field&gt;
+      &lt;extension vendor-name="objectdb" key="unique-index" value="f1" /&gt;
+      &lt;field name="f2"&gt;
+        &lt;collection element-type="B" /&gt;
+      &lt;/field&gt;
+      &lt;extension vendor-name="objectdb" key="index" value="f2" /&gt;
+      &lt;field name="f3"&gt;
+        &lt;collection element-type="B" embedded-element="true" /&gt;
+      &lt;/field&gt;
+      &lt;extension vendor-name="objectdb" key="index" value="f3.x" /&gt;
+    &lt;/class&gt;
+  &lt;/package&gt;
+&lt;/jdo&gt;
+</pre>
+
+<p>
+For fields <code>f0</code> and <code>f1</code>, which are collections of values, value indexes are declared. For field <code>f2</code>, which is a collection of external references, a reference index is declared. Field <code>f3</code>, which is a collection of embedded objects, cannot have a direct index, but fields of its embedded elements, like <code>x</code>, can have an index, as demonstrated above.
+
+<!--
+<h3>The Index Rebuilder Tool</h3>
+
+<p>
+Setting indexes for a new class that does not have persistent instances stored in the database yet requires only JDO metadata declarations. However, if the class has persistent instances stored in the database, the index becomes active only by running the Index Rebuilder tool on the database (in order to collect index information for the existing class instances), otherwise it is ignored by ObjectDB. You can run the Index Rebuilder from the Explorer, as explained in <a href='../chapter3/index.html#3.2'>section 9.4</a>, or from your application by calling the <code>Utilities.startIndexBuilder(</code>...<code>)</code> static method: 
+
+<pre>
+import com.objectdb.Utilities;
+    :	
+    :	
+  // Rebuild the index on field 'x' of class 'Point': 
+  Thread thread1 = Utilities.startIndexBuilder(pm, Point.class, "x");
+
+  // Rebuild all the indexes of class 'Point': 
+  Thread thread2 = Utilities.startIndexBuilder(pm, Point.class, null);
+
+  // Rebuild all the indexes of all the classes: 
+  Thread thread3 = Utilities.startIndexBuilder(pm, null, null);
+</pre>
+
+<p>
+The first argument to <code>Utilities.startIndexBuilder(</code>...<code>)</code> (<code>pm</code> in the code above) is a <code>PersistenceManager</code> instance that represents the database whose index or indexes should be rebuilt. The <code>Thread</code> instance returned from <code>Utilities.startIndexBuilder(</code>...<code>)</code> may be used to manipulate the index rebuilder thread (i.e. to change priority, to wait until it finishes, and so on).
+-->
+<p>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

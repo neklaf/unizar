@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.0 Transitional//EN'>
+
+<html>
+<head>
+	<title>ObjectDB for Java/JDO - Change History</title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+
+<h1>ObjectDB for Java/JDO - Change History</h1>
+
+<h2>Version 1.03 - Dec 12, 2004</h2>
+<ul style='margin-right:0; padding-right:0;'>
+<li>
+Fixed a bug in using null values in indexes (reported by Christophe Darville).
+</li><li>
+Fixed a bug in executing a multiple variables query in the Explorer (reported by Keitaro Yukawa) 
+</li><li>
+Fixed a bug in recovery after a call to System.exit(...) during commit (reported by Miika Hannus).   
+</li><li>
+Fixed a bug in loading some default package classes using the Explorer (reported by Xiu Yi Huang)
+</li><li>
+Fixed a bug in deleting persistent objects during the transaction in which they became persistent (reported by Miika Hannus).   
+</li><li>
+Fixed a bug in using persistent objects as query parameters in client-server mode (reported by Marco Santos).   
+</li></ul>
+
+<h2>Version 1.02 - Sep 27, 2004</h2>
+<ul style='margin-right:0; padding-right:0;'>
+<li>
+Fixed a memory leak when using the object names extension (reported by Bruno Davanzo).
+</li><li>
+Fixed an internal ArrayIndexOfBoundsException (reported by Normand Fortier).
+</li><li>
+Fixed a bug in managing persistent class's no-arg constructor containing retrieve operations (reported by Normand Fortier).
+</li><li>
+Fixed some bugs in the new query management algorithm of version 1.01 (reported by Christophe Darville and David Baker).
+</li><li>
+Fixed a bug in loading classes using the Explorer (reported by Keitaro Yukawa).
+</li></ul>
+
+<h2>Version 1.01 - Sep 9, 2004</h2>
+<ul style='margin-right:0; padding-right:0;'><li>
+Added client support to the free edition and to the embedded database edition.
+</li><li>
+Improved cache management and improved memory management in executing queries.
+</li><li>
+Fixed a bug in writing nested embedded objects (reported by Paul Gullidge).
+</li><li>
+Fixed bugs in using indexes: indexes on collections and arrays of strings, handling "this.field &gt; value" expressions and using non ASCII characters in string indexes (reported by Boris Katok).
+</li><li>
+Fixed a bug in cleaning temporary files (reported by Boris Katok).
+</li><li>
+Fixed a ClassCastException bug on commit (reported by Bruno Davanzo).
+</li><li>
+Fixed a StackOverflowError bug on commit (reported by Bruno Davanzo and Christophe Darville).
+</li><li>
+Fixed a deadlock when using multiple databases simultaneously (reported by Boris Katok).
+</li></ul>
+
+<h2>Version 1.0 - Jul 8, 2004</h2>
+<ul style='margin-right:0; padding-right:0;'><li>
+Added documentation (developer's guide) in PDF format.   
+</li><li>
+Added a new tool for rebuilding database indexes.   
+</li><li>
+Added support for automatic reconnection of a client after disconnecting by the server due to inactivity timeout (replacing the "Broken Pipe" exception).   
+</li><li>
+Added support for deleting persistent objects using the query results viewer in the Explorer.   
+</li><li>
+Fixed a client-server cache problem in queries on modified objects (reported by Yechiel Banchik).
+</li><li>
+Fixed a bug in iteration over a remote result collection (reported by Christophe Darville).
+</li><li>
+Fixed a bug in displaying roots in the Explorer (reported by Arvid Normann Nielsen).
+</li><li>
+Fixed a bug in unique indexes (reported by Lee Chalupa).
+</li><li>
+Fixed a bug in viewing objects in the Explorer after schema evolution (reported by Kevin Cox).
+</li><li>
+Fixed a bug in enhancement of a class with hundreds of persistent fields (reported by Michel Guillaume).
+</li><li>
+Fixed a bug in querying boolean fields with indexes (reported by Normand Fortier).
+</li><li>
+Fixed a bug in running the database garbage collector (reported by Christophe Darville).
+</li><li>
+Fixed a bug in processing queries that contain methods on indexed fields (reported by Normand Fortier).
+</li><li>
+Fixed a bug in indexes on hierarchy of classes (reported by Christophe Darville).
+</li><li>
+Fixed a bug in tracking changes in embedded fields of an object that is retrieved using a default fetch group field (reported by Kevin Cox).
+</li><li>
+Fixed a bug in indexes on hierarchy of classes (reported by Christophe Darville).
+</li><li>
+Fixed a bug in setting a default value in a persistent field without accessing its current value (reported by Russ Jackson).
+</li><li>
+Fixed concurrent thread synchronization bugs (reported by Michel Guillaume).
+</li><li>
+Fixed a bug in mapping object IDs in large databases (reported by Bruno Davanzo and David Baker).
+</li><li>
+Fixed a bug in filtering non candidate class instances when using an index of a super class in a query (reported by Normand Fortier).
+</li></ul>
+
+<h2>Version 1.0-RC2 - Feb 16, 2004</h2>
+<ul style='margin-right:0; padding-right:0;'><li>
+Improved checking of 'persistence-capable-superclass' in enhancement (reported by David Baker).
+</li><li>
+Changed static initializer enhancement to follow the JDO specification (reported by Matthew Strayer).    
+</li><li>
+Fields whose type is a system interface are now embedded by default.    
+</li><li>
+Fixed a bug in enhancement of clone (reported by Matthew Strayer)
+</li><li>
+Fixed a bug in opening the explorer by double click on an odb file located on Windows desktop.
+</li><li>
+Fixed a problem in starting explorer.exe in some environments (reported by Jonathan Caspi).
+</li><li>
+Fixed memory leak problems (reported by Daniel Carda, Christophe Darville and  David Baker).
+</li><li>
+Fixed a bug in using contains in queries with multiple &amp;&amp; constraints (reported by Normand Fortier).
+</li><li>
+Fixed ClassLoader conflicts in executing JDOQL on the server (reported by Christophe Darville).
+</li><li>
+Fixed lock and deadlock problems (reported by Christophe Darville and ChengPing Wu).
+</li><li>
+Fixed a bug (ArrayIndexOutOfBoundException) in transaction commit (reported by David Baker).
+</li><li>
+Fixed a bug in using serialization with embedded persistent objects (reported by Christophe Darville).
+</li><li>
+Fixed a bug in modifying a non default fetch group persistent field and then accessing it for the first time in that transaction (reported by Christophe Darville).
+</li><li>
+Fixed a bug in tracking changes in embedded objects when references fields of persistence capable types are in the default fetch group (reported by Christophe Darville).
+</li> 
+ 
+</li></ul>
+
+<h2>Version 1.0-RC1 - Nov 25, 2003</h2>
+<ul style='margin-right:0; padding-right:0;'><li>
+Improved cache management in client server mode and in embedded mode.
+</li><li>
+Improved server edition - new configuration, new documentation, support for running the server as a Java application or as a Windows Tray icon.   
+</li><li>
+Added support for NetBeans internal execution.   
+</li><li>
+Improved Explorer dialog boxes - new file manager, new color chooser. 
+</li><li>
+Fixed a performance bug in object retrieval (reported by Paul Gullidge). 
+</li><li>
+Fixed a bug in viewing TreeSet and TreeMap containing embedded objects in the Explorer, when the classpath is not defined (reported by Daniel Carda). 
+</li><li>
+Fixed a bug in obtaining an Extent for a class with subclasses, after deleting all the instances of that Extent (reported by Rafael Buchbinder). 
+</li><li>
+Fixed a bug in queries on non Extent collections containing objects that are not instances of the candidate class (reported by Paul Gullidge). 
+</li><li>
+Fixed a bug in deleting and renaming classes in the Explorer (reported by Lee Chalupa). 
+</li><li>
+Fixed a bug in a single class enhancement (reported by Itay Even Hen and Eyal Barzilai). 
+</li></ul>
+
+<h2>Version 0.99&nbsp;&nbsp;-&nbsp;&nbsp;Oct 3, 2003</h2>
+<ul style='margin-right:0; padding-right:0;'><li>
+New documentation - chapters 1-7 of the developer's guide.    
+</li><li>
+Added support for JDK 1.3 and IBM J9 on PocketPC (thanks to Rene Morschhauser).    
+</li><li>
+Removed old JDO behavior, modifying non private persistent fields to private on enhancement (caused IDEs to report errors on field access).       
+</li><li>
+Improved exception manager and error messages.     
+</li><li>
+Improved and enhanced sample programs.    
+</li><li>
+Fixed a bug in viewing fields of interface types in the Explorer (reported by David Baker).
+</li><li>
+Fixed a bug in viewing TreeSet and TreeMap with user defined comparator in the Explorer.
+</li><li>
+Changed persistent fields of Object and interface types to be non embedded by default.    
+</li><li>
+Fixed a bug in database page allocations (reported by Rene Morschhauser).    
+</li><li>
+Fixed a bug in cleaning heavy transactions (reported by David Baker).
+</li><li>
+Fixed a bug in modifying persistent TreeMap fields (reported by Rafael Buchbinder).
+</li><li>
+Fixed a bug in executing complex hashCode() methods when loading elements of persistent HashSet and HashMap fields from the database (reported by David Baker).
+</li><li>
+Fixed a bug in serialization of persistent collection fields (reported by Shai Nagar).
+</li><li>
+Fixed a bug in enhancement of serializable persistent classes (reported by Rafael Buchbinder).
+</li><li>
+Fixed a memory leakage when closing the PersistenceManager (reported by Mark Salamon).
+</li><li>
+Fixed a bug in allocation of database pages (reported by Paul Martin).
+</li><li>
+Fixed a bug in deletion of objects from a large extent (reported by Paul Martin).
+</li><li>
+Fixed the format of ObjectDB distribution zip to be opened in Windows XP using compressed zipped folders (reported by Dan Givaty).
+</li><li>
+Fixed a bug in enhancement of hierarchy of classes, in which the super class has a persistent field whose type is one of its non direct subclasses (reported by Shai Nagar).
+</li></ul>
+
+<h2>Version 0.98&nbsp;&nbsp;-&nbsp;&nbsp;Jul 21, 2003</h2>
+<ul><li>
+Fixed a bug in finding persistent classes in web applications.
+</li><li>
+Fixed a bug in finding classes during JDO enhancement in some environments.
+</li><li>
+Added a JDO web application demo (the guest book sample).  
+</li><li>
+Updated the JDO directory demo to support client-server mode.
+</li></ul>
+
+<h2>Version 0.97&nbsp;&nbsp;-&nbsp;&nbsp;Jun 3, 2003</h2>
+<ul><li>
+Fixed a bug in the JDO database explorer when working with null references to
+persistent classes with no objects (reported by Tshitshi Kia Ntoni).  
+</li><li>
+Fixed a bug with references to deleted objects in the JDO database explorer. 
+</li><li>
+Improved support for java.util.Collection in the JDO database explorer.
+</li><li>
+Fixed a bug in JDO enhancement and JDO metadata loading,
+when ObjectDB and JDO jar files are loaded from the jre/lib/ext/ directory
+(reported by Ralf Funk).
+</li><li>
+Fixed a bug in viewing active transaction changes in javax.jdo.Extent. 
+</li><li>
+Fixed a bug in calling JDOHelper.getObjectID(...) from the jdoPostLoad() method.
+</li></ul>
+
+<h2>Version 0.96&nbsp;&nbsp;-&nbsp;&nbsp;May 11, 2003</h2>
+<ul><li>
+Fixed a bug in JDO enhancement in a path with spaces
+(reported by Ron Ruffin). 
+</li><li>
+Improved support for loading new Java classes into the database explorer.
+</li><li>
+Fixed a bug in storing large embedded arrays
+(reported by Tomer Berznichky). 
+</li><li>
+Fixed a problem in compareTo(...) on elements of persistent TreeSet.
+</li><li>
+Added support for the new JDO 1.01 naming method for JDO metadata,
+using package.jdo
+</li></ul>
+
+<h2>Version 0.95&nbsp;&nbsp;-&nbsp;&nbsp;Apr 15, 2003</h2>
+<ul>
+<li>First public beta of ObjectDB for Java/JDO</li>
+</ul>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

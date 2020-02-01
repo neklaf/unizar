@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+  <title>
+  ObjectDB for Java/JDO Samples
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li, td {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<h1>ObjectDB for Java/JDO - Sample Programs</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The <b>samples</b> directory contains four sample programs. Two programs (Hello World and JDO Person) serve as introductory samples, and are discussed in chapter 2 of the
+<a href='../../docs/manual/index.html' target='_top'>developer's guide</a>.
+The other two sample programs present more advanced issues in working with ObjectDB.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<h2>Overview</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The following table includes a brief overview of each sample program:
+
+<!-- Table Begin -->
+<p>
+<table width='95%' align='center' border='1' cellpadding='2' cellspacing='0'>
+<tr bgcolor='#e0e0e0'>
+	<td align='center' width='120'>Sample</td>
+	<td align='center'>Overview</td>
+	<td align='center'>Links</td>
+</tr>
+
+<!-- Hello World -->
+<tr>
+<td valign='top'>
+Hello World
+</td>
+<td valign='top'
+	style='text-align: justify; padding-left: 8px; padding-right: 8px;'>
+This sample program manages a list of strings in the database. It is not JDO portable (because it uses some ObjectDB extensions), but it is a good sample to start with, because of its simplicity .
+</td>
+<td valign='top'>
+  <table><tr>
+  	<td align='left'>
+  	  <a href='../../docs/manual/chapter2/index.html#2.1'
+         target='content'>Doc</a>
+    </td>
+    <td align='left'>
+      <a href='../helloworld/' target='content'>Files</a>
+    </td>
+  </tr></table>  
+</td>
+</tr>
+
+<!-- JDO Person -->
+<tr>
+<td valign='top'>
+JDO Person
+</td>
+<td valign='top'
+	style='text-align: justify; padding-left: 8px; padding-right: 8px;'>
+This is a simple JDO portable program, which uses a single persistent class <code>Person</code>, to store and retrieve objects representing persons.
+</td>
+<td valign='top'>
+  <table><tr>
+  	<td align='left'>
+  	  <a href='../../docs/manual/chapter2/index.html#2.2'
+         target='content'>Doc</a>
+    </td>
+    <td align='left'>
+      <a href='../jdo-person/' target='content'>Files</a>
+    </td>
+  </tr></table>  
+</td>
+</tr>
+
+<!-- JDO Directory -->
+<tr>
+<td valign='top'>
+JDO Directory
+</td>
+<td valign='top'
+	style='text-align: justify; padding-left: 8px; padding-right: 8px;'>
+The JDO Directory demo is an advanced sample, consists of four programs (steps) for management of a hierarchical directory of links. It demonstrates ObjectDB and JDO capabilities in console and in GUI applications, using multiple persistent classes, inheritance and relationships.
+</td>
+<td valign='top'>
+  <table><tr>
+  	<td align='left'>
+  	  <a href='jdo-directory/index.html'
+         target='content'>Doc</a>
+    </td>
+    <td align='left'>
+      <a href='../jdo-directory/' target='content'>Files</a>
+    </td>
+  </tr></table>  
+</td>
+</tr>
+
+<!-- Web GuestBook -->
+<tr>
+<td valign='top'>
+Web GuestBook
+</td>
+<td valign='top'
+	style='text-align: justify; padding-left: 8px; padding-right: 8px;'>
+The Web GuestBook sample manages an online guestbook. It demonstrates using ObjectDB and JDO in a minimal web application with a single JSP page. Understanding this sample requires at least basic familiarity with Java web applications.
+</td>
+<td valign='top'>
+  <table><tr>
+  	<td align='left'>
+  	  <a href='jdo-guestbook/index.html'
+         target='content'>Doc</a>
+    </td>
+    <td align='left'>
+      <a href='../jdo-guestbook/' target='content'>Files</a>
+    </td>
+  </tr></table>  
+</td>
+</tr>
+
+
+<!-- Table End -->
+</table>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<h2>Running the Sample Programs</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Running the Web GuestBook sample requires a Java enabled web server, as Tomcat (which is integrated in some Java IDEs) or Resin. More details are provided in the      
+<a href='jdo-guestbook/index.html' target='content'>documentation</a> of that sample.
+
+<p>
+The other sample programs can be run in any environment in which Java is installed (the free edition requires Java 1.4.*). The sources are already compiled, so to run a sample program, just add ObjectDB and JDO jar files (from the lib directory) to the classpath, and run the main class (the main class is <b>HelloWorld</b> is the first program, and <b>eMain</b> in all the other programs). If you need step by step instructions for your specific Java environment, please start with the documentation of the       
+<a href='jdo-directory/index.html' target='content'>JDO Directory</a> sample.
+
+<p>
+Note: Project files for JBuilder (<b>*.jpx</b>) and for JCreator (<b>*.jcw</b> and <b>*.jcp</b>) are provided. <br>Please ignore these files if you are using some other IDE.    
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr>
+<font size='-1'>
+Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.
+</font>
+
+<p>
+</body>
+</html>

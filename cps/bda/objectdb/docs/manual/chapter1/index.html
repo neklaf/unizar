@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - Introduction
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 1 - About ObjectDB</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+ObjectDB for Java/JDO is a powerful Object Database Management System (ODBMS) written entirely in Java.  It can efficiently handle a wide range of database sizes, from a few KBs to hundreds of GBs. It has a small footprint, high performance, and a flexible architecture (1-Tier, 2-Tier or N-Tier). 
+
+<p>
+This introductory chapter contains the following sections:
+<div class='jumpers'>
+  <p>
+  <a href='#1.1'>1.1&nbsp;&nbsp;Why ObjectDB?</a>
+  <p>
+  <a href='#1.2'>1.2&nbsp;&nbsp;ObjectDB Operating Modes</a>
+  <p>
+  <a href='#1.3'>1.3&nbsp;&nbsp;ObjectDB Editions</a>
+  <p>
+  <a href='#1.4'>1.4&nbsp;&nbsp;ObjectDB in Web Applications</a>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='1.1'></a>
+<h2>1.1&nbsp;&nbsp;Why ObjectDB?</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+There are many benefits to using ObjectDB. This section describes some of them.
+
+<h3>ObjectDB is an Object Database</h3>
+<p>
+Developing object oriented applications with ObjectDB is easier and much more effective because the content of the database is application objects. Whereas, working with a Relational Database Management Systems (RDBMS) is difficult because developers must deal with tables, records and SQL in addition to the application's classes and objects. 
+
+<h3>ObjectDB is JDO Compliant</h3> 
+<p>
+ObjectDB is compliant with the JDO (Java Data Objects) standard, developed by Sun. Therefore, applications that use ObjectDB are not tied to ObjectDB. Switching to another JDO compliant database (for example, as a result of special customer needs or requests) can be done without modifying code. The JDO API is available today for most relational database systems (RDBMS), e.g. Oracle, IBM DB2 and Microsoft SQL Server. In addition, by using JDO you are backed up by a large community that's expanding every day. JDO already has websites, a forum, a mailing list, consulting and training companies, and many books dedicated to it.
+
+<h3>ObjectDB is Easy to Use</h3> 
+<p>
+You can be productive with ObjectDB in a very short time, because it is very easy to use. In fact, it is the easiest JDO implementation. Most other JDO implementations map classes and objects to tables and records in an RDBMS. Using such mapping makes it possible to write clean Java code, but still requires some familiarity with relational database concepts and the tables and columns defined for an application in order to perform the necessary mappings and maintain them throughout the life of a system. With ObjectDB, you can forget relational databases, tables, records, fields, SQL, JDBC and drivers, and focus your attention on the application's Java classes exclusively. 
+
+<h3>ObjectDB is Very Portable</h3> 
+<p>
+ObjectDB is written entirely in Java. Therefore, it can run on any environment that supports Java. You can easily move your application to other platforms (Windows, Unix, Macintosh and almost any other platform), simply by taking the ObjectDB and JDO jar files with you. You can even run your application on small devices like PocketPC (if Java is installed), because ObjectDB has a very small footprint (about 300KB at runtime).  
+
+<h3>ObjectDB is Very Fast</h3> 
+<p>
+ObjectDB has very good performance. It can store and retrieve thousands of objects per second. Even queries on millions of objects are very fast, when proper indexes are defined.
+
+<h3>ObjectDB has a Database Explorer</h3>
+<p>
+The ObjectDB database explorer, which is provided with every ObjectDB product, is a sophisticated tool that enables browsing, querying, editing and the construction of Java objects in a database, visually, without writing a single line of code. Many object databases do not have a visual browsing tool at all, or have a very limited one. Keep in mind that database programming without the ability to explore, query and edit the database content visually, is like developing software without a debugger.   
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='1.2'></a>
+<h2>1.2&nbsp;&nbsp;ObjectDB Operating Modes</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+ObjectDB for Java/JDO can operate in one of two modes: embedded mode or client server mode.
+
+<h3>Client-Server Mode</h3>
+<p>
+In client-server mode, an ObjectDB server is running on a separate JVM (in a separate process). Applications running on different JVM's communicate with the database server using TCP/IP. Many client processes (running on the same machine or on different machines) can safely access the database simultaneously, because the database server manages an automatic lock mechanism.  
+
+<h3>Embedded Mode</h3>
+<p>
+In embedded mode, the application uses ObjectDB as a class library, so no server process is needed in another JVM. The database file is accessed directly by the application's process, using JDO and ObjectDB jar files that are added to the application's classpath. In this mode, the database file is locked for a single process, and multi user support may be achieved only by multithreading (several threads) in a single process.
+
+<h3>Client-Server Mode vs. Embedded Database Mode</h3>
+<p>
+The embedded database mode is easier to use and faster because no server has to run in the background and no TCP/IP communication is needed. Adding JDO and ObjectDB jar files to the classpath is the only requirement. Client-Server mode, however, is useful for accessing remote databases and for database access of several processes simultaneously. Moving from one mode to the other can be done simply by changing a single string (the connection URL), because the JDO API is the same for both modes. 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='1.3'></a>
+<h2>1.3&nbsp;&nbsp;ObjectDB Editions</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+ObjectDB for Java/JDO is available in three editions:
+Free, Embedded and Server.
+<ul>
+<li>
+<p><b>Server Database Edition</b><br>
+This is the most advanced edition. It supports all ObjectDB features and both the embedded database operating mode as well as the client-server operating mode. 
+</li>
+<li>
+<p><b>Embedded Database Edition</b><br>
+This edition is limited to the embedded database operating mode. Otherwise, it is very similar to the server database edition. 
+</li>
+<li>
+<p><b>Free Database Edition</b><br>
+This is a special edition for personal non-commercial use. It is based on the embedded database edition, but has some additional restrictions and limitations. </li>
+</ul>
+
+<p>
+This developer's guide is for all ObjectDB editions. Therefore, you can assume that every feature described in this guide is supported by all the editions, unless explicitly specified otherwise.   
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='1.4'></a>
+<h2>1.4&nbsp;&nbsp;ObjectDB in Web Applications</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+ObjectDB for Java/JDO is especially designed for Java web applications. Each one of the ObjectDB editions can be easily integrated into any JSP/servlet web application. The <a href="http://www.objectdb.com/database/jdo/web-demo/"> <!-- "!'! --> <b>JDO Guest Book</b></a> sample provided with ObjectDB demonstrates a simple web application that uses ObjectDB and JDO. 
+
+<h3>Operating Modes</h3>
+<p>
+Naturally, the server database edition, supporting client-server mode, provides the highest flexibility for web applications and advanced features, like remote database administration and manipulation. However, web applications may also use the ObjectDB embedded database edition and the free database edition in embedded mode as long as the database and the web server are on the same machine. Because embedded database mode supports multithreading, and the web server handles simultaneous requests using threads, even in embedded database mode, multi user access to a database is supported. 
+
+<h3>JDO Web Hosting</h3>
+<p>
+The embedded database mode is especially important if you are considering deploying a Java web application on a virtual web hosting server rather than on a dedicated server. Using embedded mode, it is easy to deploy a web application with ObjectDB on any web hosting system that supports servlets/JSP. Just drop the JDO and ObjectDB jar files into the WEB-INF/lib directory of the web application, and database support (in embedded mode) is made available.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

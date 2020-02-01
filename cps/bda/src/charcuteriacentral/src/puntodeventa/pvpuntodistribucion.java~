@@ -1,0 +1,89 @@
+/*
+ * PuntoDistribucion.java
+ *
+ * Created on 12 de febrero de 2005, 14:07
+ */
+
+/**
+ *
+ * @author  Administrador
+ */
+package PuntoDeVenta;
+
+import java.util.*;
+
+public class PVPuntoDistribucion {
+    
+    protected int zona;
+    protected String localizacion;
+    protected String tfno;
+    /*
+    protected List empleados;  //referencia a la clase Empleados
+    protected List vehiculos;
+    protected List pedidosAProv;
+    protected List ofertas;
+    */
+    protected List clientes;
+    
+    /** Creates a new instance of PuntoDistribucion */
+    public PVPuntoDistribucion() {
+    }
+    
+    public PVPuntoDistribucion(int zona, String localizacion, String tfno, /*List empleados, List vehiculos, List pedidosAProv, List ofertas,*/ List clientes) {
+        this.zona = zona;
+        this.localizacion = localizacion;
+        this.tfno = tfno;
+        /*
+        this.empleados = empleados;
+        this.vehiculos = vehiculos;
+        this.pedidosAProv = pedidosAProv;
+        this.ofertas = ofertas;
+        */
+        this.clientes = clientes;
+    }
+    
+    public void setZona (int zona){
+        this.zona = zona;
+    }
+    
+    public int getZona (){
+        return this.zona;
+    }
+    
+    public void setLocalizacion (String localizacion){
+        this.localizacion = localizacion;
+    }
+    
+    public String getLocalizacion (){
+        return this.localizacion;
+    }
+    
+    public void setTfno (String tfno){
+        this.tfno = tfno;
+    }
+    
+    public String getTfno (){
+        return this.tfno;
+    }
+    /*
+    public void addEmpleado(PVEmpleados nuevo_empleado){
+        this.empleados.add(nuevo_empleado);
+    }
+    
+    public void addVehiculo(PVVehiculos nuevo_vehiculo){
+        this.vehiculos.add(nuevo_vehiculo);
+    }
+    
+    public void addPedido(PVPedidosAProveedor nuevo_pedido){
+        this.pedidosAProv.add(nuevo_pedido);
+    }
+    
+    public void addOferta(PVOfertas nueva_oferta){
+        this.ofertas.add(nueva_oferta);
+    }
+    */
+    public void addCliente(PVClientes nuevo_cliente){
+        this.clientes.add(nuevo_cliente);
+    }
+    
+}

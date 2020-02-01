@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - A Quick Tour
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 2 - A Quick Tour</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+This chapter introduces basic ObjectDB and JDO concepts, using two sample programs. We start with the <b>HelloWorld</b> sample program, which is not JDO portable because it uses some ObjectDB extensions, but it is a good sample to start with because of its simplicity:
+
+<div class='jumpers'>
+  <p>
+  <a href='#2.1'>2.1&nbsp;&nbsp;Hello World</a>
+</div>
+
+<p>
+We then proceed with the <b>JDO Person</b> sample program, which demonstrates the process of building a minimal JDO portable application, step by step:  
+
+<div class='jumpers'>
+  <p>
+  <a href='#2.2'>2.2&nbsp;&nbsp;Defining a Persistent Class</a>
+  <p>
+  <a href='#2.3'>2.3&nbsp;&nbsp;Storing and Retrieving Objects</a>
+  <p>
+  <a href='#2.4'>2.4&nbsp;&nbsp;On The Fly JDO Enhancement</a>
+</div>
+
+<p>
+Both sample programs are contained in ObjectDB's <b>samples</b> directory.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='2.1'></a>
+<h2>2.1&nbsp;&nbsp;Hello World</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The HelloWorld sample program manages a list of strings in the database. Each time the program is run another string is stored in the database and all the strings in the database are printed to standard output.
+
+<p>
+The output of the first run is expected to be:
+<pre>
+Hello World 0
+</pre>
+
+<p>
+The output of the second run is expected to be:
+
+<pre>
+Hello World 0
+Hello World 1
+</pre>
+
+<p>
+After two runs, the database contains a list of two strings "Hello World 0" and "Hello World 1".
+
+<h3>Program Source Code</h3> 
+
+<p>
+The program consists of a single source file, <b>HelloWorld.java</b>, containing a single class: 
+
+<pre>
+ 1  // A simple program that manages a list of strings in a database.
+ 2  
+ 3  import java.util.*;
+ 4  import javax.jdo.*;
+ 5  import com.objectdb.Utilities;
+ 6  
+ 7  public class HelloWorld {
+ 8  
+ 9      public static void main(String[] args) {
+10          
+11          // Create or open a database and begin a transaction:
+12          PersistenceManager pm =
+13              Utilities.getPersistenceManager("hello.odb");
+14          pm.currentTransaction().begin();
+15         
+16          // Obtain a persistent list:
+17          ArrayList list;
+18          try {
+19              // Retrieve the list from the database by its name:
+20              list = (ArrayList)pm.getObjectById("Hello World", true);
+21          }
+22          catch (JDOException x) {
+23              // If not found - construct and store a new list:
+24              list = new ArrayList();
+25              Utilities.bind(pm, list, "Hello World");
+26          }
+27          
+28          // Add a new string to the persistent list:
+29          list.add("Hello World " + list.size());
+30          
+31          // Display the content of the persistent list:
+32          Iterator itr = list.iterator();
+33          while (itr.hasNext())
+34              System.out.println(itr.next());
+35 
+36          // Close the transaction and the database:
+37          pm.currentTransaction().commit();
+38          pm.close();
+39     }
+40 }
+</pre>
+
+<h3>How it works</h3>
+<p>
+
+<table width='100%' cellspacing='0'>
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 3-5</td>
+<td valign='top'><p>
+Three import statements are required: for Java collections (line 3), for JDO (line 4) and for ObjectDB extensions (line 5).
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 11-14</td>
+<td valign='top'><p>
+A <code>PersistenceManager</code> instance representing a local database file, <b>hello.odb</b>, is obtained using the <code>Utilities.getPersistenceManager(</code>...<code>)</code> static method (lines 12-13). If a database file does not exist in that path, a new database file is created automatically.
+<br>
+To enable updating the content of the database, a transaction is begun (line 14), because in JDO, operations that affect the content of the database must always be contained within an active transaction.      
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 16-26</td>
+<td valign='top'><p>
+The data structure of this program is an <code>ArrayList</code> containing <code>String</code> instances. ObjectDB, as a pure object database, can simply store a memory data structure in the database as is.
+If the database is not empty (not the first run), a previously stored <code>ArrayList</code> instance is expected to be retrieved from the database by its name "Hello World" using the <code>getObjectById(</code>...<code>)</code> method (line 20). You can ignore the second argument of the <code>getObjectById(</code>...<code>)</code> method that is discussed in <a href='../chapter6/index.html#6.3'>section 6.3</a>.
+If such an <code>ArrayList</code> is not found in the database (on the first run for example), an exception is thrown and a new empty <code>ArrayList</code> instance is created (line 24). The new <code>ArrayList</code> instance is bound to the database with the name "Hello World", using the <code>Utilities.bind(</code>...<code>)</code> static method (line 25). An object bound to the database during an active transaction, is expected to be stored physically in the database when the transaction is committed (line 37).
+<p>
+Note: Memory objects that represent database objects (like <code>list</code> in this example) are called <i>persistent objects</i>. An object retrieved from the database is always persistent. A new object becomes persistent when it is bound to the database.
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 28-29</td>
+<td valign='top'><p>
+A new string ("Hello World 0", "Hello World 1", etc.) is added to the <code>ArrayList</code>. 
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 31-34</td>
+<td valign='top'><p>
+The <code>ArrayList</code> is iterated (by a standard Java iterator) and its content is printed. 
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 36-38</td>
+<td valign='top'><p>
+On transaction commit (line 37), new persistent objects (like a new <code>ArrayList</code> that becomes persistent in line 25), and modified persistent objects (like a retrieved <code>ArrayList</code>, which is modified in line 29) are automatically stored in the database. Objects in memory that are reachable from persistent objects (like the <code>String</code> instance, which is added in line 29) are also stored in the database automatically.
+<br>
+At the end, the database is closed (line 38). Usually, it is best to close the database in a <code>finally</code> block, as demonstrated in the next sample program, to ensure database closing in every situation, including exceptions.
+</td>
+</tr>
+</table>
+
+<h3>ObjectDB Extensions</h3>
+<p>
+The <code>com.objectdb.Utilities</code> class implements ObjectDB extensions. Storing an <code>ArrayList</code> directly in the database with a specified name (line 25), is supported by ObjectDB but not by JDO. In JDO, only instances of special user defined classes (which are called <i>persistent classes</i>) can be stored in the database directly, and other types (such as Java collections) can be stored only as fields of persistent classes. In addition, objects are stored without names in JDO. Another extension is used to obtain a PersistenceManager instance (line 13). Obtaining a PersistenceManager in a portable JDO way, which is slightly more complicated, is demonstrated in the next program sample.
+<p>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='2.2'></a>
+<h2>2.2&nbsp;&nbsp;Defining a Persistent Class</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+As noted above, in a portable JDO application, only instances of persistent classes are stored directly in the database. Predefined Java types like <code>ArrayList</code>, <code>String</code> and <code>Date</code> can be stored in the database only as fields of persistent classes.
+
+<h3>Persistent Classes</h3>
+
+<p>
+Persistent classes are user defined classes whose instances can be stored in the database using JDO. The JDO specification refers to persistent classes as <i>persistence capable classes</i>, but both terms are equivalent.
+<a href='../chapter3/index.html'>Chapter 3</a> is dedicated to persistent classes.
+
+<p style="margin-bottom: 0px;">
+To become persistent, a class has to:
+<ul style="margin-top: 4px;">
+<li>be declared in a JDO metadata file in XML format.</li> 
+<li>include a no-arg constructor.</li>
+<li>implement the <code>javax.jdo.spi.PersistenceCapable</code> interface.</li>
+</ul>
+<p>
+
+<p>
+The <code>PersistenceCapable</code> interface includes more than 20 abstract methods, so implementing it explicitly is far from trivial. Therefore, persistent classes are usually defined without implementing that interface explicitly, and a special tool, the <i>JDO enhancer</i>, adds the implementation automatically.
+
+<h3>The Person Persistent Class</h3>
+
+<p>
+The following <code>Person</code> class serves as a persistent class: 
+
+<pre>
+ 1 // The Person persistent class
+ 2 
+ 3 public class Person {
+ 4 
+ 5     // Persistent Fields:
+ 6     private String firstName;
+ 7     private String lastName;
+ 8     private int age;
+ 9     
+10     // Constructors:
+11     public Person() {}
+12     public Person(String firstName, String lastName, int age) {
+13         this.firstName = firstName;
+14         this.lastName = lastName;
+15         this.age = age;
+16     }
+17     
+18     // String Representation:
+19     public String toString() {
+20         return firstName + " " + lastName + " (" + age + ")";
+21     }
+22 }
+</pre>
+
+<p>
+The <code>Person</code> class is an ordinary Java class with a no-arg constructor (line 11). If it is declared as persistent in a JDO metadata file, it can easily become persistent using the JDO enhancer.      
+
+<h3>JDO Metadata</h3>
+
+<p>
+Every persistent class must be declared as persistent in a special XML file, called the JDO metadata file. The <code>Person</code> class must be declared in a metadata file named either <b>package.jdo</b> (generic name) or <b>Person.jdo</b> (name of the class). More details about metadata files, including their location and naming rules, are provided in <a href='../chapter4/index.html'>chapter 4</a>, which is devoted to JDO metadata.
+
+<p>
+The following <b>package.jdo</b> file is located in the same directory as <b>person.class</b>: 
+
+<pre>
+ 1 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+ 2 &lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd"&gt;
+ 3 
+ 4 &lt;jdo&gt;
+ 5     &lt;package name=""&gt;
+ 6         &lt;class name="Person" /&gt;
+ 7     &lt;/package&gt;
+ 8 &lt;/jdo&gt;
+</pre>
+ 
+<p>
+Every JDO metadata file contains a single <code>&lt;jdo&gt;</code> element (lines 4-8). Each package is represented by a <code>&lt;package&gt;</code> sub element (e.g. lines 5-7) containing <code>&lt;class&gt;</code> elements for all the persistent classes in the package (e.g. line 6). Both <code>&lt;package&gt;</code> and <code>&lt;class&gt;</code> elements must have a <code>name</code> attribute. An empty name is specified for the <code>&lt;package&gt;</code> element to represent the default package (in which the class is defined). More information can be provided in the metadata file (as shown in <a href='../chapter4/index.html'>chapter 4</a>), but this minimal form is sufficient here.   
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='2.3'></a>
+<h2>2.3&nbsp;&nbsp;Storing and Retrieving Objects</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The <b>JDO Person</b> sample manages a collection of <code>Person</code> instances in the database.
+<br>
+Three arguments have to be specified in order to run the program <b>Main</b> class:
+
+<pre>
+> java Main George Bush 57
+</pre>
+
+<p>
+Each time the program is run, another <code>Person</code> instance is constructed (according to the specified first name, last name and age) and stored in the database.
+
+<h3>Program Source Code</h3> 
+
+<p>
+In addition to the two files from the previous section (<b>Person.java</b> and <b>package.jdo</b>), the program contains the following <b>Main.java</b> source:
+
+<pre>
+ 1 // Main of the JDO Person sample.
+ 2 
+ 3 import java.util.*;
+ 4 import javax.jdo.*;
+ 5 
+ 6 public class Main {
+ 7 
+ 8     public static void main(String[] args) {
+ 9         
+10         // Check the arguments:
+11         if (args.length != 3)
+12         {
+13             System.out.println(
+14                "Usage: java Main &lt;first name&gt; &lt;last name&gt; &lt;age&gt;");
+15             System.exit(1);
+16         }
+17
+18         try {				         
+19             // Obtain a database connection:
+20             Properties properties = new Properties();
+21             properties.setProperty(
+22                 "javax.jdo.PersistenceManagerFactoryClass",
+23                 "com.objectdb.jdo.PMF");
+24             properties.setProperty(
+25                 "javax.jdo.option.ConnectionURL", "persons.odb");
+26             PersistenceManagerFactory pmf =
+27                 JDOHelper.getPersistenceManagerFactory(properties);
+28             PersistenceManager pm = pmf.getPersistenceManager();
+29         
+30             try {
+31                 // Begin the transaction:
+32                 pm.currentTransaction().begin();
+33             
+34                 // Create and store a new Person instance:
+35                 Person person = new Person(
+36                     args[0], args[1], Integer.parseInt(args[2]));
+37                 pm.makePersistent(person);
+38     
+39                 // Print all the Persons in the database:
+40                 Extent extent = pm.getExtent(Person.class, false);
+41                 Iterator itr = extent.iterator();
+42                 while (itr.hasNext())
+43                     System.out.println(itr.next());
+44                 extent.closeAll();
+45
+46                 // Commit the transaction:
+47                 pm.currentTransaction().commit();
+48             }
+49             finally {
+50                 // Close the database and active transaction:
+51                 if (pm.currentTransaction().isActive())
+52                     pm.currentTransaction().rollback();
+53                 if (!pm.isClosed())
+54                     pm.close();
+55             }
+56         }
+57
+58         // Handle both JDOException and NumberFormatException:
+59         catch (RuntimeException x) {
+60             System.err.println("Error: " + x.getMessage());
+61         }
+62     }
+63 }
+</pre>
+
+<h3>How it works</h3>
+<p>
+
+<table width='100%' cellspacing='0'>
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 3-4</td>
+<td valign='top'><p>
+Two import statements are required: for Java collections (line 3), and for JDO (line 4). ObjectDB extensions are not used in this program.
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 19-28</td>
+<td valign='top'><p>
+A <code>PersistenceManager</code> instance representing a local database file, <b>person.odb</b>, is obtained using JDO portable code (slightly more complicated than the equivalent code in <a href='#2.1'>section 2.1</a>). A detailed explanation of this code is provided in <a href='../chapter5/index.html'>Chapter 5</a>.
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 31-32</td>
+<td valign='top'><p>
+A transaction on the database is begun.
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 34-37</td>
+<td valign='top'><p>
+A new <code>Person</code> instance is constructed (lines 35-36) and becomes persistent (line 37). The <code>makePersistent(</code>...<code>)</code> method binds the object to the database, but without specifying a name (as done by the <code>bind(</code>...<code>)</code> method in <a href='#2.1'>section 2.1</a>). This is the JDO portable way to add objects to the database. The new persistent object is physically stored in the database only when the transaction is committed (line 47).
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 39-44</td>
+<td valign='top'><p>
+The <code>Person</code> instances in the database are represented in JDO by an <code>Extent</code> instance (line 40). The second argument of the <code>getExtent(</code>...<code>)</code> method indicates whether the <code>Extent</code> should also represent instances of subclasses (changing <code>false</code> to <code>true</code> has no effect here, because <code>Person</code> has no subclasses). The <code>Extent</code> of the class can be iterated using an ordinary Java <code>Iterator</code> (lines 41-43). Unlike ordinary Java iteration, when the end of <code>Extent</code> iteration is reached it is recommended to use <code>closeAll()</code> (line 44) or <code>close(</code>...<code>)</code> to release resources.
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 46-47</td>
+<td valign='top'><p>
+Updates are physically applied to the database when the transaction is committed (line 47).
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 49-55</td>
+<td valign='top'><p>
+The database is closed (lines 53-54) in a <code>finally</code> block, to ensure it is always properly closed, even in case of an error (when an exception is thrown). If a transaction is still active (e.g. exception is thrown in lines 34-44), it should be ended before closing the database. Ending the transaction with <code>rollback()</code> discards all the changes done during its activity (line 52). 
+</td>
+</tr>
+
+<tr>
+<td width='100' valign='top'><p>&nbsp;&nbsp;Lines 58-61</td>
+<td valign='top'><p>
+When working with JDO, instances of <code>JDOException</code> and its subclasses may be thrown as exceptions. Because <code>JDOException</code> is a subclass of <code>RuntimeException</code>, the compiler does not enforce the <code>throws</code> declaration if a <code>catch</code> block does not exist in the method. Therefore, extra caution is required by the developer to make sure that at some level a proper catch block (like in lines 58-61) exists. 
+</td>
+</tr>
+</table>
+
+<p>
+An attempt to run the program now results in the following error:
+
+<pre>
+Error: Class 'Person' is not PersistenceCapable
+</pre>
+
+<p>
+Something is still missing to make this program work - the JDO enhancement.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='2.4'></a>
+<h2>2.4&nbsp;&nbsp;On The Fly JDO Enhancement</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+On the fly JDO enhancement is the easiest way to use the JDO enhancer. To use it, an additional main class, named <code>eMain</code> (enhancer Main) is defined: 
+<p>
+
+<pre>
+ 1 // An enhancer main class for the JDO Person Sample
+ 2 
+ 3 public class eMain {
+ 4 
+ 5     public static void main(String[] args) {
+ 6         
+ 7         // Enhance the Person class if necessary:
+ 8         com.objectdb.Enhancer.enhance("Person");
+ 9 
+10         // Now run the real main:
+11         Main.main(args);
+12     }
+13 }
+</pre>
+
+<p>
+Class <code>eMain</code> replaces the original <code>Main</code> class as a program entry point at development time. It starts by enhancing necessary classes (line 8). JDO enhancement includes modifying class files in order to add implementation of the <code>PersistenceCapable</code> interface, where necessary, at the byte code level. When this process is completed the real <code>main</code> is called (line 11). Of course, this arrangement should only be used during development. Eventually, the application should be deployed with ready to use enhanced classes and without the <code>eMain</code> class.
+
+<p>
+The enhancer should print the following message (unless <b>Person.class</b> is already enhanced):
+
+<pre>
+[ObjectDB Enhancer] 1 new persistence capable class has been enhanced.
+</pre>
+
+<p>
+If you see the following message, something went wrong: 
+
+<pre>
+[ObjectDB Enhancer] 1 new persistence aware class has been enhanced.
+</pre>
+
+<p>
+The enhancer did not find the metadata file in which <code>Person</code> is declared as persistent. Therefore, it was not able to enhance the Person class as a persistent class (a persistence <b>aware</b> class is not a persistence <b>capable</b> class). Additional information on JDO enhancement, persistence capable classes and persistence aware classes is provided in <a href='../chapter3/index.html#3.3'>section 3.3</a>.
+
+<p>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

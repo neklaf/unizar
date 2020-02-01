@@ -1,0 +1,62 @@
+
+PARA EL CÓDIGO
+--------------
+
+Copia toda la carpeta Aplicaciones a c:\.
+
+
+
+PARA LA BD
+----------
+
+En mi sistema, las carpetas de bd estaban en: C:\Aplicaciones\app_bda\.
+Quedando de la siguiente manera:
+  C:\Aplicaciones\app_bda\DBCentral
+  C:\Aplicaciones\app_bda\DBPuntoDeVenta
+
+Para mayor facilidad, te recomiendo que las guardes con esta ruta, si no, haz los siguientes pasos:
+
+Dependiendo de dónde guardes la bd deberás cambiar las rutas hasta la bd en el archivo jdo.properties de las carpetas 
+\Central y \PuntoDeVenta de cada aplicación. Es decir, cambiarlo dos veces en cada aplicación que se vaya a lanzar.
+
+Además de ese archivo, deberás cambiar el archivo server.xml de la carpeta de la bd. En él se indica dónde está guardada 
+tu bd para porder buscarla por el sistema.
+
+
+
+EJECUTAR LA APLICACIÓN
+----------------------
+
+1.- LANZAR LA BD
+
+Si estuvieras interesado en usar los script (sólo si trabajas bajo windows) "Lanzar Servidor.bat" y "Parar Servidor.bat" 
+deberías de cambiarle las rutas a las bases de datos si no lo has copiado en el lugar por defecto. Ábrelo y modifícalo.
+
+Antes de ejecutar la aplicación, recuerda lanzar el servidor de bd. Mediante los script o en línea de comandos. Un ejemplo de cómo hacerlo 
+si usas la línea de comandos es lo siguiente:
+
+- "java -cp c:\aplicaciones\app_bda\DBCentral\odbse.jar com.objectdb.Server -conf c:\aplicaciones\app_bda\DBCentral\server.xml start"
+Aquí estamos lanzando el servidor de bd de nuestra sede central.
+
+Lanzar la BD de la sede central y del punto de venta.
+
+2.- EJECUTAR LA APLICACION
+
+Descripción de directorios:
+ --> charcuteriaCentral: es la aplicación para la sede central.
+ --> charcuteriaCentralInicializa: rellena la BD central y el punto de venta con algunos valores.
+ --> charcuteriaPV: es la aplicación para el punto de venta.
+ --> charcuteriaPVInicializa: rellena la BD de Punto de Venta con pedidos a proveedores y pedidos de clientes.
+
+Para ejecutar la aplicación se puede usar el archivo ejecutarAplicacion.bat si estás trabajando bajo windows. Hace 
+lo siguiente:
+ a.- Añade al classpath las librerías necesarias para hacer un enhancer
+ b.- Hace el enhancer con la base de datos de tu sistema
+ c.- Lanza la aplicación
+
+El orden de ejecución correcto de las aplicaciones debería de ser:
+  Para la primera vez -> charcuteriaCentralInicializa ; charcuteriaPVInicializa ; charcuteriaCentral || charcuteriaPV
+
+  Para la siguiente vez -> charcuteriaCentral || charcuteriaPV
+
+  Para reinicializar la BD -> charcuteriaCentralInicializa ; charcuteriaPVInicializa ; charcuteriaCentral || charcuteriaPV

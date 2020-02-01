@@ -1,0 +1,76 @@
+/*
+ * PedidosAProveedor.java
+ *
+ * Created on 14 de febrero de 2005, 21:22
+ */
+
+package MantenimientoDB;
+
+import java.util.*;
+import ConexionBD.*;
+import PuntoDeVenta.PVPedidosAProveedor;
+import javax.jdo.*;
+/**
+ *
+ * @author  Ignacio Carcas
+ */
+public class PedidosAProveedor {
+    
+    /** Creates a new instance of PedidosAProveedor */
+    public PedidosAProveedor() {
+    }
+    
+    /**
+     *Se encarga de buscar los Pedidos a Proveedor con unos parámetros
+     *@param zona: zona de la que se desean obtener los pedidos a proveedor. Si zona<2 o zona>Máximo número de BD, devuelve todos los pedidos a proveedor existentes
+     * @author Ignacio Carcas
+     */
+    public Vector buscar(int zona){
+        //Buscar en la BD de los nodos
+        Vector v = new Vector();
+        
+        int[] peticion = {zona};
+        if ((zona < 2)||(zona > new Utilities().obtenNumeroDB()) ){
+            peticion = null;
+        }
+        
+        PersistenceManager[] conexiones = new Utilities().obtenerConexiones(peticion);
+        if ((conexiones[0] != null)){
+            // Creamos un try-catch para comprobar que todo va bien en la consulta
+            Query query = null;
+            Collection result = null;
+            try{
+                int i,j;
+                if (zona == -1){
+                    // Si se quieren todos los pedidos a proveedor habrá que buscar en todas las BD menos en la central
+                    i = 1;
+                }else{
+                    // Buscaremos en la única que ha decidido buscar
+                    i = 0;
+                }
+                for (j=i;j<conexiones.length;j++){
+                    // Creamos la sentencia de consulta
+                    query = conexiones[j].newQuery(PVPedidosAProveedor.class);
+                    
+                    // Ejecutamos la sentencia pasándole los parámetros
+                    result = (Collection) query.execute();
+               
+                    v.addAll(result);
+                    
+                    query.close(result);
+                }
+                
+            }catch(Exception e){ 
+                System.out.println("Error consultando pedidos a proveedor: " + e.getMessage());
+                v = null;
+            }finally{
+                //new Utilities().ejecutaFinally(conexiones);
+            }
+        }else{
+            v = null; // Fallo en la conexión. 
+            System.err.println("¿Exiten pedidos a proveedor? Fallo en la conexión a la BD");
+        }
+        return (v);
+    }
+    
+}

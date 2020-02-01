@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - JDOQL Queries
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 7 - JDOQL Queries</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+There are various ways to retrieve objects from an ObjectDB database, as shown in <a href='../chapter6/index.html#6.3'>section 6.3</a>. An <code>Extent</code>, for instance, can be used to retrieve all the instances of a specified persistent class. When a more selective retrieval is needed, JDOQL (JDO Query Language) is used. JDOQL for JDO is like SQL for RDBMS. It provides object retrieval from the database according to a specified selection criteria, and iteration over the results in a specified order.
+
+<p>
+This chapter contains the following sections:
+<div class='jumpers'>
+  <p>
+  <a href='#7.1'>7.1&nbsp;&nbsp;Introduction to JDOQL</a>
+  <p>
+  <a href='#7.2'>7.2&nbsp;&nbsp;Query Filter Syntax</a>
+  <p>
+  <a href='#7.3'>7.3&nbsp;&nbsp;Using Parameters</a>
+  <p>
+  <a href='#7.4'>7.4&nbsp;&nbsp;Using Variables</a>
+  <p>
+  <a href='#7.5'>7.5&nbsp;&nbsp;Namespaces and Imports</a>
+  <p>
+  <a href='#7.6'>7.6&nbsp;&nbsp;Ordering the Results</a>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='7.1'></a>
+<h2>7.1&nbsp;&nbsp;Introduction to JDOQL</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p style="margin-bottom: 0px;">
+A basic JDOQL query has the following three components:
+<ul style="margin-top: 4px;">
+<li>A candidate collection containing persistent objects (usually an <code>Extent</code>)</li>
+<li>A candidate class (usually a persistent class)</li>
+<li>A filter, which is a boolean expression in a Java like syntax</li>
+</ul>
+
+<p>
+The query result is a subset of objects from the candidate collection that contains only the instances of the candidate class satisfying the given filter. In addition to these three main components, queries can include other optional components, such as parameters, variables and import and ordering expressions, which are discussed later in this chapter. 
+
+<p>
+
+<h3>A First Query</h3>
+
+<p> 
+The following query retrieves all the people whose age is 18 or older:
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= 18");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+Queries are represented by the <code>javax.jdo.Query</code> interface. A <code>Query</code> instance is constructed by one of the <code>PersistenceManager</code>'s <code>newQuery(</code>...<code>)</code> methods. For example, in the query above, the candidate class is <code>Person</code> and the filter is <code>"this.age >= 18"</code>. When a candidate collection is not specified explicitly, as it is in this query, the entire <code>Extent</code> of the candidate class is used, and the candidate collection contains all the non embedded instances of the candidate class. In such cases, if an <code>Extent</code> is not managed for the candidate class, the query is not valid.  
+
+<p>
+The <code>execute()</code> method compiles and runs the query. If there is no <code>age</code> field in class <code>Person</code> or if the field exists but its type cannot be compared with an <code>int</code> value, a <code>JDOUserException</code> is thrown. If the query compilation succeeds, the <code>Extent</code> of <code>Person</code> instances in the database is iterated object by object, and the filter is evaluated for every <code>Person</code> instance. The <code>this</code> keyword in the filter represents the iterated object. Only instances for which the evaluation of the filter expression is <code>true</code> are included in the result collection. If an index is defined for the <code>age</code> field (see <a href='../chapter4/index.html#4.5'>section 4.5</a>), iteration over the objects in the database would not be required, and the query would execute much faster. The <code>execute()</code> method returns a <code>Collection</code> instance, but its declared return type is <code>Object</code> (for future JDO extensions), so casting is required. 
+
+<p>
+Compilation and execution of queries can also be separated into two commands:
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= 18");
+  query.compile();
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+The <code>compile()</code> method checks the syntax of the query and prepares it for execution without executing it. In most cases, an explicit call to <code>compile()</code> is not needed, because when <code>execute()</code> is invoked it automatically compiles the query, if it has not been done so already.
+
+<h3>The Result Collection</h3>
+
+<p>
+The query result is represented by a <code>java.util.Collection</code> instance and managed like any ordinary Java collection. For example, the number of retrieved objects can be obtained using the <code>size()</code> method:
+ 
+<pre>
+  int count = result.size();
+</pre>
+
+<p>
+Iteration over the result collection is done by a
+<code>java.util.Iterator</code> instance:
+
+<pre>
+  Iterator itr = result.iterator();
+  while (itr.hasNext())
+    System.out.println(itr.next());
+</pre>
+
+<p>
+Similarly, other methods of <code>java.util.Collection</code> can be used on the result collection. There is, however, one important difference between the result collection and other Java collections. Rather than relying on the garbage collector to cleanup when the collection is no longer used, a result collection has to be closed explicitly. This is especially important in client server mode because the result collection on the client side may hold resources on the server side. The closing is performed using methods of the <code>Query</code> instance:
+
+<pre>
+  // Close a single result collection obtained from this query:
+  query.close(result);
+</pre>
+
+<pre>
+  // Close all the result collections obtained from this query:
+  query.closeAll();
+</pre>
+
+<p>
+The complete code for printing all the people whose age is 18 or older (using the <code>toString()</code> method of <code>Person</code>) might have the following structure:  
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= 18");
+  Collection result = (Collection)query.execute(); 
+  try {
+    Iterator itr = result.iterator();
+    while (itr.hasNext())
+      System.out.println(itr.next());
+  }
+  finally {
+    query.close(result);
+  } 
+</pre>
+
+<p>
+The <code>finally</code> block ensures result collection closing regardless of whether the operations succeeded or threw an exception. An exception is thrown on any attempt to use a closed result collection. 
+
+<h3>Query Construction</h3>
+
+<p>
+In most queries, the <code>Extent</code> of the candidate class is used as the candidate collection . A <code>Query</code> instance for this type of query can be obtained by one of the following two <code>newQuery(</code>...<code>)</code> forms:
+
+<pre>
+Query newQuery(Extent candidates, String filter)
+Query newQuery(Class cls, String filter) 
+</pre>
+
+<p>
+In the first form, the candidate class is automatically set to the class of the specified candidate <code>Extent</code>, and in the second form, the candidate collection is automatically set to the <code>Extent</code> of the specified candidate class (which also covers subclasses). The first form is slightly more flexible because it enables using an Extent with or without subclass support. 
+
+<p>
+There is another form of <code>newQuery(</code>...<code>)</code> for a case in which the candidate collection is a regular Java collection, rather than an <code>Extent</code>:   
+
+<pre>
+Query newQuery(Class cls, Collection candidates, String filter)
+</pre>
+
+<p>
+Querying a collection is less common than querying an <code>Extent</code>. It is useful for filtering a collection in memory, and for requerying the result of a previous JDOQL query.   
+
+<p>
+A query can also be executed without a filter. The result of such a query contains all the candidate objects that are instances of the candidate class. This may be useful, for instance, to obtain the number of objects of a specific class (an operation that is not supported directly by an <code>Extent</code>). The following forms of <code>newQuery(</code>...<code>)</code> are equivalent to the forms described above, but without a filter:   
+
+<pre>
+Query newQuery(Extent candidates);
+Query newQuery(Class cls);
+Query newQuery(Class cls, Collection candidates);
+</pre>
+
+<p>
+A <code>Query</code> instance can even be constructed by an empty newQuery() form:
+
+<pre>
+Query newQuery();
+</pre>
+
+<p>
+However, a candidate collection must be provided before query execution (explicitly or implicitly by specifying a candidate class), otherwise an execution of the query throws a <code>JDOUserException</code>.
+Query components that are not specified when invoking one of the <code>PersistenceManager</code> interface <code>newQuery</code> methods can be assigned later using methods in the <code>Query</code> interface itself:
+
+<pre>
+ void setClass(Class cls) 
+ void setCandidates(Collection pcs) 
+ void setCandidates(Extent pcs) 
+ void setFilter(String filter) 
+</pre>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='7.2'></a>
+<h2>7.2&nbsp;&nbsp;Query Filter Syntax</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+A query filter is a string containing a boolean expression in a Java like syntax. It has to be valid in the scope of the candidate class. For example, <code>"this.age >= 18"</code> is a valid filter if the candidate class contains a field with the name <code>age</code> and a type comparable to <code>int</code>. This section describes all the elements that can be used in a JDOQL query filter, except for parameters and variables that are discussed later in this chapter.  
+
+<p>
+
+<h3>Literals</h3>
+
+<p>
+All types of Java literals are supported by JDOQL, as demonstrated by the following table:
+
+<p>
+<table width='80%' align='center' border='1'
+	cellpadding='2' cellspacing='0'>
+<tr bgcolor='#e0e0e0'>
+	<td>&nbsp;&nbsp;&nbsp;Literal Type</td>
+	<td>&nbsp;&nbsp;&nbsp;Samples of valid literals in JDOQL</td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;int</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>2003, -127, 0, 0xFFFF, 07777</code>, ...</td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;long</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>2003L, -127L, 0L, 0xFFFFL, 07777L</code>, ...</td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;float</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>3.14F, 0f, 1e2f, -2.f, 5.04e+17f</code>, ...</td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;double</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>3.14, 0d, 1e2D, -2., 5.04e+17</code>, ...</td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;char</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>'x', '@', '\n', '\\', '\'', '\uFFFF'</code>, ...</td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;string</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>"", " ", "abcd\n1234"</code>, ...</td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;boolean</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>true, false</code></td>
+</tr><tr>
+	<td>&nbsp;&nbsp;&nbsp;reference</td>
+  <td>&nbsp;&nbsp;&nbsp;<code>null</code></td>
+</tr>
+</table>
+
+<p>
+As shown in the next section (<a href='#7.3'>section 7.3</a>), parameters could be used instead of constant literals to make queries more generic. Parameter values are provided when the query is executed so that the same query can be executed with different parameter values.
+
+<h3>The 'this' Keyword</h3>
+
+<p>
+During query evaluation, each object in the candidate collection that is an instance of the candidate class is evaluated by the filter. The evaluated object is represented in the filter by the keyword <code>this</code>, whose type is the candidate class. Usually <code>this</code> is used for accessing fields of the candidate object, but it can also be used to reference a candidate object in other operations, such as method calls and comparison expressions.
+
+<h3>Fields</h3>
+
+<p>
+Persistent fields of the candidate class play an important role in query filters. For instance, if a candidate class has a persistent field, <code>verified</code>, of <code>boolean</code> type, the expression <code>"this.verified"</code> is a valid query filter. It selects all the objects with the <code>true</code> value in that field. Other types of persistent fields can participate in queries in combination with comparison expressions, as in <code>"this.age&nbsp;>=&nbsp;18"</code>. The <code>this.</code> prefix can be omitted in Java, therefore, <code>"verified"</code> and <code>"age&nbsp;>=&nbsp;18"</code> are also valid filter expressions. Field accessing is not limited to the <code>this</code> reference. Persistent fields of any entity that represents a persistent object can be accessed. This includes fields of parameter objects and variable objects (parameters and variables are discussed later in this chapter). The expression <code>this.address.city</code> is also valid if the candidate class contains a persistent field <code>address</code> whose type is a persistent class with a persistent field <code>city</code>.
+<br>
+In Java, a <code>NullPointerException</code> is thrown on any attempt to access a field or a method using a <code>null</code> reference. JDOQL behavior is different. An attempt to access a field or invoke a method using a <code>null</code> reference results in a <code>false</code> evaluation for the containing expression but no exception is not thrown. Notice that the candidate object can still be included in the result collection if the failed expression is only a subexpression of the whole filter expression (for example, when the <code>||</code> operator is used). 
+
+<h3>Operators</h3>
+
+<h4>Comparison operators</h4>
+
+<p style="margin-bottom: 0px;">
+Comparison operators (<code>==, !=, &lt;, &gt;, &lt;=, &gt;=</code>) generate boolean expressions, which are very useful in queries. Comparison operators act in JDOQL as in Java, with a few exceptions:
+<ul style="margin-top: 4px;"><li>
+Equality operators (<code>==</code>, <code>!=</code>) compare the identity of  instances of user persistent classes (as in Java), but use the <code>equals(</code>...<code>)</code> method for system types (<code>String</code>, <code>Date</code>, <code>ArrayList</code>, ...). 
+</li><li>
+<code>String</code> instances can be compared using all six comparison operators. 
+</li><li>
+<code>Date</code> instances can be compared using all six comparison operators.  
+</li><li>
+Numeric wrapper types (<code>Byte</code>, <code>Short</code>, <code>Character</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>), as well as <code>BigInteger</code> and <code>BigDecimal</code> can participate in comparisons as if they were primitive numeric types (<code>byte</code>, <code>short</code>, <code>char</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>).
+</li></ul>
+
+<h4>Logical Operators</h4>
+
+<p>
+Logical operators (<code>&&</code>, <code>||</code>, <code>!</code>) generate complex boolean expressions out of simpler boolean expressions. These operators function in JDOQL exactly as they do in Java.
+
+<h4>Arithmetic Operators</h4>
+
+<p>
+In JDOQL, arithmetic operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) can be applied to numeric wrapper types (Byte, Character, Short, Integer, Long, Float, Double, and also BigInteger and BigDecimal). The concatenation operator '<code>+</code>' can only be applied to two strings, but not to a string and some other type as in Java. Besides that, their behavior is the same as in Java. 
+
+<h4>Bitwise Operators</h4>
+
+<p>
+Only the <code>~</code> operator is supported by JDOQL. Binary bitwise operators (<code>&</code>, <code>|</code>) are not supported.
+
+<h3>Methods</h3>
+
+<p>
+ObjectDB supports using any method that does not modify persistent objects, including instance methods and static methods. Notice, however, that the minimum requirement of JDO implementation includes support for two string methods (<code>startsWith</code> and <code>endsWith</code>), and two collection methods (<code>contains</code> and <code>isEmpty</code>, where <code>isEmpty()</code> also returns <code>true</code> when invoked on a <code>null</code> value). Therefore, using other methods in queries might be less portable. One of the useful string methods that is not supported by JDO 1.0 but supported in ObjectDB (and will be supported by JDO 2.0) is the <code>match(</code>...<code>)</code> method. It provides string comparison using regular expressions (a possible replacement to the like operator of SQL). To use methods of user defined classes in queries, the user code must be available. In embedded mode, user classes are always available. In client-server mode, on the other hand, the classes are usually available on the client side, but not on the server side. Therefore, to enable user defined methods in query execution on the server side, classes have to be added to the classpath of the server as well.
+
+<h3>Casting</h3>
+
+<p>
+Casting is also supported by JDOQL. If a <code>ClassCastException</code> occurs during evaluation the expression is evaluated as <code>false</code> but an exception is not thrown (similarly to handling <code>NullPointerException</code> by JDOQL, as explained above).     
+
+<h3>Gathering Elements</h3>
+
+<p>
+Usually, a query filter contains a combination of elements. For example:
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.setFilter("!this.children.isEmpty() && " +
+    "this.age - ((Person)this.children.get(0)).age &lt; 25");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+This query retrieves all the parents who are older than their older child by not more than 25 years (assuming the child at position 0 is the older child). Support of the <code>get(</code>...<code>)</code> method is an extension of ObjectDB, but all the other elements are standard JDOQL elements. A JDO portable version of this query is shown in <a href='#7.4'>section 7.4</a>. 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='7.3'></a>
+<h2>7.3&nbsp;&nbsp;Query Parameters</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Using parameters instead of literals produces more generic queries, which can be executed with different argument values. The role of parameters in JDOQL, however, is for much more than just making more generic queries. The only way to include objects with no literal representation in queries (as <code>Date</code> instances, and instances of user defined classes) is to use parameters. 
+
+<h3>Primitive Type Parameters</h3>
+
+<p>
+The first query in this chapter (in <a href='#7.1'>Section 7.1</a>) includes an <code>int</code> literal:
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= 18");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+The literal, <code>18</code>, can be replaced by a parameter, <code>age</code>, whose type is <code>int</code>: 
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= age");
+  query.declareParameters("int age");
+  Collection result1 = (Collection)query.execute(new Integer(18));
+  Collection result2 = (Collection)query.execute(new Integer(21));
+</pre>
+
+<p>
+Parameters are declared by the <code>declareParameters(</code>...<code>)</code> method, with a syntax that is similar to the syntax of parameter declarations in Java. The name of a parameter has to be a valid identifier in Java. Every parameter that is used in the filter has to be declared; otherwise, the compilation of the query fails. Notice that, in the above query, the <code>this.</code> prefix in <code>this.age</code> is required to distinguish the field from the parameter. This code demonstrates the execution of a query with two different arguments. An attempt to use the no-arg <code>execute()</code> method on a query with parameters throws a <code>JDOUserException</code>, because when a query is executed an argument has to be provided for each of its declared parameters. Wrapper values (<code>Boolean</code>, <code>Byte</code>, <code>Short</code>, <code>Character</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>) are used instead of primitive values because <code>execute(</code>...<code>)</code> only accepts Object arguments. 
+
+<h3>Reference Type Parameters</h3>
+
+<p>
+The following query retrieves all the children who were born in the third millennium:
+
+<pre>
+  Calendar calendar = Calendar.getInstance();
+  calendar.clear();
+  calendar.set(2000, 0, 1);
+  Date date = calendar.getTime(); 
+	
+  Query query = pm.newQuery(Person.class, "this.birthDate &gt;= date");
+  query.declareParameters("java.util.Date date");
+  Collection result = (Collection)query.execute(date);
+</pre>
+
+<p>
+The first four lines of code prepare  a <code>Date</code> instance representing the first day of the year 2000. The query is declared with a parameter <code>date</code> of type <code>Date</code>, and an argument for this parameter is provided when the query is executed. Class <code>Person</code> must have a persistent field with the name <code>birthDate</code> and type  <code>Date</code>. Otherwise, the query compilation fails. As explained in <a href='#7.2'>section 7.2</a>, the comparison of <code>Date</code> instances is supported by JDOQL. A full class name, <code>java.util.Date</code>, has to be specified in the parameter declaration, unless an import statement is used, as explained in <a href='#7.5'>section 7.5</a>.
+
+<p>
+<Code>Date</code> parameters are required to include <Code>Date</code> values in queries. String values, on the other hand, can be represented in queries by literals. Double quote characters are specified in Java strings using the <code>\"</code> sequence: 
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.firstName == \"Steve\"");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+Alternatively, the literal can be replaced by a parameter: 
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.firstName == firstName");
+  query.declareParameters("String firstName");
+  Collection result = (Collection)query.execute("Steve");
+</pre>
+
+<p>
+The parameter type can be specified here as <code>String</code> rather than as <code>java.lang.String</code> because classes of <code>java.lang</code> are automatically imported. More details can be found in <a href='#7.5'>section 7.5</a>.
+
+<p>
+Instances of user defined classes can also be used as parameters:  
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this != p1 && this != p2");
+  query.declareParameters("Person p1, Person p2");
+  Collection result = (Collection)query.execute(person1, person2);
+</pre>
+
+<p>
+With the above query, all the <code>Person</code> instances are retrieved, except the two <code>Person</code> instances that are specified as arguments. To execute the query, two <code>Person</code> arguments for the two declared parameters must be provided. Also, <code>person1</code> and <code>person2</code> must be instances of class <code>Person</code> (or its subclasses), otherwise the query execution throws a <code>JDOUserException</code>.
+
+<h3>Array and Maps of Parameters</h3>
+
+<p>
+Queries with up to three parameters can be executed using the following <code>Query</code> interface methods: 
+
+<pre>
+ void execute() 
+ void execute(Object p1) 
+ void execute(Object p1, Object p2) 
+ void execute(Object p1, Object p2, Object p3) 
+</pre>
+
+<p>
+For example, all the people in a range of ages can be retrieved by:
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareParameters("int age1, int age2");
+  query.setFilter("this.age &gt;= age1 && this.age &lt;= age2");
+  Collection result =
+    (Collection)query.execute(new Integer(20), new Integer(60));
+</pre>
+
+<p>
+The same query can be executed using other <code>Query</code> interface methods:
+
+<pre>
+ void executeWithArray(Object[] parameters) 
+ void executeWithMap(Object[] parameters) 
+</pre>
+
+<p>
+Arguments can be passed in an array:
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareParameters("int age1, int age2");
+  query.setFilter("this.age &gt;= age1 && this.age &lt;= age2");
+  Integer[] args = new Integer[] { new Integer(20), new Integer(60) };
+  Collection result = (Collection)query.executeWithArray(args);
+</pre>
+
+<p>
+Arguments can also be passed in a map (by names rather than by order):
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareParameters("int age1, int age2");
+  query.setFilter("this.age &gt;= age1 && this.age &lt;= age2");
+  Map args = new HashMap();
+  args.put("age1", new Integer(20));
+  args.put("age2", new Integer(60));
+  Collection result = (Collection)query.executeWithMap(args);
+</pre>
+
+<p>
+Arrays and maps of parameters are useful mainly in executing queries with more than three parameters.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='7.4'></a>
+<h2>7.4&nbsp;&nbsp;Query Variables</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p style="margin-bottom: 0px;">
+There are two types of variables in JDOQL:
+<ul style="margin-top: 4px; margin-bottom: 0px;">
+<li>Bound variables, whose main role is in querying collection fields</li> 
+<li>Unbound variables, which serve as a replacement for the JOIN operation of SQL</li>
+</ul>
+<p>
+Support of bound variables is mandatory, but support of unbound variables is optional in JDO. ObjectDB supports both types of variables.
+
+<h3>The contains(...) Method</h3>
+
+<p>
+Bound variables in JDOQL go side by side with the <code>contains(</code>...<code>)</code> method, which is one of the few methods that every JDO implementation should support (see <a href='#7.2'>section 7.2</a>). The following query, which does not use variables but does use <code>contains(</code>...<code>)</code>, retrieves all the people who live in cities from a specified collection <code>myCities</code>:
+
+<pre>
+  Query query = pm.newQuery(
+    Person.class, "cities.contains(this.address.city)");
+  query.declareParameters("Collection cities");
+  Collection result = (Collection)query.execute(myCities);
+</pre>
+
+<p>
+The <code>contains(</code>...<code>)</code> method is used mainly in queries with bound variables, but as shown above, it is also useful in queries without variables. The <code>contains(</code>...<code>)</code> method works in JDOQL as in Java, except that JDOQL returns <code>false</code> when <code>contains(</code>...<code>)</code> is called on a <code>null</code> reference, while Java throws a <code>NullPointerException</code>. 
+
+<h3>Bound Variables</h3>
+
+<p>
+A bound variable is an identifier that appears in the query filter as an argument of <code>contains(</code>...<code>)</code>, and all its other appearances in the filter (usually at least one additional appearance) are in subexpressions that are ANDed with that <code>contains(</code>...<code>)</code> clause. In ObjectDB the order of the ANDed expressions is not important, but according to JDO, the <code>contains(</code>...<code>)</code> clause must come first (i.e. on the left side), before any other appearance of the variable in the query filter. The following query retrieves people with at least one child living in London:
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareVariables("Person child");
+  query.setFilter(
+    "this.children.contains(child) && child.address.city == \"London\"");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+A variable <code>child</code> whose type is <code>Person</code> is declared by the <code>declareVariables(</code>...<code>)</code> method. Variables (as well as parameters) can be declared before or after setting the query filter, but they must be declared before the query is compiled and executed, otherwise the query compilation fails because of unknown identifiers. 
+
+<p>
+When an AND expression that includes a bound variable is evaluated, all the possible values for that variable are considered. The expression is evaluated as 
+<code>true</code> if there is at least one variable value for which the expression value is <code>true</code>. In the query above, when a candidate <code>Person</code> is evaluated as <code>this</code>, only <code>child</code> values contained in its <code>children</code> collection are considered, because of the <code>contains(</code>...<code>)</code> clause. If there is such a <code>child</code> for whom the expression on the right side of the <code>&&</code> operator is <code>true</code>, the entire AND expression is evaluated to <code>true</code>, and the candidate object is added to the result collection.
+
+<h3>Negative Contains(...)</h3>
+
+<p>
+The next query retrieves all the parents who are older than their older child by not more than 25 years (a similar query, but not JDO portable, is shown in <a href='#7.2'>section 7.2</a>):
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareVariables("Person child");
+  query.setFilter(
+    "this.children.contains(child) && this.age - child.age &lt;= 25"
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+A single child satisfying the <code>"this.age - child.age &lt;= 25"</code> expression is sufficient to include <code>this</code> in the result collection. On the other hand, to retrieve only parents with <b>all</b> children satisfying some condition, a trick has to be used. The following query uses De Morgan's rules to retrieve all the people who are older than every one of their children by not more than 25 years (including people without any children):
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareVariables("Person child");
+  query.setFilter(
+    "!(this.children.contains(child) && this.age - child.age &gt; 25)"
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+The expression in parenthesis refers to the people who are older than at least one of their children by more than 25 year. But because of the <code>!</code> operator, eventually, the result collection contains all the people but them, i.e. all the people who are older than every one of their children by not more than 25 years.
+
+<h3>Nested Bound Variables</h3>
+
+<p>
+In some cases, more than one <code>contains(</code>...<code>)</code> clause is needed. The following query retrieves all the people that have at least one child with a cat:
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareVariables("Person child; Pet pet;");
+  query.setFilter(this.children.contains(child) && " +
+  	"child.pets.contains(pet) && pet.isCat()");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+When more than one variable is declared, a semicolon is used as a separator. A semicolon at the end of the string is optional. Multiple variables are required above because two collection fields are involved, <code>children</code> and <code>pets</code>. Only <code>Person</code> instances, with a combination of <code>child</code> and <code>pet</code> satisfying the AND expression, are included in the result collection. Because <code>child</code> is dependent on <code>this</code> and <code>pet</code> is dependent on <code>child</code>, the three subexpressions must be ordered as shown above, in order to make the query JDO portable.  
+
+<h3>Unbound Variables</h3>
+
+<p>
+Unbound variables are variables that are not constrained by a <code>contains(</code>...<code>)</code>. The following query retrieves all the people except the oldest and the youngest:
+
+<pre>
+  Query query = pm.newQuery(Person.class);
+  query.declareVariables("Person p1; Person p2");
+  query.setFilter("this.age &gt; p1.age && this.age &lt; p2.age"); 
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+The type of every unbound variable is expected to be a persistent class with <code>Extent</code> support (not necessarily the candidate class as in this example). The variable can have as values any objects in the <code>Extent</code>. The result collection contains all the instances of the candidate collection (excluding non instances of the candidate class), for which there is at least one combination of variables that makes the query filter evaluate to <code>true</code>.
+
+<p>
+Unbound variables are supported by ObjectDB, but considered optional by JDO. 
+Queries with unbound variables are similar to JOIN queries in SQL because every combination of variables has to be checked for every candidate object. Just like  JOIN queries in SQL, queries with unbound variables may become very slow, so caution is needed when using them.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='7.5'></a>
+<h2>7.5&nbsp;&nbsp;Import Declarations</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Names of classes are used in many components of JDOQL, including the declaration of parameters and variables, when casting and when accessing static methods and fields (supported by ObjectDB as an extension to JDO). As in Java, full class names that include a package name can always be used. The package name can be omitted only for classes in the <code>java.lang</code> package (e.g. <code>String</code> instead of <code>java.lang.String</code>), for classes that are in the same package as the candidate class, and when a proper import declaration is used.
+
+<p>
+The following query, previously discussed in <a href='#7.3'>section 7.3</a>, serves as a good example:
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.birthDate &gt;= date");
+  query.declareParameters("java.util.Date date");
+  Collection result = (Collection)query.execute(date);
+</pre>
+
+<p>
+The full name of class <code>Date</code> is specified because that class is in neither package <code>java.lang</code> nor the package of the candidate class. Using a short class name (without the package name) causes a query compilation error unless a proper <code>declareImports(</code>...<code>)</code> declaration exists, as shown next:
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.birthDate &gt;= date");
+  query.declareImports("import java.util.Date");
+  query.declareParameters("Date date");
+  Collection result = (Collection)query.execute(date);
+</pre>
+
+<p>
+Multiple import statements can also be declared:
+
+<pre>
+  query.declareImports(
+    "import java.util.*; import directory.pc.Category;");
+</pre>
+
+<p>
+The argument of <code>declareImports(</code>...<code>)</code> is expected to use the Java syntax for <code>import</code> statements. Multiple import statements are separated by semicolons. A semicolon at the end of the string is optional.
+
+<p>
+Of all the JDOQL components, import declarations are the most rarely used because most of the classes in queries belong to <code>java.lang</code> or to the package of the candidate class and because classes of other packages can be specified by their full name without using an import declaration.     
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='7.6'></a>
+<h2>7.6&nbsp;&nbsp;Ordering the Results</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+A result collection can be ordered by a query. For example: 
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= 18");
+  query.setOrdering("this.age ascending");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+As a result of calling <code>setOrdering(</code>...<code>)</code>, an ordered collection is returned by the query. Iterating over the result collection using <code>Iterator</code> returns people in order from younger to older. As usual, the <code>this.</code> prefix can be omitted. The <code>ascending</code> keyword specifies ordering from low to high. To order the results in reverse order, the <code>descending</code> keyword can be used:
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= 18");
+  query.setOrdering("this.age descending");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+Iteration over the new result collection returns people in order from older to younger. Note that when <code>setOrdering(</code>...<code>)</code> is not used, ObjectDB orders result collections by object IDs from lower to higher, which means that objects will be returned in the order in which they were added to the database (but this behavior is not specified by JDO).  
+
+<p>
+The syntax of ordering expressions is similar to the syntax of query filters, except that variables and parameters cannot be used, and the type of each ordering expression is some comparable type rather than <code>boolean</code>. Valid types include numeric primitive types (<code>byte</code>, <code>short</code>, <code>char</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>), numeric wrapper types (<code>Byte</code>, <code>Short</code>, <code>Character</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>), <code>String</code>, <code>Date</code>, <code>BigInteger</code> and <code>BigDecimal</code>.
+
+<p>
+Multiple ordering expressions can also be specified:
+
+<pre>
+  Query query = pm.newQuery(Person.class, "this.age >= 18");
+  query.setOrdering("age descending, children.size() ascending");
+  Collection result = (Collection)query.execute();
+</pre>
+
+<p>
+The primary ordering is <code>age</code> and the secondary ordering is <code>children.size()</code> (which is supported by ObjectDB as an extension to JDO). Results are ordered by the primary ordering expression. The secondary ordering expression is only needed when two or more result instances share the same primary ordering evaluation. 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

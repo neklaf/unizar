@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - Persistent Classes
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 3 - Persistent Classes</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Persistent Classes are user defined classes whose instances can be stored in a database using JDO. Instances of these classes that represent objects in the database are called <i>persistent objects</i> or <i>persistent instances</i>. Objects that do not represent anything in the database (including instances of persistent classes that live only in memory) are called <i>transient objects</i> or <i>transient instances</i>. The JDO specification refers to persistent classes as <i>persistence capable classes</i>.
+
+<p>
+This chapter contains the following sections:
+<div class='jumpers'>
+  <p>
+  <a href='#3.1'>3.1&nbsp;&nbsp;Persistent Classes</a>
+  <p>
+  <a href='#3.2'>3.2&nbsp;&nbsp;Persistent Fields and Types</a>
+  <p>
+  <a href='#3.3'>3.3&nbsp;&nbsp;JDO Enhancement</a>
+  <p>
+  <a href='#3.4'>3.4&nbsp;&nbsp;InstanceCallbacks</a>
+  <p>
+  <a href='#3.5'>3.5&nbsp;&nbsp;Automatic Schema Evolution</a>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='3.1'></a>
+<h2>3.1&nbsp;&nbsp;Persistent Classes</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Only classes that represent data in the database should be declared persistent because persistent classes have some overhead. Classes that are not declared persistent are called <i>transient classes</i> and can have only transient objects as instances. 
+
+<p style="margin-bottom: 0px;">
+To become persistent, a class has to:
+<ul style="margin-top: 4px;">
+<li>be declared in a JDO metadata file in XML format.</li> 
+<li>include a no-arg constructor.</li>
+<li>implement the <code>javax.jdo.spi.PersistenceCapable</code> interface.</li>
+</ul>
+ 
+<p>
+The <code>PersistenceCapable</code> interface includes more than 20 abstract methods, so implementing it explicitly is not trivial. It is easier to define a class without implementing the <code>PersistenceCapable</code> interface, and have the JDO Enhancer add the interface implementation automatically, as explained in <a href='#3.3'>section 3.3</a>. ObjectDB's  JDO Enhancer also adds a no-arg constructor if it is missing, so out of the three requirements described above, developers only have to provide the JDO metadata declaration. <a href='../chapter4/index.html'>Chapter 4</a> explains how to write the JDO metadata declaration.
+
+<p>
+Aside from the requirements described above, a persistent class is like any other Java class. It can include constructors, methods, fields, attributes (<code>final</code>, <code>abstract</code>, <code>public</code>), inheritance (even from a non persistent class), interface implementations, inner classes, etc. The class members (constructors, methods and fields) can have any access modifiers (i.e. public, protected, package or private).
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='3.2'></a>
+<h2>3.2&nbsp;&nbsp;Persistent Fields and Types</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Storing a persistent object in the database does not store methods and code. Only the state of the object as reflected by its <i>persistent fields</i> is stored. Persistent fields, by default, are all the fields that are not defined as <code>static</code>, <code>final</code> or <code>transient</code>, and have <i>persistent types</i>. Every persistent class is a persistent type. The following predefined system types are also persistent types:
+
+<ul>
+<li> 
+All the primitive types - <code>boolean</code>, <code>byte</code>, <code>short</code>, <code>char</code>, <code>int</code>, <code>long</code>, <code>float</code> and <code>double</code>.
+</li> 
+<li> 
+Selected classes in package <code>java.lang</code>:
+<br>
+<code>Boolean</code>, <code>Byte</code>, <code>Short</code>, <code>Character</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>, <code>Number</code> and <code>String</code>. 
+</li> 
+<li> 
+Selected classes in package <code>java.util</code>:
+<br>
+<code>Date</code>, <code>Locale</code>, <code>HashSet</code>, <code>TreeSet</code>, <code>ArrayList</code>, <code>LinkedList</code>, <code>Vector</code>, <code>HashMap</code>, <code>TreeMap</code> and <code>Hashtable</code>, and the interfaces - <code>Collection</code>, <code>Set</code>, <code>List</code> and <code>Map</code>. 
+</li> 
+<li> 
+<code>java.math.BigInteger</code> and <code>java.math.BigDecimal</code> 
+</li> 
+<li> 
+Any array of persistent type, including multi dimensional arrays
+</li> 
+</ul> 
+
+<p>
+Some of the persistent types above are defined as optional by JDO (arrays and most of the collection classes), but ObjectDB supports all of them. You cannot extend the list to include other system types. The only way to add support for additional types is to define new persistent classes. For example, the class <code>java.awt.Image</code> is not supported by JDO. You can store images in <code>byte[]</code> fields or you can define a new persistent class for this purpose (images can also be stored as external files, storing only the file names or paths in the database).
+
+<p>
+Static and final fields can never be persistent. The <code>transient</code> modifier can be used to exclude other fields from being stored in the database. It is recommended to explicitly define fields of non persistent types as transient, even though they are considered transient in JDO by default. A field with a <code>transient</code> modifier can still become persistent by an explicit instruction in the JDO metadata (useful when a field has to be transient in serialization but persistent in JDO)  
+
+<p>
+Of course, persistent fields should not hold non persistent values at runtime when the object is stored in the database. For example, a field whose type is <code>Number</code> (which is an abstract class) must have a reference to an object whose type is persistent at storage time, e.g. an <code>Integer</code>, or <code>null</code> value. Similarly, a field whose type is one of the persistent collection interfaces (<code>Collection</code>, <code>Set</code>, <code>List</code> and <code>Map</code>) cannot refer to an unsupported collection, or a collection that contains objects of non persistent types, at storage time.
+
+<p>   
+As an extension to JDO, ObjectDB supports storing instances of any of the persistent types defined above in the database (as demonstrated in <a href='../chapter2/index.html#2.1'>section 2.1</a> for <code>ArrayList</code>). Portable JDO applications, however, should only store instances of user defined persistent classes in the database directly and use the other persistent types only as fields in these classes.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='3.3'></a>
+<h2>3.3&nbsp;&nbsp;JDO Enhancement</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The ObjectDB JDO Enhancer is a post compilation tool that modifies the byte code of compiled classes. Classes to be enhanced must be located in class files and not in jar files. However, enhanced classes can be packed in jar files. 
+
+<p>
+Two types of classes must be enhanced:
+
+<h3>Persistence Capable Classes</h3>
+<p>
+Incomplete persistent classes that do not implement the <code>PersistenceCapable</code> interface explicitly (as is usually the case) must be enhanced. The enhancer modifies the byte code of these classes, and the result is classes that do implement the <code>PersistenceCapable</code> interface. The JDO specification refers to these classes as persistence capable classes. 
+
+<h3>Persistence Aware Classes</h3>
+<p>
+Classes that access or modify persistent fields are referred to as <i>persistence aware classes</i>. Most persistent classes are also persistence aware, according to this definition, but usually the term 'persistence aware' refers to classes that are not persistent but contain code that accesses or modifies persistent fields of other classes. Directly accessing a single persistent field is sufficient for a class to become persistence aware. Accessing a persistent field indirectly by calling a method or by getting its value as an argument to a method, on the other hand, does not make the class persistence aware. One exception, however, is in working with persistent array fields (persistent fields of types like <code>int[]</code> or <code>Object[]</code>). Any class in which a persistent array is modified, no matter how the array is accessed, is considered a persistence aware class by ObjectDB. This exception only applies to persistent arrays and not to persistent collections (such as <code>ArrayList</code>).
+
+<p>
+Persistence aware classes must be enhanced in order to track persistent fields. ObjectDB must know when a persistent field is modified during a transaction because the change must be applied to the database when the transaction is committed. ObjectDB must also know when a persistent field is accessed because it might require loading additional data and objects from the database (as part of transparent persistence support). Enhancement replaces direct persistent field accesses with equivalent methods that perform the same accesses but also report to ObjectDB. Tracking changes in persistent arrays (in enhanced classes), which is optional in JDO, is also fully supported by ObjectDB.
+
+<p>
+Persistence aware classes that are not persistent themselves are supported by ObjectDB and JDO, but it might be a good practice to avoid them. This can be achieved by defining all persistent fields as private, or by accessing the fields directly only in persistent classes. Because persistent classes are automatically enhanced also as persistence aware, working with persistent fields only in persistent classes simplifies things.  
+
+<h3>Command Line Enhancement</h3>
+
+<p>
+The classic method to enhance classes is to run the enhancer from the command line.
+
+<p>
+First, the classpath has to be set to include ObjectDB and JDO jar files. For example:
+
+<pre>
+On Windows command:
+  > set classpath=%classpath%;.;c:\objectdb\lib\odbfe.jar;c:\objectdb\lib\jdo.jar
+  
+On Unix sh / bash shell:
+  % CLASSPATH=${CLASSPATH}:.:/objectdb/lib/odbfe.jar:/objectdb/lib/jdo.jar
+On Unix csh shell: 
+  % setenv CLASSPATH ${CLASSPATH}:.:/objectdb/lib/odbfe.jar:/objectdb/lib/jdo.jar
+</pre>
+  
+<p>
+The enhancer can be run without arguments to get usage instructions: 
+
+<pre>
+&gt; java com.objectdb.Enhancer
+ObjectDB JDO Enhancer - Version 1.00
+Copyright (C) ObjectDB Software 2003. All rights reserved.
+
+Usage: java com.objectdb.Enhancer [ &lt;options&gt; | &lt;class&gt; | &lt;filename&gt; ] ...
+
+&lt;class&gt; - class name (without .class suffix) found in the CLASSPATH
+&lt;filename&gt; - absolute or relative file specification (including *? wildcards)
+
+&lt;options&gt; include:
+  -cp        classpath for input user classes
+  -d         output path for enhanced classes
+  -s         include sub directories in search
+  -noopt     disable enhancement optimization
+</pre>
+
+<p>
+You can specify class files for enhancement explicitly or by using wildcards.
+The output message tells how many persistence capable and persistence aware classes have been enhanced (classes that are already enhanced are excluded). The JDO metadata is expected to be found automatically. If it is not found, classes are enhanced as persistence aware but not as persistence capable, so always notice the output message that distinguishes persistence capable classes from persistence aware classes that are not persistent.           
+
+<pre>
+&gt; java com.objectdb.Enhancer test/*.class test/pc/*.class
+[ObjectDB Enhancer] 2 new persistence capable classes have been enhanced.
+[ObjectDB Enhancer] 1 new persistence aware class has been enhanced.
+</pre>
+
+<p>
+Class files can also be searched automatically in sub directories using the <code>-s</code> option (the "*.class" expression is in quote marks here to avoid auto resolving at the shell level in some environments): 
+
+<pre>
+&gt; java com.objectdb.Enhancer -s "*.class"
+</pre>
+
+<p>
+Use the <code>-d</code> option to redirect the output classes to a different directory, keeping the original class files unchanged:
+
+<pre>
+&gt; java com.objectdb.Enhancer -s "*.class" -d enhanced
+</pre>
+
+<p>
+Instead of specifying class files, you can specify class names (e.g. <code>test.X</code>) and packages (e.g. <code>test.pc.*</code>):
+
+<pre>
+&gt; java com.objectdb.Enhancer test.X test.pc.*
+</pre>
+
+<p>
+Use the <code>-cp</code> option to specify an alternative classpath in which to look for the classes (the default is the classpath in which the enhancer is running): 
+
+<pre>
+&gt; java com.objectdb.Enhancer -cp src test.X test.pc.*
+</pre>
+
+<h3>On the Fly JDO Enhancement</h3>
+
+<p>
+Command line enhancement is useful for testing and for build scripts (like ANT  for example), but in most Java IDEs a plugin is required to integrate a JDO enhancer into the IDE Build command. A simple alternative that does not require a plugin and works on any Java IDE (and also from the command line) is to add a new simple main class to a project that applies on the fly enhancement:
+  
+<pre>
+package test;
+
+/** Additional main - On the Fly JDO Enhancer */
+public class eMain {
+    public static void main(String[] args) {
+
+    	// Always start by calling the enhancer:
+        com.objectdb.Enhancer.enhance("test.pc.*,test.X");
+        
+        // Now move to the original entry point:
+        RealMain.main(args);
+    }
+}
+</pre>
+
+<p>
+The <code>eMain</code> class ("enhancer Main")  becomes the new entry point at development time. First the enhancer is called, and when enhancement is completed, the original entry point is called. The overhead to run the enhancer on every run is negligible because the ObjectDB Enhancer is very fast. Notice that persistent classes should not be referenced in <code>eMain</code>. Otherwise they might be loaded by the JVM too early, before enhancement is completed. 
+
+<p>
+The <code>com.objectdb.Enhancer.enhance(</code>...<code>)</code> static method accepts as an argument a string specifying the classes to be enhanced. The syntax is adopted  from the <code>import</code> statement. You can specify full class names (e.g. <code>test.X</code>) as well as entire packages (e.g. <code>test.pc.*</code>), where elements are separated by commas.         
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='3.4'></a>
+<h2>3.4&nbsp;&nbsp;InstanceCallbacks</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The <code>javax.jdo.InstanceCallbacks</code> interface represents events in a persistent object's lifecycle. By implementing the <code>InstanceCallbacks</code> interface, a persistent class can handle these events. 
+
+<p>
+Four methods are defined in the <code>InstanceCallbacks</code> interface:
+
+<ul style="margin-top: 4px; text-align:justify;">
+<li style="margin-top: 8px;">
+<b><code>void jdoPostLoad()</code></b><br>
+Called when a persistent object is being loaded from the database, just after the default fetch group fields (see <a href='../chapter4/index.html'>Chapter 4</a>) are initialized. A possible action is to initialize non persistent fields of the object. Other persistent objects, and even persistent fields in this loaded object that are not in the default fetch group, should not be accessed by this method. 
+</li>
+<li style="margin-top: 8px;">
+<b><code>void jdoPreStore()</code></b><br>
+Called when a persistent object is going to be stored in the database during transaction commit. A possible action is to apply last minute changes to persistent fields in the object just before the store.	 
+</li>
+<li style="margin-top: 8px;">
+<b><code>void jdoPreClear()</code></b><br>
+Called when the persistent fields are going to be cleared at transaction end (for example on rollback). This event is rarely used. Other persistent objects and even persistent fields in this loaded object that are not in the default fetch group should not be accessed by this method. 
+</li>
+<li style="margin-top: 8px;">
+<b><code>void jdoPreDelete()</code></b><br>
+Called during the execution of <code>deletePersistent(</code>...<code>)</code>, just before an object is deleted. A possible action is to delete depended persistent objects as demonstrated below. 
+</li>
+</ul>
+
+<p>
+Because the four events are defined in the same interface, to implement one of them you have to implement the entire interface with all the four methods, keeping the methods that are irrelevant empty. For example:
+
+<pre>
+package test; 
+import javax.jdo.*;
+
+class Line implements InstanceCallbacks {
+  private Point p1, p2;
+  public Line(Point p1, Point p2) {
+    this.p1 = p1;
+    this.p2 = p2;
+  }
+  public void jdoPostLoad() {
+  }
+  public void jdoPreClear() {
+  }
+  public void jdoPreStore() {
+  }
+  public void jdoPreDelete() {
+    PersistenceManager pm = JDOHelper.getPersistenceManager(this); 
+    pm.deletePersistent(p1);
+    pm.deletePersistent(p2);
+  }
+}
+</pre>  
+
+<p>
+When a <code>Line</code> instance is deleted, the two referred <code>Point</code> instances are deleted with it. 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='3.5'></a>
+<h2>3.5&nbsp;&nbsp;Automatic Schema Evolution</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Most of the changes to persistent classes do not affect the database. This includes adding, removing and changing constructors, methods and non persistent fields. Changes to persistent fields (schema changes), however, do affect the database. New persistent objects are stored using the new schema (the new class structure), and old persistent instances, which were stored using the old schema, have to be converted to the new schema. ObjectDB implements an automatic schema evolution mechanism, which enables transparent use of old schema instances. When an old instance is loaded into the memory it is automatically converted into an instance of the new up-to-date persistent class.
+
+<p>
+The conversion is straightforward. New persistent fields that are missing in the old schema are initialized with default values (<code>0</code>, <code>false</code> or <code>null</code>). Old persistent fields that are missing in the new class are just ignored. When a type of a persistent field is changed, if casting of the old value to the new type is valid in Java (for example from <code>int</code> to <code>float</code> and from <code>float</code> to <code>int</code>) the old value is converted automatically to the new type. If casting is illegal (for example from <code>int</code> to <code>Date</code>) the field is initialized with a default value as a new field.
+
+<p>
+When an upgraded object is stored again in the database, it is stored using the new schema. Until then, the conversion is done only in memory each time the object is loaded, and the content of the object in the database remains in its old schema without any change. 
+
+<p>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

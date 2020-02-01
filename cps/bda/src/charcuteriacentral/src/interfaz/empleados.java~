@@ -1,0 +1,910 @@
+/*
+ * Empleados.java
+ *
+ * Created on 13 de febrero de 2005, 23:41
+ */
+
+/*TODO:
+ * Tengo que indagar un poco en las propiedades que nos ofrecen las JTable's para poder trabajar con tablas grandes
+ */
+
+/*IDEA:
+ * Hacer que los ArrayList aparezcan en otra ventana con una tabla, en la que se pueda editar y eliminar los telefonos
+ * Tenemos que tener una œnica ventana en la que se representaran bien los telefonos personales o bien los telefonos de la empresa
+ *  Implicaciones:  podemos tener una ventana abierta y querer abrir la otra??? Tiene alguna funcionalidad posible
+ *                  tenemos que cambiar el nombre de la columna cada vez que se vuelva a visualizar
+ *                  Patron singleton +/- como en las anteriores ventanas
+ */
+
+/*NOTA IMPORTANTE:
+ * Para Empleados hemos seleccionado la fragmentacion por punto de distribucion y asignaremos cada fragmento a su punto de distribucion
+ * y en la sede central todos los fragmentos
+ */
+
+/*TODO: visualizacion de las fechas FALTA NO ENTIENDO PORQUE COJONES NO FUNCIONA*/
+
+package Interfaz;
+
+//import MantenimientoDB.Empleados;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JTable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.text.DateFormat;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.util.Iterator;
+//import java.text.Format;
+import java.text.SimpleDateFormat;
+
+/**
+ *
+ * @author  hadden
+ */
+public class Empleados extends javax.swing.JFrame {
+
+    /*Variables necesarias para la tabla*/
+    DateFormat formatter;
+    //private static String date; //mantiene la fecha
+    DefaultTableModel m;
+    /*Cuando eliminamos alguna columna tambien tiene que ser eliminada de aqui*/
+    String cols[] = new String [] {"nif", "apellidos", "nombre", "%Comision", "activo", "cargo", "*numCuenta", 
+                                    "departamento", "*jefe", "sueldoBase", "fechaAltaContrato", "domicilio"};
+    private final int COLS = 12;
+    /*Columnas*/
+    private final int NIF = 0;
+    private final int APELLIDOS = 1;
+    private final int NOMBRE = 2;
+    private final int COMISION = 3;
+    private final int ACTIVO = 4;
+    private final int CARGO = 5;
+    private final int CUENTA = 6;
+    private final int DEPARTAMENTO = 7;
+    private final int JEFE = 8;
+    private final int SUELDO = 9;
+    private final int FECHA = 10;
+    private final int DOMICILIO = 11;
+    
+    
+    
+    Vector vCol;
+    
+    /*Almacenan los telefonos de cada uno de los empleados que tenemos en la tabla, tenemos que mantener coherente la hashtable!!!*/
+    static Hashtable tPers, tEmpr;
+    
+    tfnosPers vTfnosPers;
+    tfnosEmpr vTfnosEmpr;
+    fecha vFecha; //Ventana de la fecha
+    
+    
+    /** Creates new form Empleados */
+    public Empleados() {
+        //date = new String();
+        /*Para escribir la fecha adecuadamente*/
+        formatter = new SimpleDateFormat("dd/MM/yy");
+        
+        vCol = new Vector();
+        
+        for(int i=0; i<COLS; i++)
+            vCol.addElement(cols[i]);
+                
+        initComponents();
+        
+        m = (DefaultTableModel)jTable1.getModel(); //Aqui tendremos el modelo de nuestra tabla
+        
+        tPers = new Hashtable();
+        tEmpr = new Hashtable();
+        
+        /*TableColumn col = jTable1.getColumnModel().getColumn(FECHA);
+        col.setCellRenderer(new miDateRenderer());*/
+        
+        /*Configuracion de la ventana*/
+        this.setSize(1000,500);
+        this.setVisible(true);
+        this.setTitle("Ventana de Empleados");
+        this.setResizable(false);
+    }
+    
+    /*Abre la ventana representando los empleados que hay en la bd central, en este caso*/
+    public void visualiza(){
+        Vector v;
+        
+        //Con esto conseguimos la informacion de la bd
+        v = (Vector)new MantenimientoDB.Empleados().buscar("-1", 2);
+System.out.println("tamaño "+v.size());
+        db2table(v);
+
+        this.setVisible(true);
+    }
+    
+    /*Esta funcion realiza un mapeo de la informacion contenida en la bd de la clase CentralEmpleados en la tabla que representa sus datos*/
+    /*La raz—n por la que se ha implementado considerando dos posibles clases diferentes siendo que en la BD Central que es para la que 
+     estamos implementando esta ventana tiene muchas similitudes con la ventana que existira en los puntos de distribucion*/
+    /*TODO Almacenar los telefonos en alguna estructura*/
+    private void db2table(Vector v){
+        /*Tenemos que tener en cuenta que columnas son las que vamos a representar en la tabla*/
+        /*En este caso NO vamos a representar las columnas que son los ArrayList (los telefonos) sino que se representaran en otra ventana
+         Pero tenemos que tener en cuenta que hay dos columnas que no se encuentran en las dos clases por lo que no tendre que tenerlas
+         en cuenta dependiendo de la clase que este manejando, esto lo hago asi porque lo tendre que hacer para la ventana de los Empleados
+         en el punto de distribucion*/
+        if (v != null){
+            /*La solucion que podemos adoptar es no representar toda la informacion de los empleados, por lo menos lo que no 
+             tienen ambas clases*/
+            String clase;
+            
+            /*Definimos tantas variables como tipos pueda tener la fila que vamos a recibir*/
+            Central.CentralEmpleados crow;
+            PuntoDeVenta.PVEmpleados pvrow;
+            Vector rows = new Vector();
+                       
+            int i = 0;
+            String nif;
+            
+            //Recorremos todas filas que nos haya proporcionado la base de datos
+            while (i < v.size()){
+               
+                clase = v.elementAt(i).getClass().getName(); //Recibimos el nombre de la clase de la fila
+                
+                if(clase.endsWith("Central.CentralEmpleados")){
+                    
+                    crow = (Central.CentralEmpleados)v.elementAt(i);
+                    Vector vfields = new Vector();
+                    /*Tenemos que recuperar todos los campos del vector que representa la fila de la bd*/
+                    /*La clase de CentralEmpleados NO tiene el campo ventas pero tiene el campo departamento*/
+                    
+                    /*La secuencia de recepcion de los campos tendra que coincidir con el orden en el que se representen en la tabla*/
+                    /*{"nif", "apellidos", "nombre", "%Comision", "activo", "cargo", "numCuenta", 
+                                    "departamento", "jefe", "sueldoBase", "fechaAltaContrato", "domicilio"};*/
+                    nif = crow.getNif();
+                    vfields.addElement(nif);
+                    vfields.addElement(crow.getApellidos());
+                    vfields.addElement(crow.getNombre());
+                    vfields.addElement(new Double(crow.getPorcentajeComision()));
+                    //vfields.addElement(((ArrayList)crow.getAllTfnoPers()).toString());
+                    //ArrayList new2 = (ArrayList)crow.getAllTfnoPers(); 
+                    tPers.put(nif, copiaArrayList((ArrayList)crow.getAllTfnoPers())); //Tenemos que hacer un clone()!!
+                    //listaTfnos((ArrayList)tPers.get(nif));
+                    
+                    vfields.addElement(new Boolean(crow.getActivo()));
+                    vfields.addElement(crow.getCargo());
+                    //vfields.addElement(((ArrayList)crow.getAllTfnoEmpr()).toString());
+                    //ArrayList new1 = (ArrayList)crow.getAllTfnoEmpr(); 
+                    tEmpr.put(nif, copiaArrayList((ArrayList)crow.getAllTfnoEmpr())); 
+                    //listaTfnos((ArrayList)tEmpr.get(nif));
+                    
+                    vfields.addElement(crow.getNumcuenta());
+                    vfields.addElement(new Integer(((Central.CentralPuntoDistribucion)crow.getDepartamento()).getZona())); //Clase: CentralPuntoDistribucion
+                    try{ //Se tiene que poner un try porque es posible que sea null
+                        vfields.addElement(((Central.CentralEmpleados)crow.getJefe()).getNif()); //Clase: CentralEmpleados
+                    }catch(NullPointerException nu){
+                        vfields.addElement("null");
+                    }
+                    vfields.addElement(new Double(crow.getSueldoBase()));
+                    
+                    vfields.addElement(formatter.format((Date)crow.getFechaAltaContrato())); //Clase: Date
+                    vfields.addElement(crow.getDomicilio());
+                    
+                    rows.addElement(vfields);
+                    
+                }else if(clase.endsWith("PuntoDeVenta.PVEmpleados")){
+                    /*La clase PVEmpleados no tiene el campo departamento pero tiene el campo ventas*/
+                    /*Recordar que el campo ventas se tendra que solucionar como lo de los telefonos*/
+                    /*Entonces tendremos que tener un boton ventas que aparezca en la ventana!!!*/
+                    /*VENTAS ES OPTATIVO A LA HORA DE INTRODUCIR UN EMPLEADO*/
+                    
+                    pvrow = (PuntoDeVenta.PVEmpleados)v.elementAt(i);
+                    
+                    Vector vfields = new Vector();
+                    
+                    nif = pvrow.getNif();
+                    vfields.addElement(nif);
+                    vfields.addElement(pvrow.getApellidos());
+                    vfields.addElement(pvrow.getNombre());
+                    vfields.addElement(new Double(pvrow.getPorcentajeComision()));
+                    //vfields.addElement(((ArrayList)crow.getAllTfnoPers()).toString());
+                    tPers.put(nif, ((ArrayList)pvrow.getAllTfnoPers()).clone());
+                    
+                    vfields.addElement(new Boolean(pvrow.getActivo()));
+                    vfields.addElement(pvrow.getCargo());
+                    //vfields.addElement(((ArrayList)crow.getAllTfnoEmpr()).toString());
+                    tEmpr.put(nif, ((ArrayList)pvrow.getAllTfnoEmpr()).clone());
+                    
+                    vfields.addElement(pvrow.getNumcuenta());
+                    //vfields.addElement(new Integer(((Central.CentralPuntoDistribucion)crow.getDepartamento()).getZona())); //Clase: CentralPuntoDistribucion
+                    vfields.addElement(null); //No lo tendria ni que considerar
+                    vfields.addElement(((PuntoDeVenta.PVEmpleados)pvrow.getJefe()).getNif()); //Clase: CentralEmpleados
+                    vfields.addElement(new Double(pvrow.getSueldoBase()));
+                    vfields.addElement(formatter.format((Date)pvrow.getFechaAltaContrato())); //Clase: Date
+                    vfields.addElement(pvrow.getDomicilio());
+                    
+                    rows.addElement(vfields);
+                    
+                }
+                i++;
+              
+            }
+            m.setDataVector(rows, vCol); //Pasamos los resultados de la base de datos a la tabla
+        }else
+            out.setText("No hay puntos de Venta en la BD");
+    }
+    
+    
+    /*public static void setDate(Sring nd, int row){
+        date = d;
+        m.setValueAt(date, row, FECHA);
+    }*/
+    
+    private ArrayList copiaArrayList(ArrayList a){
+        ArrayList n = new ArrayList();
+        Iterator it = a.iterator();
+        while(it.hasNext()){
+            n.add((String)it.next());
+        }
+        return n;
+    }
+    
+    /***MOVIDAS CON LOS HASHTABLES***/
+    
+    public static void eliminaEmpTfnoPers(String nif){
+        eliminaEmpTfno(tPers, nif);
+    }
+    
+    public static void eliminaEmpTfnoEmpr(String nif){
+        eliminaEmpTfno(tEmpr, nif);
+    }
+    
+    private static void eliminaEmpTfno(Hashtable h, String nif){
+        h.remove(nif);
+    }
+    
+    public static ArrayList getTfnoPers(String nif){
+        return (getTfno(tPers, nif));
+    }
+    
+    public static ArrayList getTfnoEmpr(String nif){
+        return (getTfno(tEmpr, nif));
+    }
+    
+    private static ArrayList getTfno(Hashtable h, String nif){
+        return (ArrayList)h.get(nif);
+    }
+    
+    public static void modificaTfnoPers(String nif, String tel, String tel2){
+        modificaTfno(tPers, nif, tel, tel2);
+    }
+    
+    public static void modificaTfnoEmpr(String nif, String tel, String tel2){
+        modificaTfno(tEmpr, nif, tel, tel2);
+    }
+    
+    private static void modificaTfno(Hashtable h, String nif, String tel, String tel2){
+        if((h!=null)&&(nif!=null)&&(tel!=null)&&(tel2!=null)){
+            ArrayList l; 
+            l = (ArrayList)h.get(nif);
+            if(l!=null){
+                int i=0;
+                while((i<l.size())&&(!tel.equals(l.get(i)))){
+                    i++;
+                }
+                if(i < l.size())
+                    l.set(i, tel2);
+                else
+                    System.out.println("Telenfono no encontrado");
+            }else
+                System.err.println("El nif "+nif+" no tiene telefonos");
+        }else
+            System.err.println("Fallo al pasar los parametros");
+    }
+    
+    public static void eliminaTfnoPers(String nif, String tel){
+        eliminaTfno(tPers, nif, tel);
+    }
+    
+    public static void eliminaTfnoEmpr(String nif, String tel){
+        eliminaTfno(tEmpr, nif, tel);
+    }
+    
+    private static void eliminaTfno(Hashtable h, String nif, String tel){
+        if((h!=null)&&(nif!=null)&&(tel!=null)){
+            ArrayList l; 
+            l = (ArrayList)h.get(nif);
+            if(l!=null){
+                int i=0;
+                while((i<l.size())&&(!tel.equals(l.get(i)))){
+                    i++;
+                }
+                if(i < l.size())
+                    l.remove(i);
+                else
+                    System.out.println("Telenfono no encontrado");
+            }
+        }else
+            System.err.println("Fallo al pasar los parametros");
+    }
+    
+    
+    public static void insertaTfnoPers(String nif, String t){
+        insertaTfno(tPers, nif, t);
+    }
+    
+    public static void insertaTfnoEmpr(String nif, String t){
+        insertaTfno(tEmpr, nif, t);
+    }
+    
+    private static void insertaTfno(Hashtable h, String nif, String t){
+        //TEngo que insertar el telefono dentro del ArrayList de telefonos del pavo
+        ((ArrayList)h.get(nif)).add(t);
+    }
+    
+    /*Interface para recibir los datos de las hashtables*/
+    public static Vector tPers2Vector(String nif){
+        return(hash2Vector(tPers, nif));
+    }
+    
+    public static Vector tEmpr2Vector(String nif){
+        return(hash2Vector(tEmpr, nif));
+    }
+    
+    private static Vector hash2Vector(Hashtable h, String nif){
+        Vector rows;
+        if((nif != null) && (h != null)){
+            rows = new Vector(); 
+            int i = 0;
+            ArrayList l = (ArrayList)h.get(nif);
+            while(i<l.size()){
+                Vector v = new Vector();
+                v.addElement(l.get(i));
+                rows.addElement(v);
+                //System.out.println("tel: "+l.get(i));
+                i++;
+            }
+            return rows;
+        }else{
+            System.err.println("Error en la entrada de los parametros");
+            return null;
+        }
+        
+    }
+        
+    /*Imprime por pantalla los telefonos de la pe–a*/
+    private void listaTfnos(ArrayList tfnos){
+        int i=0;
+        if(tfnos != null){
+            while(i<tfnos.size()){
+                System.out.println("telefono: " + (String)tfnos.get(i));
+                i++;
+            }
+        }else
+            System.out.println("No tiene telefonos");
+        
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    private void initComponents() {//GEN-BEGIN:initComponents
+        insertar = new javax.swing.JButton();
+        eliminar = new javax.swing.JButton();
+        buscar = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        modificar = new javax.swing.JButton();
+        limpiar = new javax.swing.JButton();
+        nnif = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        out = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        tpers = new javax.swing.JButton();
+        tempr = new javax.swing.JButton();
+        suma = new javax.swing.JButton();
+        menos = new javax.swing.JButton();
+        fecha = new javax.swing.JButton();
+
+        getContentPane().setLayout(null);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        insertar.setText("Insertar");
+        insertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(insertar);
+        insertar.setBounds(10, 30, 80, 25);
+
+        eliminar.setText("Eliminar");
+        eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(eliminar);
+        eliminar.setBounds(10, 80, 80, 25);
+
+        buscar.setText("Buscar");
+        buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(buscar);
+        buscar.setBounds(10, 240, 69, 25);
+
+        cancelar.setText("Cancelar");
+        cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(cancelar);
+        cancelar.setBounds(790, 360, 90, 25);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "nif", "apellidos", "nombre", "%Comision", "activo", "cargo", "*numCuenta", "departamento", "*jefe", "sueldoBase", "fechaAltaContrato", "domicilio"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Object.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, true, true, true, true, true, true, true, true, true, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(120, 50, 860, 290);
+
+        modificar.setText("Modificar");
+        modificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modificarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(modificar);
+        modificar.setBounds(10, 130, 90, 25);
+
+        limpiar.setText("Limpiar");
+        limpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                limpiarActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(limpiar);
+        limpiar.setBounds(560, 360, 81, 25);
+
+        getContentPane().add(nnif);
+        nnif.setBounds(10, 200, 80, 21);
+
+        jLabel1.setText("Nuevo nif:");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(10, 180, 80, 15);
+
+        getContentPane().add(out);
+        out.setBounds(140, 410, 600, 21);
+
+        jLabel2.setText("Estado:");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(40, 410, 70, 15);
+
+        tpers.setText("Tfno. Pers");
+        tpers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tpersActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(tpers);
+        tpers.setBounds(10, 300, 100, 25);
+
+        tempr.setText("Tfno. Empr");
+        tempr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                temprActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(tempr);
+        tempr.setBounds(10, 340, 87, 30);
+
+        suma.setText("+");
+        suma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sumaActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(suma);
+        suma.setBounds(360, 360, 40, 25);
+
+        menos.setText("-");
+        menos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menosActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(menos);
+        menos.setBounds(400, 360, 40, 25);
+
+        fecha.setText("Fecha");
+        fecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fechaActionPerformed(evt);
+            }
+        });
+
+        getContentPane().add(fecha);
+        fecha.setBounds(220, 360, 81, 25);
+
+        pack();
+    }//GEN-END:initComponents
+
+    private void temprActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temprActionPerformed
+        // TODO add your handling code here:
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            if(vTfnosPers == null)
+                vTfnosEmpr = new tfnosEmpr();
+            
+            int row = jTable1.getSelectedRow();
+            if(row >= 0)
+                try{
+                    String ni;
+                    //System.out.println("Fila: "+row);
+                    ni = ((String)jTable1.getValueAt(row, NIF)).trim();
+                    //System.out.println("El nif es: "+ni);
+                    //Tenemos que contemplar la posibilidad de que queramos insertar los telefonos de un empleado nuevo
+                    try{
+                        ArrayList l;
+                        l = (ArrayList)tEmpr.get(ni); //hashtable.get(nif) devuelve un Object de ahi el cast
+                        vTfnosEmpr.visualiza(ni, false);
+                    }catch(NullPointerException nu){
+                        tEmpr.put((String)ni, new ArrayList()); //Creamos una nueva entrada en la hashtable
+                        vTfnosEmpr.visualiza(ni, true);
+                        out.setText("Telefonos personales de un empleado nuevo");
+                    }
+                        
+                    
+                }catch(NullPointerException nu){
+                    out.setText("Error recibiendo el nif");
+                }
+                    
+            else
+                out.setText("Fila erronea");
+            
+        }else
+            System.err.println("No hay Empleados seleccionados");
+    }//GEN-LAST:event_temprActionPerformed
+
+    private void fechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActionPerformed
+        // TODO add your handling code here:
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            int row = jTable1.getSelectedRow();
+            if(row >= 0){
+                if(vFecha == null)
+                    vFecha = new fecha();
+                
+                    vFecha.visualiza(row, FECHA, m);
+            }else
+                out.setText("Error de la fila seleccionada");
+        }
+    }//GEN-LAST:event_fechaActionPerformed
+
+    private void modificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarActionPerformed
+        // TODO TEST
+     
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            int row = jTable1.getSelectedRow();
+            if(row >= 0){
+                //public int modificar(String antiguoNif, String nuevoNif, String domicilio,String cargo, double porcentajeComision, Date fechaAltaContrato,String nombre,String apellidos, double sueldoBase, String numcuenta, String nifJefe, int zona)
+                try{
+                    String oldNif, newNif, domicilio, cargo, nombre, apellidos, cuenta, jefe;
+                    Double comision, sueldo;
+                    Date fecha;
+                    Integer zona;
+                    //La modificacion de los telefonos se hace a parte
+                    //Comprobamos los datos de la tabla y del campo de texto
+                    oldNif = ((String)jTable1.getValueAt(row, NIF)).trim();
+                    domicilio = ((String)jTable1.getValueAt(row, DOMICILIO)).trim();
+                    cargo = ((String)jTable1.getValueAt(row, CARGO)).trim();
+                    nombre= ((String)jTable1.getValueAt(row, NOMBRE)).trim();
+                    apellidos = ((String)jTable1.getValueAt(row, APELLIDOS)).trim();
+                    //activo = (Boolean)jTable1.getValueAt(row, ACTIVO);
+                    comision = (Double)jTable1.getValueAt(row, COMISION);
+                    sueldo = (Double)jTable1.getValueAt(row, SUELDO);
+                    zona = (Integer)jTable1.getValueAt(row, DEPARTAMENTO);
+                    cuenta = ((String)jTable1.getValueAt(row, CUENTA)).trim();
+                    jefe = ((String)jTable1.getValueAt(row, JEFE)).trim();
+                    try{
+                        fecha = (Date)formatter.parse((String)jTable1.getValueAt(row, FECHA));
+                        if(!nnif.equals("")){
+                        newNif = nnif.getText();
+                        if((new MantenimientoDB.Empleados().modificar(oldNif, newNif, domicilio, cargo, comision.doubleValue(), fecha, nombre, apellidos, sueldo.doubleValue(), cuenta, jefe, zona.intValue()))==1){
+                            if(oldNif != newNif)
+                                m.setValueAt(newNif, row, NIF); //Cambiamos el valor del nif en la tabla
+                            out.setText("Empleado modificado con exito");
+                            nnif.setText("");
+                        }else
+                            out.setText("Error en la modificacion");
+                    }else
+                        out.setText("Nuevo nif incorrecto");
+                    }catch(java.text.ParseException p){
+                        out.setText("Error parseando la fecha");
+                    }
+                    
+                    
+                }catch(NullPointerException nu){
+                    
+                }
+            }else
+                out.setText("Error fila no valida");
+        }
+    }//GEN-LAST:event_modificarActionPerformed
+
+    private void menosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menosActionPerformed
+        // TODO add your handling code here:
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            m.removeRow(jTable1.getSelectedRow());
+        }else
+            out.setText("No hay fila seleccionada");
+    }//GEN-LAST:event_menosActionPerformed
+
+    private void sumaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sumaActionPerformed
+        // TODO add your handling code here:
+        Vector v = new Vector();
+        v.addElement(null);
+        m.addRow(v);
+    }//GEN-LAST:event_sumaActionPerformed
+
+    private void tpersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tpersActionPerformed
+        // TODO TEST
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            if(vTfnosPers == null)
+                vTfnosPers = new tfnosPers();
+            
+            int row = jTable1.getSelectedRow();
+            if(row >= 0)
+                try{
+                    String ni;
+                    ni = ((String)jTable1.getValueAt(row, NIF)).trim();
+                    //Tenemos que contemplar la posibilidad de que queramos insertar los telefonos de un empleado nuevo
+                    try{
+                        ArrayList l;
+                        l = (ArrayList)tPers.get(ni); //hashtable.get(nif) devuelve un Object de ahi el cast
+                        vTfnosPers.visualiza(ni, false);
+                    }catch(NullPointerException nu){
+                        tPers.put((String)ni, new ArrayList()); //Creamos una nueva entrada en la hashtable
+                        vTfnosPers.visualiza(ni, true);
+                        out.setText("Telefonos personales de un empleado nuevo");
+                    }
+                        
+                    
+                }catch(NullPointerException nu){
+                    out.setText("Error recibiendo el nif");
+                }
+                    
+            else
+                out.setText("Fila erronea");
+            
+        }else
+            System.err.println("No hay Empleados seleccionados");
+        
+    }//GEN-LAST:event_tpersActionPerformed
+
+    private void insertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarActionPerformed
+        // TODO TEST
+              
+        //TODO la ventana para los telefonos de la empresa
+        
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            int row = jTable1.getSelectedRow();
+            if(row >= 0){
+                String nif, domicilio, cargo, nombre, apellidos, cuenta, jefe;
+                Boolean activo;
+                Double comision, sueldo;
+                ArrayList tp, te;
+                Date fecha;
+                Integer zona;
+                
+                /*Los campos opcionales en Empleados son: cuenta, jefe*/
+                try{
+                    cuenta = ((String)jTable1.getValueAt(row, CUENTA)).trim();
+                }catch(NullPointerException nu){
+                    cuenta = new String("00000");
+                    out.setText("Numero de cuenta por defecto");
+                }
+                try{
+                    jefe = ((String)jTable1.getValueAt(row, JEFE)).trim();
+                }catch(NullPointerException nu){
+                    jefe = new String("null");
+                    out.setText("Jefe por defecto");
+                }
+                /*Campos obligatorios*/
+                try{
+                    nif = ((String)jTable1.getValueAt(row, NIF)).trim();
+                    domicilio = ((String)jTable1.getValueAt(row, DOMICILIO)).trim();
+                    cargo = ((String)jTable1.getValueAt(row, CARGO)).trim();
+                    nombre= ((String)jTable1.getValueAt(row, NOMBRE)).trim();
+                    apellidos = ((String)jTable1.getValueAt(row, APELLIDOS)).trim();
+                    activo = (Boolean)jTable1.getValueAt(row, ACTIVO);
+                    comision = (Double)jTable1.getValueAt(row, COMISION);
+                    sueldo = (Double)jTable1.getValueAt(row, SUELDO);
+                    //Cogemos los telefonos de las variables locales en las que estan mantenidos
+                    tp = (ArrayList)(tPers.get(nif));
+                    te = (ArrayList)(tEmpr.get(nif));
+                    zona = (Integer)jTable1.getValueAt(row, DEPARTAMENTO);
+                    try{
+                        fecha = (Date)formatter.parse((String)jTable1.getValueAt(row, FECHA));
+                        if((new MantenimientoDB.Empleados().insertar(nif, domicilio, cargo, activo.booleanValue(), comision.doubleValue(), tp, te, fecha, nombre, apellidos, sueldo.doubleValue(), cuenta, jefe, zona.intValue())) == 1){
+                        out.setText("Empleado insertado con exito");
+                    }else{
+                        out.setText("Inserion erronea");
+                        //Se podria borrar la linea si la insercion no es correcta pero puede que queramos editar los cambios porque ha sido 
+                        //un error tipografico
+                    }
+                    }catch(java.text.ParseException p){
+                        out.setText("Error al parsear la fecha");
+                    }
+                                        
+               }catch(NullPointerException nu){
+                   out.setText("Error en la introduccion de datos");
+               }
+            }else
+                out.setText("Error fila no valida");
+                
+        }
+    }//GEN-LAST:event_insertarActionPerformed
+
+    private void limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarActionPerformed
+        // TODO add your handling code here:
+        nnif.setText("");//Limpiamos el contenido del nuevo nif
+        
+        Vector v = new Vector();
+        v.addElement(null); //Cada elemento del vector que le pasamos como dato a setDataVector es una fila!!!
+        
+        /*v.addElement(null);
+        v.addElement(null);*/
+        m.setDataVector(v, vCol);
+        out.setText("Tabla limpiada!");
+    }//GEN-LAST:event_limpiarActionPerformed
+
+    private void buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarActionPerformed
+        // TODO TEST
+        //new Empleados.buscar(buscar_text.getText());
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            int row = jTable1.getSelectedRow();
+            if(row >= 0){
+                String nif;
+                try{
+                    Vector v;
+                    nif = ((String)jTable1.getValueAt(row, NIF)).trim();
+                    if(!nif.equals("")){ //Tenemos que evitar que se seleccione una cadena vacia como nif
+                        //public Vector buscar(String nif, int estado)
+                        v = new MantenimientoDB.Empleados().buscar(nif, 2);
+                        if(v != null){
+                            out.setText("Empleado encontrado con exito");
+                            //Tengo que modificar la tabla con la fila encontrada
+                            //TESTEAR Y SI FUNCIONA PONERLO EN LAS DEMAS VENTANAS
+                            m.removeRow(row);
+                            m.insertRow(row, v);
+                        }else
+                            out.setText("Empleado no encontrado");
+                    }
+                }catch(NullPointerException nu){
+                    out.setText("Error en el nif introducido");
+                }
+            }else
+                out.setText("Error fila no valida");
+        }
+    }//GEN-LAST:event_buscarActionPerformed
+
+    private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
+        // TODO TEST
+        if(!jTable1.getColumnSelectionAllowed() && jTable1.getRowSelectionAllowed()){
+            int row = jTable1.getSelectedRow();
+            if(row >= 0){
+                //public int eliminar(String nif)
+                String nif;
+                try{
+                    nif = ((String)jTable1.getValueAt(row, NIF)).trim();
+                    if(!nif.equals("")){ //Tenemos que evitar que se seleccione una cadena vacia como nif
+                        if((new MantenimientoDB.Empleados().eliminar(nif)) == 1){
+                            m.removeRow(row); //Eliminamos la fila de la tabla
+                            out.setText("Eliminado con exito");
+                        }else
+                            out.setText("Empleado no ha podido eliminarse de la bd");
+                    }else
+                        out.setText("El nif no puede ser la cadena vacia");
+                }catch(NullPointerException nu){
+                    out.setText("Error en el nif introducido");
+                }
+            }else
+                out.setText("Error fila no valida");
+        }
+    }//GEN-LAST:event_eliminarActionPerformed
+
+    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
+        // TESTED
+        setVisible(false);
+    }//GEN-LAST:event_cancelarActionPerformed
+    
+    /**
+     * @param args the command line arguments
+     */
+    /*public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Empleados().setVisible(true);
+            }
+        });
+    }*/
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buscar;
+    private javax.swing.JButton cancelar;
+    private javax.swing.JButton eliminar;
+    private javax.swing.JButton fecha;
+    private javax.swing.JButton insertar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JButton limpiar;
+    private javax.swing.JButton menos;
+    private javax.swing.JButton modificar;
+    private javax.swing.JTextField nnif;
+    private javax.swing.JTextField out;
+    private javax.swing.JButton suma;
+    private javax.swing.JButton tempr;
+    private javax.swing.JButton tpers;
+    // End of variables declaration//GEN-END:variables
+    
+}
+
+/*Clase que tenemos que implementar para visualizar las fechas dentro de la tabla*/
+/*La implementacion de esta nueva clase se hace minima porque extendemos la clase DefaultTableCellRenderer*/
+/*class miDateRenderer extends DefaultTableCellRenderer{
+    DateFormat f;
+    public miDateRenderer(){ super(); }
+    
+    public void setValue(Object value){
+        if (f == null){
+            //f = DateFormat.getDateInstance(DateFormat.SHORT);
+            f = DateFormat.getDateInstance(DateFormat.SHORT);
+        }
+        if((value != null) && (value instanceof Date)){
+            //setText((value == null) ? "" : (f.format((Date)value)));
+            super.setText(f.format((Date)value));
+            }
+            //Date d = (Date) value;            
+            //f.format(d);
+        //}else
+            //System.out.println("No es una fecha o es null");
+    }
+}*/

@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - Database Server
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 9 - ObjectDB Explorer</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+ObjectDB Explorer is a visual tool for managing ObjectDB databases. You can use the Explorer to browse databases, execute JDOQL queries, create new databases and edit the content of existing databases.
+
+<p>
+<div align='center'>
+    <img src='desktop.png' width='560' height='436' alt='Explorer Desktop'>
+</div>
+
+<p>
+This chapter contains the following sections:
+<div class='jumpers'>
+  <p>
+  <a href='#9.1'>9.1&nbsp;&nbsp;Running the Explorer</a>
+  <p>
+  <a href='#9.2'>9.2&nbsp;&nbsp;Browsing the Database</a>
+  <p>
+  <a href='#9.3'>9.3&nbsp;&nbsp;Editing the Database</a>
+  <p>
+  <a href='#9.4'>9.4&nbsp;&nbsp;Tools and Threads</a>
+  <p>
+  <a href='#9.5'>9.5&nbsp;&nbsp;Options and Setting</a>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='9.1'></a>
+<h2>9.1&nbsp;&nbsp;Running the Explorer</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The Explorer is a pure Java GUI application.  It is shipped as an executable jar that will run on any system with a Java 1.3 JRE or later installed. A Windows EXE (explorer.exe) and a Unix shell script (explorer.sh) for starting the Explorer on those respective operating systems are also provided. 
+
+<h3>Running the Executable JAR directly</h3>
+
+<p>
+The Explorer is packaged in the main ObjectDB development jar file (odbfe.jar / odbee.jar / odbse.jar), located in ObjectDB's lib directory. Because this file is an executable jar, on most systems, you can double click on it to start the Explorer.  
+
+<p>
+You can also start the Explorer from the command line. For instance, if the installation path of the ObjectDB Free Edition on Windows is <b>c:\objectdb</b>, you can start the Explorer using the following command:
+
+<pre>
+  > java -jar c:\objectdb\lib\odbfe.jar
+</pre>
+
+<p>
+If a database path is specified, the database is opened automatically when the Explorer starts:
+
+<pre>
+  > java -jar c:\objectdb\lib\odbfe.jar my.odb
+</pre>
+
+<p>
+Some JVM arguments can be useful. For instance, by default Java does not use more than 64MB of memory. If you need to run the Explorer with increased available memory, you can use the <b>-Xmx</b> JVM argument: 
+
+<pre>
+  > java -Xmx256m -jar c:\objectdb\lib\odbfe.jar
+</pre>
+
+<p>
+Similar commands (but with different paths) can run the Explorer on other operating systems.
+
+<p>
+<h3>Starting the Explorer on Windows</h3>
+
+<p>
+You can start the Explorer on Windows using the explorer.exe application, located in the bin directory. Notice that the original structure of the ObjectDB installation directory must be preserved. Otherwise, the required executable jar would not be found by explorer.exe. By default, running explorer.exe is equivalent to the following command: 
+
+<pre>
+> java -Xms16m -Xmx512m -jar odbfe.jar
+</pre>
+
+<p>
+In addition, any JVM argument can be specified as an argument to explorer.exe during startup. For instance: 
+
+<pre>
+> explorer.exe -Xmx256m my.odb
+</pre>
+
+<p>
+Explicitly specified arguments override the default. Therefore, the above command is equivalent to:
+
+<pre>
+> java -Xms16m -Xmx256m -jar odbfe.jar my.odb
+</pre>
+
+<h3>Starting the Explorer on Unix</h3>
+
+<p>
+You can start the Explorer on Unix using a shell script. A sample script, explorer.sh, is located in the bin/sh directory. Before using explorer.sh, you have to edit the paths that it contains. The following procedure is recommended, copy the file to the bin subdirectory, edit the copy and use it to start Explorer. In this way, the edited script will not be deleted when extracting files of a newer ObjectDB version to the same installation directory. 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='9.2'></a>
+<h2>9.2&nbsp;&nbsp;Browsing the Database</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The ability to explore database objects visually, navigate among them and execute queries is very valuable during development and debugging. Therefore, these are the most commonly used features of the Explorer.
+
+<h3>Opening a Local Database</h3>
+
+<p>
+To open a local database file, use the "File | Open Local" menu command (or the equivalent toolbar button) and in the Open dialog box select the desired local database file and click the "Open" button. Recently used local database files can also be opened using the "File | Recent Local Files" menu command.  
+By default, when the Explorer starts its opens the last used local database file automatically. You can change this behavior in "Tools | Options | General".
+
+<h3>Opening a Remote Database</h3>
+
+<p>
+To open a connection to a remote database using client-server mode (supported only by ObjectDB Server Edition) use the "File | Open Remote" menu command (or the equivalent toolbar button). In the Open dialog you have to fill in the host, port, username and password of the remote connection. You also have to specify a path of the database file on the remote server, possibly using the "Browse" button that opens the "Remote File Selection" dialog box.
+
+<h3>Closing the Database</h3>
+
+<p>
+Use the "File | Close" menu command to close a local database file or a connection to a remote database file.
+
+<h3>The Tabbed Windows</h3>
+
+<p>
+Four tabbed windows are displayed on the left side of the Explorer desktop when a database is open. The "Class" window shows all the persistent classes in the database. You can select a class from the list of classes at the top of this window and see all its persistent fields at the bottom. The "Database" window is also split into two sub windows. The top sub window displays general information about the database and the bottom sub window displays a list of root objects that the database contains (root objects are discussed in <a href='../chapter6/index.html'>chapter 6</a>). The "Query" window enables a user to execute JDOQL queries in the Explorer, as discussed below. Finally, the "Thread" window, unlike the other three tabbed windows, is displayed even when no database is open in the Explorer, because it is not related to a specific database. <a href='#9.4'>Section 9.4</a> explains how to work with threads in the Explorer	.
+
+<h3>Using Viewer Windows</h3>
+
+<p>
+The Explorer provides two types of viewer windows for exploring the contents of database objects. The <b>Table</b> window displays a collection of objects following the approach of traditional visual database tools. Every row in the table represents a single object, every column represents a persistent field, and the content of a cell is the value of a single field in a single database object. This type of viewer is useful for viewing the data of a simple object model. 
+
+<p>
+In most cases, however, the <b>Browser</b> window (which is designed to handle more complex object models) is preferred. The browser window displays objects using a tree. Every database object is represented by a tree node, and the values of its persistent fields are represents by child nodes. The main advantage of using the browser window is in navigation among objects. Because every reference between two database objects is represented by a parent-child relationship in the tree, you can navigate among objects by expanding nodes in the tree, similar to exploring objects in a visual debugger. Notice that the same database object might be accessed using different paths in the tree and may therefore be represented by more than one node. To help identify circles in the graph of objects, a special {R} sign (indicating recursive) is displayed for an object that is already shown in a higher level of the same tree path (i.e. the object is identified as a descendant of itself in the tree).
+
+<p style="margin-bottom: 0px;">
+To open a new viewer window, first select a target element:
+<ul style="margin-top: 4px; text-align: justify;" >
+<li>
+Select a persistent class in the "Class" tabbed window to view all the instances of that class.
+</li><li>
+Select a root object in the "Database" tabbed window to view the content of that object.
+</li><li>
+Select an object in a currently open table or browser viewer to explore it in a new viewer window.
+</li> 
+</ul>
+
+<p style="margin-top: 0px;">
+When the target element is selected, you can open a new viewer window using the "Window | Open Table Window" or the "Window | Open Browser Window" menu commands, or by the equivalent context menu commands (right clicking the selected target element) or the equivalent toolbar buttons. When the target element is an object in an open viewer window, the "Window | Open Focus Selection" command switches the current viewer to focus on the selected object.
+A double click on the target element opens the browser window by default (you can change the default to a table window in "Tools | Options | General | Display").
+
+<p>
+Additional information about working with viewer windows is provided in later sections. <a href='#9.3'>Section 9.3</a> explains how to use viewer windows to edit and modify the content of a database. <a href='#9.5'>Section 9.5</a> explains how to define views and set other options that affect viewer windows.      
+
+<h3>Executing JDOQL queries</h3>
+
+<p>
+The "Query" tabbed window on the left side of the Explorer desktop enables execution of JDOQL queries. The first step in defining a query is selecting a candidate class. All the instances of the selected class and its subclasses are included in the candidate collection of the query. Optional JDOQL components, such as filter, parameters, variables, ordering and imports (<a href='../chapter7/index.html'>chapter 7</a> explains all these components), can also be specified in the query form. The "Reset" button clears the content of all the fields.
+
+<p>
+To execute a query click the "Execute" button. If the query is valid, the default viewer (the browser window by default) is opened with the query results and the size of the result collection and the query execution time are displayed on the query form. If the query compilation fails, an error is displayed on the query form and no viewer window is opened. You can also execute a query using the "Window | Open Table Window" or the "Window | Open Browser Window" menu commands (or using the equivalent toolbar buttons). This opens the specified viewer window type and displays the results. 
+
+<p>
+On the bottom of the query window there are two assistant tab windows. The first tab window implements auto completion support for query definition. You can select elements from the auto completion list when you write the query filter and also when you fill the ordering field in the query form. The second tab window is filled at the moment of query execution with Java code that implements the query. You can use that code to export JDOQL queries that you test in the Explorer into your Java code. 
+
+<h3>Refreshing the Cache</h3>
+
+<p>
+When a database is open in the Explorer using client server mode, it can be accessed simultaneously by other applications. If the database is modified by another process the viewer windows in the Explorer might display content from the cache that does not reflect the real content in the database. In this case you can refresh the cache and the viewer windows using the "File | Refresh Data" menu command.    
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='9.3'></a>
+<h2>9.3&nbsp;&nbsp;Editing the Database</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The Explorer is usually used as a viewer of database files, but it can also function as an editor. Therefore, you can create new database files and edit exiting database files using the Explorer.      
+
+<h3>Creating a new Database</h3>
+
+<p>
+The main purpose of the "Open Local Database" dialog box (displayed by "File | Open Local") is to select existing database files, but it can also serve as a basic file manager. Using the toolbar and the context menus of this dialog box (right click the directory tree and the file list to open the context menus), you can copy, cut, paste, delete and rename directories and files. You can also use this dialog to create new directories and database files. Similarly, in the server edition you can manage a remote server file system using "File | Open Remote | Browse". 
+
+<h3>Class Management</h3>
+
+<p>
+The "Class" tabbed window on the left side of the Explorer desktop lists all the persistent classes in the database. For a new, empty database this window is empty. A new persistent class is automatically added to the database when its first instance is stored by the application in the database. To add persistent classes to the database using the Explorer, first create and compile the classes externally in your IDE, and then use the "File | Load New Classes" menu command (or the equivalent context menu command). Notice that JDO metadata for the class (as discussed in <a href='../chapter4/index.html'>chapter 4</a>) must be available, otherwise the load operation will fail. A change to the class schema (for instance, a new persistent field added in the IDE) is applied to the database automatically when the application stores an object with the new schema in the database. To see the change in the Explorer earlier, reload the class using the same "File | Load New Classes" command.
+
+<p>
+You can also delete or rename a selected persistent class using the "Edit | Delete" and the "Edit | Rename" menu commands, respectively, or using the equivalent context menu commands. A deleted class is not shown in the list of classes anymore (unless it is loaded again), but if it still has instances in the database these objects are not affected. Renaming a class is useful as a complementary operation to renaming the class in the IDE, to avoid losing old persistent instances of the class. Similarly, renaming a selected persistent field in the Explorer is useful in order to avoid losing values of that field if the field has been renamed in the IDE.    
+	
+<h3>Object Management</h3>
+
+<p style="margin-bottom: 0px;">
+To construct new persistent objects and store them in the database, open the "Construct New Persistent Objects" dialog box using one of the following methods:   
+<ul style="margin-top: 4px; text-align: justify;" >
+<li>
+Use the "Edit | Construct Objects" menu command.
+</li><li>
+Select a class in the "Class" tabbed window and then use the "Edit | Add To" menu command, or the equivalent "Construct Objects" context menu command.
+</li><li>
+Select an Extent in a viewer window and then use the "Edit | Add To" menu command, or the equivalent "Add To" context menu command.
+</li> 
+</ul>
+
+<p>
+In the dialog box you have to specify the number of objects to construct and their type. Additional information is required for specific types. For instance, most system types require specifying an initial value and arrays require specifying an array length. Click the "OK" button to construct the new persistent objects.
+
+<p>
+You can also use the Explorer to edit the content of database objects. To edit a persistent field you have to first select it in a viewer window (browser or table). You can start editing a value field by double clicking it, by pressing F2, or, more commonly, by simply typing the new value. Other editing commands are provided in the "Edit" menu and in the content menu. Use the "Edit Multi Line String" command to edit a multi line string. Use the "Set Reference" command to set a reference field to a new object, to an exiting object or to null. You can add objects or references to a persistent collection using the "Add To" command, and you can change the order of elements in an ordered collection using the "Move Element" command. The functionality of the "Delete" command changes according to the context. Deleting a reference field sets the value to null without deleting any referenced persistent object. On the other hand, deleting a persistent object (which is represented by a child of an Extent node in a browser window and by a row in a table window) deletes the object itself from the database. The clipboard commands, "Cut" "Copy" and "Paste", may also be used for setting fields (for instance, for copying a reference from one field to another).
+
+<h3>Root Management</h3>
+
+<p>
+The "Edit" menu and the context menu of the "Database" tabbed window provide commands for managing root objects. To define a new root use the "Create Root" command, and then in the "Create a New Root" dialog box set the name of the root and either construct a new object or select an existing object. To define an existing object as a root you can also right click the object in a viewer window and select the "Create Root" command, and then in the "Create a New Root" dialog box you can pick the selected object in the "Reference" category. You can also rename or delete roots (notice that deleting a root does not delete the object from the database, only its name) using commands in these menus.
+
+<h3>Saving Changes</h3>
+
+<p>
+The Explorer manages an active transaction for every open database file. All  editing operations (including loading classes, constructing objects, editing fields, defining roots, etc.) are stored in memory, associated with the active transaction. The "File | Save" menu command (and the equivalent toolbar button) commits the transaction which applies all the changes to the database. The "File | Discard Changes" menu command rolls back the transaction discarding all the changes. After "File | Save" and "File | Discard Changes", the Explorer automatically begins a new transaction for the next editing session. Another useful command, "File | Save As", copies a local database file to a new location, applying all the changes of the current transaction only to the new database file. This command is available only when accessing a local database using embedded mode.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='9.4'></a>
+<h2>9.4&nbsp;&nbsp;Tools and Threads</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The "Thread" tabbed window on the left side of the Explorer desktop manages special database tasks in the Explorer as background threads.  
+
+<h3>Working with Threads</h3>
+
+<p>
+You can start a new thread using commands from the "Tools" menu or from the context menu. A running thread is represented by a line in the "Threads" list. The output of the selected thread is displayed at the bottom of the window. Using the context menu (or the "Tools" and "Edit" menus in the menu bar) you can stop a running thread, delete a thread that is not running, or copy selected lines from the thread output to the clipboard.
+
+<h3>Maintenance Tools</h3>
+
+<p>
+Three maintenance tools are supported by the Explorer. The "Start Garbage Collector" command starts a database garbage collector as a background thread. Objects that are not reachable (by navigation from Extent objects or from roots using persistence reference fields) are deleted from the database. The "Rebuild All Extents" command starts a thread that scans the entire database and rebuilds all the Extents. This tool is useful when changing the value of the "requires-extent" attribute (in the JDO metadata) for a persistent class that already has persistent instances in the database. You can also start this thread for a single class by right clicking the class in the "Class" tabbed window and selecting "Rebuild Class Extent". The "Rebuild All Indexes" command starts a thread that scans the entire database and rebuilds all the indexes. This tool is useful when adding a new index (in the JDO metadata) to a class that already has persistent instances in the database. You can also start this thread for a single class by right clicking the class in the "Class" tabbed window and selecting "Rebuild Class Indexes".
+
+<h3>Server Tools</h3>
+
+<p>
+In the server edition of ObjectDB, the Explorer supports transferring ObjectDB database files from the local machine to the server, and vice versa, using the "Upload to Server" and "Download from Server" commands from the "Tools" menu or from the context menu. In addition, you can use the "Start Database Server" command to start the server as an Explorer thread. The server configuration file is located automatically by the Explorer, but you can specify a configuration path explicitly using "Tools | Options | General". 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='9.5'></a>
+<h2>9.5&nbsp;&nbsp;Options and Settings</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The Explorer settings are organized in a an "Options" dialog box with tabbed pages: "General", "SSL" (in the Server Edition), "Fonts" and "Views". You can open the "Options" dialog box using the "Tools | Options" menu command.  
+
+<h3>The "General" Page</h3>
+
+<p>
+The "General" page contains various options. The "Encoding" combo box should reflect the encoding of strings in the database. ObjectDB stores <code>String</code> instances in the database using the same encoding that they have in memory, which is usually Unicode. If you store <code>String</code> instances in the database that have a different memory encoding you have to set that encoding to manage these strings in the Explorer. This requirement is applied only to the Explorer. In your applications, retrieved <code>String</code> instances always have the same encoding as they had when they were stored, and therefore, there is no need to specify the encoding during retrieval. 
+
+<p style="margin-bottom: 0px;">
+The "General" group of check boxes contains the following options:
+<ul style="margin-top: 4px; text-align: justify;" >
+<li>
+Whether or not to open the last locally opened database file when the Explorer starts.
+</li><li>
+Transaction type (datastore or optimistic) on the open database (see <a href="../chapter5/index.html#5.3">Section 5.3</a>).
+</li><li>
+Whether or not to include instances of subclasses when browsing the Extent of a class.
+</li> 
+</ul>
+
+<p style="margin-bottom: 0px;">
+The "Display" group of check boxes contains the following options:
+<ul style="margin-top: 4px; text-align: justify;" >
+<li>
+Default viewer window (Table or Browser), as discussed in <a href="#9.2">Section 9.2</a>.
+</li><li>
+Whether or not to use different colors for open an close nodes in a Browser window.
+</li><li>
+Whether to use multi line string editor or single line string editor by default.
+</li> 
+</ul>
+
+<p>
+When the "Classpath for persistent classes and metadata" field is set, the Explorer uses that path to locate persistent classes and JDO metadata. Setting this field is not mandatory because you can browse and edit ObjectDB database files when class and metadata files are not available. Some features of the Explorer, however, do require setting the classpath. For instance, executing JDOQL queries containing user defined methods can be supported by the Explorer only when the code of these methods is available using the specified classpath.  
+       
+<p>
+The "Server Configuration Path" field is displayed only by the Server edition. If not initialized, it is automatically set to the path of the default server configuration file the first time the server is run in the Explorer, but you can always change the path to use a different configuration file. 
+
+<h3>The "SSL" Page</h3>
+
+<p>
+The "SSL" page (which is displayed only in the Server Edition) contains definitions for connecting to an ObjectDB server using SSL. The settings in this page are used only when the "Use SSL" check box in the "Open Remote Database" dialog box (which is shown by the "File | Open Remote" menu command) is checked. You can learn more about using SSL with ObjectDB in <a href='../chapter8/index.html#8.4'>section 8.4</a>. Notice that all the keystore and trustore details that are specified in this options page refer to the client side connection. When running an ObjectDB server as an Explorer thread its SSL setting is loaded from the server configuration file as usual.
+
+<h3>The "Fonts" Page</h3>
+
+<p>
+The "Fonts" page is used to set the appearance of different Explorer components. Select one or more elements on the left side and then use the combo boxes on the right side to choose font face, font size, font style, background color and foreground color. Click the "Reset" button to apply the default settings to the selected elements. To discard all changes and apply the default settings to all the elements, click the "Reset All" button.        
+
+<h3>The "Views" Page</h3>
+
+<p>
+In the "Views" page you can select the persistent fields that are shown in the viewer windows and their order of appearance. This is especially useful when working with classes with a large number of fields where displaying all the fields is problematic (for instance, in a row in the table viewer). 
+
+<p>
+There are three views. The "Table View" determines which fields in each persistent class are displayed as columns in Table viewer windows. The "Browser View" determines which fields are displayed as child nodes when browsing persistent objects using the browser viewer windows. The "Summary" view is also used for the browser viewer. It determines which fields are displayed as a summary of a persistent object in the node that represents the object itself. The "Table View" and the "Browser View" are initialized to contain all the persistent fields, but the "Summary" is initialized as an empty view. Therefore, unless set, persistent objects are presented in the Browser viewer as an empty set of fields (using "{}").
+
+<p>
+To set a view for a class, first select one of the three supported views and then select the persistent class in the list of classes. You can change the visibility of persistent fields of the class (in the selected view) using the Left and Right arrow buttons to move fields between the "Shown Fields" and the "Hidden Fields" lists. You can change the order of the shown fields by using the Up and Down arrow buttons or the "Field Ordering" combo box. A view for a class can also be set by right clicking one of its instances in the a viewer window (table or browser) and using the "Set View" context menu command. 
+
+<p>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

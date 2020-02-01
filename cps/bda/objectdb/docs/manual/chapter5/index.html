@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - JDO Environment
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 5 - JDO Connections</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p style="margin-bottom: 0px;">
+This chapter describes three essential interfaces for using JDO:
+
+<p>
+<div class='jumpers'>
+<p>
+<a href='#5.1'>5.1&nbsp;&nbsp;javax.jdo.PersistenceManagerFactory</a>
+<br>
+The <code>PersistenceManagerFactory</code> interface represents a factory of database connections.
+<br>
+Its main role is to provide <code>PersistenceManager</code> instances.
+<p>
+<a href='#5.2'>5.2&nbsp;&nbsp;javax.jdo.PersistenceManager</a>
+<br>
+The <code>PersistenceManager</code> interface represents a database connection.
+<br>
+Every operation on a database requires a <code>PersistenceManager</code> instance. 
+<p>
+<a href='#5.3'>5.3&nbsp;&nbsp;javax.jdo.Transaction</a>
+<br>
+The <code>Transaction</code> interface represents a transaction on a database.
+<br>
+Every operation that modifies the content of the database requires an active transaction.
+</div>
+
+<p>
+The focus of this chapter is on setting up a runtime environment for using JDO. Explanations on how to use this environment to do database operations, such as storing, retrieving, updating and deleting database objects, are provided in the next chapter (<a href='../chapter6/index.html'>Chapter 6</a>).     
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='5.1'></a>
+<h2>5.1&nbsp;&nbsp;javax.jdo.PersistenceManagerFactory</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Most applications require multiple database connections during their lifetime. For instance, in a web application it is very common to establish a separate database connection for every web request. In general, holding a database connection open for longer than necessary is not recommended in multi user applications because of the resources that every connection consumes.
+
+<p>
+Database connections are managed in JDO by the <code>javax.jdo.PersistenceManagerFactory</code> interface.
+A <code>PersistenceManagerFactory</code> instance represents a specific database address (local or remote), and connections to that database are obtained using its <code>getPersistenceManager()</code> method. Each time this method is called, a <code>PersistenceManager</code> instance representing a connection to the database is obtained. To improve efficiency, a <code>PersistenceManagerFactory</code> instance may manage a pool of free <code>PersistenceManager</code> instances. From the developer's point of view, connection pool management is transparent. The functionality of  <code>PersistenceManager</code> instances returned by the  <code>getPersistenceManager()</code> method is the same for both new database connections and database connections obtained from a pool.
+
+<p>
+Both <code>PersistenceManagerFactory</code> and <code>PersistenceManager</code> are defined as JDO interfaces, not as classes. Every JDO implementation, including ObjectDB, defines classes that implement these interfaces. When using ObjectDB you are actually working with instances of ObjectDB classes, but to make your application JDO portable these objects are accessed through the standard JDO interfaces.
+
+<h3>Obtaining a PersistenceManagerFactory</h3>
+
+<p>
+The following code demonstrates how to obtain a <code>PersistenceManagerFactory</code> instance:
+
+<pre>
+import java.util.Properties;
+import javax.jdo.*;
+    :
+    :
+  Properties properties = new Properties();
+  properties.setProperty(
+    "javax.jdo.PersistenceManagerFactoryClass", "com.objectdb.jdo.PMF");
+  properties.setProperty(
+    "javax.jdo.option.ConnectionURL", "local.odb");
+
+  PersistenceManagerFactory pmf =
+    JDOHelper.getPersistenceManagerFactory(properties);
+</pre>  
+
+<p style="margin-bottom: 0px;">
+The requested <code>PersistenceManagerFactory</code> is specified using a 
+<code>Properties</code> instance. Each property consists of two strings, a name that identifies the property, and a value for that property. The two properties that are set in the code above are usually essential:
+<ul style="margin-top: 4px; margin-bottom: 0px;">
+<li>
+<code>javax.jdo.PersistenceManagerFactoryClass</code>
+<br> Specifies the real type of the constructed <code>PersistenceManagerFactory</code> instance.
+<br>
+When using ObjectDB, the value should always be <code>"com.objectdb.jdo.PMF"</code> (the name of ObjectDB's class that  implements the <code>PersistenceManagerFactory</code> interface).
+</li>
+<li>
+<code>javax.jdo.option.ConnectionURL</code>
+<br>
+Specifies a database location. To access a database file directly using embedded mode, specify either its absolute path or its relative path.
+</li>
+</ul>
+
+<p style='text-align: left;'>
+The <code>JDOHelper.getPersistenceManagerFactory(</code>...<code>)</code> static method constructs and returns a new <code>PersistenceManagerFactory</code> instance, based on the specified properties.
+
+<h3>Using a Properties File</h3>
+<p>
+Properties can also be specified in a file, as demonstrated by the following properties file:
+
+<pre>
+javax.jdo.PersistenceManagerFactoryClass=com.objectdb.jdo.PMF
+javax.jdo.option.ConnectionURL=local.odb
+</pre>
+
+<p>
+Assuming the name of the file is <b>jdo.properties</b>, it can be loaded by a class in the same directory using:
+ 
+<pre>
+import java.io;
+import java.util.Properties;
+import javax.jdo.*;
+      :
+      :
+  InputStream in = getClass().getResourceAsStream("jdo.properties");
+  try {
+    Properties properties = new Properties();
+    properties.load(in);
+    PersistenceManagerFactory pmf =
+      JDOHelper.getPersistenceManagerFactory(properties);
+  }
+  finally {
+    in.close();   
+  }
+</pre>  
+
+<p>  
+Notice that the code above may throw an <code>IOException</code> if the <b>jdo.properties</b> file is not found. In addition, the call to <code>getClass()</code> should be replaced by some other expression (e.g. <code>MyClass.class</code>) in a static context (i.e. a static method and a static initializer) in which <code>this</code> is undefined. 
+
+<h3>Connection Properties</h3>
+
+<p>
+The <code>javax.jdo.option.ConnectionURL</code> property specifies the database location and whether embedded mode or client server mode should be used to access that database. To use embedded mode, an absolute path or a relative path of a local database file has to be specified.
+<br>
+To use client server mode, a url in the format <b>objectdb://host:port/path</b> has to be specified. In this case, a database server is expected to be running on a machine named <b>host</b> (could be domain name or ip address) and listening to the specified <b>port</b> (the default is 6136 when not specified). The <b>path</b> indicates the location of the database file on the server, relative to the server root path (see <a href='../chapter8/index.html'>chapter 8</a> for more details). Client server mode is only supported by the ObjectDB server database edition.
+
+<p>
+The following code demonstrates a connection to a database located at path <b>/my.odb</b> in a database server running on <b>localhost</b> (the same machine) and listening to the default port (6136): 
+
+<pre>
+  Properties properties = new Properties();
+  properties.setProperty(
+    "javax.jdo.PersistenceManagerFactoryClass", "com.objectdb.jdo.PMF");
+  properties.setProperty(
+    "javax.jdo.option.ConnectionURL", "objectdb://localhost/my.odb");
+  properties.setProperty("javax.jdo.option.ConnectionUserName", "john");
+  properties.setProperty("javax.jdo.option.ConnectionPassword", "itisme");
+
+  PersistenceManagerFactory pmf =
+    JDOHelper.getPersistenceManagerFactory(properties);
+</pre>  
+
+<p>
+The <code>javax.jdo.option.ConnectionUserName</code> and
+<code>javax.jdo.option.ConnectionPassword</code> properties are usually required  in a client server connection to enable user identification and permission checking. Username and password are optional in a client server connection only when the server configuration allows anonymous access to the database. If not specified here, username and password can also be specified later when obtaining a <code>PersistenceManager</code> instance, as explained in the next section. In embedded mode, in which permissions are not managed, these properties are always optional and ignored if specified.
+
+<p>
+Connection properties can also be managed later using methods of the <code>PersistenceManagerFactory</code>:  
+
+<pre>
+  // Using the setter methods:
+  pmf.setConnectionURL("objectdb://localhost/data.odb");
+  pmf.setConnectionUserName("john");
+  pmf.setConnectionPassword("itisme");
+
+  // Using the getter methods:
+  System.out.println("Database URL: " + pmf.getConnectionURL());
+  System.out.println("Username: " + pmf.getConnectionUserName());
+  // No getter for the password because of security considerations.
+</pre>
+
+<h3>Transaction Properties</h3>
+
+<p>
+JDO defines five optional modes for working with transactions, represented by five flags that can be set or cleared. All these optional modes are supported by ObjectDB. Flags can be specified for a specific <code>Transaction</code> (as shown in <a href='#5.3'>section 5.3</a>) or at the <code>PersistenceManagerFactory</code> level as a default for all the transactions of <code>PersistenceManager</code> instances obtained from that factory.    
+
+<p>
+Setting these flags for a PersistenceManagerFactory can be done using boolean properties: 
+
+<pre>
+  properties.setProperty("javax.jdo.option.Optimistic", "false");
+  properties.setProperty("javax.jdo.option.NontransactionalRead", "true");
+  properties.setProperty("javax.jdo.option.NontransactionalWrite", "false");
+  properties.setProperty("javax.jdo.option.RetainValues", "true");
+  properties.setProperty("javax.jdo.option.RestoreValues", "false");
+
+  PersistenceManagerFactory pmf =
+    JDOHelper.getPersistenceManagerFactory(properties);
+</pre>
+
+<p>
+Actually, the settings above are redundant because they are the default flag values in ObjectDB (but not in JDO, which does not specify a default). Opposite values should be specified in order to change the default.
+
+<p>
+In addition, the <code>PersistenceManagerFactory</code> class includes getter 
+and setter methods:
+<pre>
+  // Using the setter methods:
+  pmf.setOptimistic(true);
+  pmf.setNontransactionalRead(false);
+  pmf.setNontransactionalWrite(true);
+  pmf.setRetainValues(false);
+  pmf.setRestoreValues(true);
+
+  // Using the getter methods:
+  boolean flag1 = pmf.getOptimistic();
+  boolean flag2 = pmf.getNontransactionalRead();
+  boolean flag3 = pmf.getNontransactionalWrite();
+  boolean flag4 = pmf.getRetainValues();
+  boolean flag5 = pmf.getRestoreValues();
+</pre>
+
+<p>
+Transaction modes are discussed in <a href='#5.3'>section 5.3</a>, which deals with transactions. 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='5.2'></a>
+<h2>5.2&nbsp;&nbsp;javax.jdo.PersistenceManager</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The <code>javax.jdo.PersistenceManager</code> interface represents database connections. A <code>PersistenceManager</code> instance is required for every operation on a database. It may represent either a remote connection to a remote database server (in client server mode) or a local connection to a local database file (in embedded mode). The functionality in both cases is the same.  
+
+<p>
+<code>PersistenceManager</code> instances are usually obtained for short term use (for example, per web request in a web application). In some cases, however, a single <code>PersistenceManager</code> instance can be used during the entire application run. This may be a good option in a single-user desktop application using an embedded ObjectDB database (for example, a personal organizer). In multi-user applications (using client server mode to connect to the database), short term connections are preferred because every open connection consumes essential server resources.          
+
+<h3>Obtaining a Database Connection</h3>
+
+<p>
+Given a <code>PersistenceManagerFactory</code> instance <code>pmf</code>, a <code>PersistenceManager</code> instance can be obtained by:  
+
+<pre>
+  PersistenceManager pm = pmf.getPersistenceManager();
+</pre>
+
+<p>
+If the connection requires username and password other than the <code>PersistenceManagerFactory</code>'s username and password (irrelevant when using embedded mode), new values can be specified:
+
+<pre>
+  PersistenceManager pm = pmf.getPersistenceManager(userName, password);
+</pre>
+
+<p>
+The settings of the <code>PersistenceManagerFactory</code> at the time of this operation are used to initialize the new <code>PersistenceManager</code> instance. The <code>PersistenceManagerFactory</code>'s connection url specifies the location of the database.
+Using an ObjectDB extension, a <code>PersistenceManager</code> instance can also be obtained directly, without a <code>PersistenceManagerFactory</code> instance:
+  
+<pre>
+  PersistenceManager pm = Utilities.getPersistenceManager("local.odb");
+</pre>
+
+<p>
+<b>Note:</b> These operations can be used for both opening a database and creating a new one. If a database file is not found at the specified connection url, ObjectDB tries to <b>create a new, empty database</b> at that location. This behavior is an ObjectDB extension. JDO does not define a standard method for creating a new database.
+
+<h3>Closing a Database Connection</h3>
+
+<p>
+A typical short term database connection has the following structure: 
+
+<pre>
+  PersistenceManager pm = pmf.getPersistenceManager();
+  try {
+    // Operations on the database should come here. 
+  }
+  finally {
+    if (pm.currentTransaction().isActive())
+      pm.currentTransaction().rollback();
+    if (!pm.isClosed())
+      pm.close();
+  }
+</pre>
+
+<p>
+The <code>finally</code> block ensures database connection closure (and rolling back an active transaction if any) regardless of whether the operations succeeded or threw an exception. 
+
+<h3>Exception Handling</h3>
+
+<p>
+The code fragment above, as with any other code that uses JDO, may throw instances of JDOException (and its subclasses) as exceptions. Therefore, it is important to wrap JDO method calls in a <code>try-catch</code> block: 
+
+<pre>
+  try {
+    // The code above, containing database operations, should come here.    
+  }
+  catch (JDOException x) {
+    // Error handling code should come here.
+  }
+</pre>
+
+<p>
+Because <code>JDOException</code> is a subclass of <code>RuntimeException</code> the compiler does not force a <code>throws</code> declaration if code that uses JDO is not wrapped by a <code>try-catch</code> block (unlike code working with files and I/O, for example, in which handling a checked exception, such as  <code>IOException</code>, is forced by the compiler). Therefore, extra caution is required by the developer to make sure that at some level a proper <code>try-catch</code> block exists.
+
+<p>
+More details on the JDO exception hierarchy can be found at: 
+<a href="http://java.sun.com/products/jdo/javadocs/" target="blank">http://java.sun.com/products/jdo/javadocs/</a>.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='5.3'></a>
+<h2>5.3&nbsp;&nbsp;javax.jdo.Transaction</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The <code>javax.jdo.Transaction</code> interface is used to represent and manage transactions on a database. In JDO, operations that affect the content of the database (store, update, delete) must always be performed within an active transaction. On the other hand, reading from the database does not require an active transaction unless the <code>NontransactionalRead</code> mode is off, as explained below.   
+
+<h3>Working with Transactions</h3>
+
+<p>
+The code from the section above is now adjusted to work with a transaction:   
+
+<pre>
+  PersistenceManager pm = pmf.getPersistenceManager();
+  try {
+    pm.currentTransaction().begin();
+    // Operations that modify the database should come here. 
+    pm.currentTransaction().commit();
+  }
+  finally {
+    if (pm.currentTransaction().isActive())
+      pm.currentTransaction().rollback();
+    if (!pm.isClosed())
+      pm.close();
+  }
+</pre>
+
+<p>
+Every <code>PersistenceManager</code> instance holds a reference to an attached <code>Transaction</code> instance (i.e. there is a one to one relationship between these two instances). The <code>currentTransaction()</code> method can be called on any <code>PersistenceManager</code> instance, in any context, to return its associate <code>Transaction</code> object.
+The strong one to one relationship implies that, theoretically, transaction management could be done directly in <code>PersistenceManager</code>. But, the designers of JDO preferred to define a separate interface for managing transactions.    
+
+<p>
+A transaction is started by a call to <code>begin()</code> and ended by a call to <code>commit()</code> or <code>rollback()</code>. All the operations on the database within these boundaries are associated with that transaction and are kept in memory until the transaction is ended. If the transaction is ended with <code>rollback()</code>, all the modifications to the database are discarded. On the other hand, ending the transaction with <code>commit()</code> propagates all the database modifications physically to the database. If for any reason a <code>commit()</code> fails, the transaction is rolled back automatically (including rolling back modifications that have already been propagated to the database prior to the failure) and an exception is thrown. The type of the exception is a <code>JDOException</code> subclass that reflects the specific error that occurred.
+
+<p>
+A transaction is always expected to be atomic, so a situation in which only some of the changes are applied to the database is not acceptable.   
+Before <code>commit()</code> starts writing to the database it stores the changes in a related temporary file in the same directory as the database file. For instance, a database file named <b>db.odb</b>, would have a corresponding temporary file named <b>.$db.odb$</b>. After the transaction is completed the temporary file is marked as obsolete (and for efficiency, it is deleted only when the database is closed). If the system crashes during a <code>commit()</code> (e.g. power failure), and before the changes are able to be completely written to the database, the transaction is expected to be completed, using the temporary file, the next time the database is opened. This feature, which is called <i>auto recovery</i>, is not supported by the free edition of ObjectDB. To ensure database consistency, it is recommended that write caching be disabled - at least for the database file and the recovery temporary file. Consult your operating system documentation for instructions on how to accomplish this.      
+
+<p>
+It is mainly a matter of style whether or not to use a separate variable to hold the <code>Transaction</code> instance. The following code is equivalent to the code above:
+
+<pre>
+  PersistenceManager pm = pmf.getPersistenceManager();
+  Transaction tr = pm.currentTransaction(); 
+  try {
+    tr.begin();
+    // Operations that modify the database should come here. 
+    tr.commit();
+  }
+  finally {
+    if (tr.isActive())
+      tr.rollback();
+    if (!pm.isClosed())
+      pm.close();
+  }
+</pre>
+
+<h3>Automatic Lock Management</h3>
+
+<p>
+ObjectDB manages an automatic lock mechanism in order to prevent a database object from being modified by two different users (which are represented by two different <code>PersistenceManager</code> instances) at the same time. In an active transaction, on every retrieval of an object from the database a READ lock on that object is obtained by the <code>PersistenceManager</code>. On every attempt to modify a persistent object, within an active transaction, a WRITE lock is obtained on that object by the <code>PersistenceManager</code>. Multiple READ locks of different <code>PersistenceManager</code> instances on the same object at the same time are allowed, but a WRITE lock is expected to be exclusive. Therefore, any attempt to modify an object that is currently in use by some other <code>PersistenceManager</code> instance (for read or write), as well as any attempt to read an object that is currently being modified by some other <code>PersistenceManager</code>, blocks the thread until the previous lock is released. When a transaction ends, all the locks held by that transaction are automatically released. 
+
+<p>
+To avoid a deadlock, threads do not wait for a lock forever. When a lock request cannot be granted, the requesting thread waits 50 milliseconds and then makes another attempt to obtain the lock. After 40 retries (about 2 seconds) a <code>JDOUserException</code> (a subclass of <code>JDOException</code>) is thrown. These constants (50 milliseconds and 40 retries) can be changed using System properties (before the database is opened) as so:
+
+<pre>
+  // Maximum 10 tries before throwing an exception: 
+  System.setProperty("com.objectdb.lock.retry.max", "10");
+  
+  // Wait 100 milliseconds between every two tries:
+  System.setProperty("com.objectdb.lock.retry.wait", "100");  
+</pre>
+
+<p>
+Transactions that use the lock mechanism described above are called, in JDO, <i>datastore transactions</i>. This type of transaction is used in ObjectDB by default, but ObjectDB also supports another type of transaction called <i>optimistic transactions</i>. When using optimistic transactions, objects are not locked. Therefore, two transactions may update the same persistent object at the same time, and conflicts are detected at commit time. If a conflict happens, the first committed transaction succeeds while the second fails, throws an exception, and is rolled back automatically.
+
+<p>
+Optimistic transactions may be a good choice when long running transactions are required. This would avoid the excessively long object locking periods that datastore transactions may cause. On short running transactions, however, or when the probability for lock conflicts is high, datastore transactions are preferred.
+<p>
+
+<h3>JDO Transaction Flags</h3>
+
+<p>
+Transaction modes can be set at <code>PersistenceManagerFactory</code> level (as shown in <a href='#5.1'>section 5.1</a>), or at the <code>PersistenceManager</code> or <code>Transaction</code> levels, using getter and setter methods:
+
+<pre>
+  // Using the setter methods:
+  pm.currentTransaction().setOptimistic(true);
+  pm.currentTransaction().setNontransactionalRead(false);
+  pm.currentTransaction().setNontransactionalWrite(true);
+  pm.currentTransaction().setRetainValues(false);
+  pm.currentTransaction().setRestoreValues(true);
+
+  // Using the getter methods:
+  boolean flag1 = pm.currentTransaction().getOptimistic();
+  boolean flag2 = pm.currentTransaction().getNontransactionalRead();
+  boolean flag3 = pm.currentTransaction().getNontransactionalWrite();
+  boolean flag4 = pm.currentTransaction().getRetainValues();
+  boolean flag5 = pm.currentTransaction().getRestoreValues();
+</pre>
+
+<p>
+Here is a short explanation of each one of these modes:
+
+<h4>javax.jdo.option.Optimistic</h4>
+<p>
+Indicates whether optimistic locking (optimistic transaction) or pessimistic locking (datastore transaction) is used. The default in ObjectDB is <code>false</code>, indicating that transactions are datastore transactions by default.   
+
+<h4>javax.jdo.option.NontransactionalRead</h4>
+<p>
+Indicates whether or not database operations that do not modify the database content (queries, object retrieval, reading) can be done without an active transaction. The default in ObjectDB is <code>true</code>, indicating that only operations that modify the database require an active transaction. A <code>false</code> value enforces the use of an active transaction when reading from the database. 
+
+<h4>javax.jdo.option.NontransactionalWrite</h4>
+<p>
+Indicates whether or not persistent objects (i.e. objects that represent database objects) can be modified when no transaction is active. The default in ObjectDB is <code>false</code>, indicating that any attempt to modify a persistent object without an active transaction is not allowed and will cause a a <code>JDOUserException</code> (a subclass of <code>JDOException</code>) to be thrown. A <code>true</code> value enables modifying persistent objects without an active transaction, but in this case changes are only performed in memory (they are never propagated to the database). 
+
+<h4>javax.jdo.option.RetainValues</h4>
+<p>
+Indicates whether or not persistent objects preserve their content after transaction commit. The default in ObjectDB is <code>true</code>, indicating that persistent object fields are the same before and after <code>commit()</code>.
+A <code>false</code> value causes persistent objects to become hollow on commit, causing all persistent fields to be assigned default values. The content of a hollow object is automatically reread from the database by JDO at the time the application tries to access it (unless <code>NontransactionalRead</code> is <code>false</code> and there is no active transaction - in which case an exception is thrown). Usually the only difference between the two modes is in performance, where the default <code>true</code> value is expected to be slightly more efficient.
+
+<h4>javax.jdo.option.RestoreValues</h4>
+<p>
+Indicates whether or not, on transaction rollback, persistent objects are restored to their original content at the beginning of the transaction. The default in ObjectDB is <code>false</code>, indicating that persistent objects become hollow on <code>rollback()</code>. In this case, their content is reread from the database by JDO only when the application tries to access them again. A <code>true</code> value causes persistent objects to be restored to their original value at the time of transaction rollback. Usually the only difference between the two modes is in performance. If <code>rollback()</code> is not so common, turning this flag off (using the default <code>false</code> value) is expected to be more efficient.
+
+<p>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

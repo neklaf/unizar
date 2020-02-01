@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>ObjectDB - Object Database for Java/JDO - Web Application Demo</title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<h1>Guest Book - A Minimal JDO Database Web Application</h1>
+
+<h2>Introduction</h2>
+
+<p>
+The <b>Guest Book</b> sample demonstrates using ObjectDB for Java/JDO in a minimal web application with a single JSP web page.
+Initially, an empty guest book with a brief form is displayed:  
+
+<p>
+<div align='center'>
+<img src='web-application-1.gif'
+	width='564' height='395' alt='JDO Web Application 1'>
+</div>
+
+<p style='padding-top: 12px;'>
+Every new registration (filling the form and pressing Add) extends the list of guests:  
+
+<p>       
+<div align='center'>
+<img src='web-application-2.gif'
+	width='564' height='395' alt='JDO Web Application 2'>
+</div>
+
+<p>
+The list of guests is stored by the web application, using JDO, in an ObjectDB database.
+
+<h2>Web Application File Structure</h2>
+
+<p>
+The entire web application is located under the <b>jdo-guestbook</b> directory, in a standard file structure for a Java web application.
+For example, the web application descriptor file (<b>web.xml</b>) containing general definitions of the web application, is located as expected in the <b>WEB-INF</b> directory:
+
+<p>       
+<div align='center'>
+<img src='web-application-3.gif'
+	width='202' height='248' alt='JDO Web Application 3'>
+</div>
+
+<p>
+Java classes (defined in <b>Guest.java</b> and <b>WebAppMgr.java</b>) as well as other resources required at runtime (JDO metadata defined in <b>package.jdo</b>), are located under <b>WEB-INF/classes</b> in paths which reflect their packages.
+Essential jar files for using ObjectDB (<b>odbfe.jar</b> and <b>jdo.jar</b>) are located in the <b>WEB-INF/lib</b> directory (could be located in the server's global lib directory to enable using ObjectDB in more than one web application).
+Details of all the guests are stored in the <b>guestbook.odb</b> database file. Initially this database file does not exist - it is created on first guest registration.
+Finally, <b>index.jsp</b> implements the only web page in this demo, which displays the list of guests and manages registration of new guests.           
+
+<h2>The Persistence Capable Class</h2>
+
+<p>
+A single persistence capable class, <code>guestbook.pc.Guest</code>, is sufficient to represent the data of this simple application.
+Every <code>Guest</code> instance represents a registered guest and holds its details in three persistent fields:  
+
+<p>
+<p align='center'><b> WEB-INF/classes/guestbook/pc/Guest.java </b>
+<table border='0' cellpadding='0' cellspacing='0' width='100%'><tr><td>
+<pre style='font-size: 9pt;'>
+ // ObjectDB for Java/JDO - The Guest Book - A Mimimal JDO Based Web Application
+ // Copyright (C) 2001-2003, ObjectDB Software. All rights reserved.
+ 
+ package guestbook.pc;
+ 
+ import java.text.SimpleDateFormat;
+ import java.util.Date;
+ 
+ /**
+  * The Guest class represents a single guest in the guest book.
+  */
+ public class Guest {
+     
+     // Static Date Formatter:
+     private static SimpleDateFormat formatter =
+         new SimpleDateFormat("MMM dd, yyyy");
+     
+     // Persistent Fields:
+     private String firstName;
+     private String lastName;
+     private Date date;
+     private int dummy;
+     
+     // Constructors:
+     public Guest() {}
+     public Guest(String firstName, String lastName) {
+         this.firstName = firstName;
+         this.lastName = lastName;
+         this.date = new Date();
+     }
+     
+     // String Representation:
+     public String toString() {
+         return firstName + " " + lastName + " (" + formatter.format(date) + ")";
+     }
+ }
+ </pre>
+</td></tr></table>
+<br>
+
+<p>
+A <code>package.jdo</code> file is required to define the <code>Guest</code> class as persistence capable:  
+
+<p>
+<p align='center'><b> WEB-INF/classes/guestbook/pc/package.jdo </b>
+<table border='0' cellpadding='0' cellspacing='0' width='100%'><tr><td>
+<pre style='font-size: 9pt;'>
+ &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+ &lt;!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd"&gt;
+ 
+ &lt;jdo&gt;
+     &lt;package name="guestbook.pc"&gt;
+         &lt;class name="Guest" /&gt;
+     &lt;/package&gt;
+ &lt;/jdo&gt;</pre>
+</td></tr></table>
+<br>
+
+<h2>JSP Page and Web Application Manager</h2>
+
+<p>
+The <b>index.jsp</b> page displays the list of guests and manages registration of new guests:
+
+<p>
+<p align='center'><b> index.jsp </b>
+<table border='0' cellpadding='0' cellspacing='0' width='100%'><tr><td>
+<pre style='font-size: 9pt;'>
+ &lt;%@page import="javax.jdo.*,java.util.Iterator,guestbook.*,guestbook.pc.*" %&gt;
+ &lt;%@page isThreadSafe="false" %&gt; &lt;%-- more efficient and safe in
+                                      a website which is not too loaded --%&gt;
+ 
+ &lt;%! static { WebAppMgr.enhanceAll(); } %&gt;
+     
+ &lt;html&gt;
+ &lt;head&gt;&lt;title&gt;
+     Guest Book - ObjectDB for Java/JDO - Web Application Demo
+ &lt;/title&gt;&lt;/head&gt;
+ &lt;body&gt; &lt;%
+ 
+ // Obtain a PersistenceManager instance:
+ PersistenceManager pm = WebAppMgr.getPersistenceManager(application);
+ 
+ try {
+     // Handle a filled form (if any):
+     String firstName = request.getParameter("firstName");
+     String lastName = request.getParameter("lasstName");
+     if (firstName != null &amp;&amp; lastName != null)
+     {
+         pm.currentTransaction().begin();
+         pm.makePersistent(new Guest(firstName,lastName));
+         pm.currentTransaction().commit();
+     } %&gt;
+ 
+     &lt;h1&gt;The Guest Book&lt;/h1&gt;
+     &lt;p&gt;&lt;b&gt;ObjectDB for Java/JDO - Web Application Demo&lt;/b&gt;&lt;/p&gt;
+     &lt;hr&gt;
+ 
+     &lt;form method="POST" action="index.jsp"&gt;
+         First Name: &lt;input type="text" name="firstName"&gt; &amp;nbsp;&amp;nbsp;
+         Last Name: &lt;input type="text" name="lasstName"&gt; &amp;nbsp;&amp;nbsp;
+         &lt;input type="submit" value="Add"&gt;
+     &lt;/form&gt;
+ 
+     &lt;hr&gt;&lt;ol&gt; &lt;%
+     // Display the list of guests:
+     Extent extent = pm.getExtent(Guest.class, false);
+     Iterator itr = extent.iterator();
+     while (itr.hasNext()) { %&gt;
+         &lt;li&gt; &lt;%= itr.next() %&gt; &lt;/li&gt; &lt;%
+     }
+     extent.close(itr); %&gt;
+     &lt;/ol&gt;&lt;hr&gt; &lt;%
+ 
+ } finally {
+     // Close the PersistenceManager:
+     if (pm.currentTransaction().isActive())
+         pm.currentTransaction().rollback();
+     pm.close();
+ } %&gt;
+ 
+ &lt;font size="-1"&gt;Powered by
+ &lt;a href="http://www.objectdb.com" target="_blank"&gt;ObjectDB Java/JDO Database&lt;/a&gt;
+ &lt;/font&gt;
+ 
+ &lt;/body&gt;
+ &lt;/html&gt;
+ </pre>
+</td></tr></table>
+<br>
+
+<p>
+When the page is first loaded, the <code>WebAppMgr.enhanceAll()</code> static method is invoked in order to ensure on the fly JDO enhancement of all the persistence capable classes.
+
+<p>
+A <code>PersistenceManager</code> instance which represents a connection to the database is obtained using the <code>WebAppMgr.getPersistenceManager()</code> static method. A <code>try-finally</code> block ensures closing the <code>PersistenceManager</code> on any case, including on errors, to avoid lock problems.
+If <code>firstName</code> and <code>lastName</code> parameters are specified (the page responses to the form) - a new <code>Guest</code> instance is constructed and stored into the database.
+The list of existing <code>Guest</code> instances is retrieved from the database using the class's <code>Extent</code>.
+
+<p>
+Common services (which may be shared by more than one JSP page) are defined in the <code>WebAppMgr</code> class: 
+
+<p align='center'><b> WEB-INF/classes/guestbook/WebAppMgr.java </b>
+<table border='0' cellpadding='0' cellspacing='0' width='100%'><tr><td>
+<pre style='font-size: 9pt;'>
+ // ObjectDB for Java/JDO - The Guest Book - A Mimimal JDO Based Web Application
+ // Copyright (C) 2001-2003, ObjectDB Software. All rights reserved.
+ 
+ package guestbook;
+ 
+ import java.io.File;
+ import java.util.Properties;
+ import javax.jdo.*;
+ import javax.servlet.*;
+ 
+ /**
+  * This class handles JDO enhancement and PersistenceManager allocations.
+  */
+ public class WebAppMgr {
+     
+     /**
+      * Ensures on the fly JDO enhancement of persistence capable classes.
+      * NOTE: NO PERSISTENCE CAPABLE CLASS IS MENTIONED IN THIS CLASS!
+      * (otherwise classes might be loaded into JVM before enhancement).
+      */
+     public static void enhanceAll() {
+         if (!enhanced) {
+             com.objectdb.Enhancer.enhance("guestbook.pc.*");
+             enhanced = true;
+         }
+     }
+     private static boolean enhanced; // indicates if already been done
+ 
+     /**
+      * Obtains a PersistenceManager instance.
+      */
+     public static PersistenceManager getPersistenceManager(
+         ServletContext context) {
+         
+         // Prepare an application scope PersistenceManagerFactory when needed:
+         if (pmf == null) {
+             Properties properties = new Properties();
+             properties.setProperty(
+                 "javax.jdo.PersistenceManagerFactoryClass",
+                 "com.objectdb.jdo.PMF" // always the same for ObjectDB
+             );
+             properties.setProperty(
+                 "javax.jdo.option.ConnectionURL",
+                 context.getRealPath("/WEB-INF/db/guestbook.odb")
+                     // path is relative to web application root
+             );
+             pmf = JDOHelper.getPersistenceManagerFactory(properties);
+         }
+         
+         // Return a request scope PersistenceManager instance:
+         return pmf.getPersistenceManager();
+     }
+     private static PersistenceManagerFactory pmf; // holds a global PMF
+ }
+ </pre>
+</td></tr></table>
+<br>
+
+<h2>Web Application Deployment</h2>
+
+<p style='margin-bottom: 4px;'>
+To install and run the guest book sample you will need:
+<ul>
+<li>
+Any edition of ObjectDB for Java/JDO (you can download the 
+<a target="_blank" href="/database/jdo/free-download/">Free Database Edition</a>
+which also includes this Guest Book sample).
+</li>
+<li>
+Any J2EE Application Server or Web Server (IBM Websphere, Bea WebLogic, Borland Application Server, Sun One Server, JBoss, Apache Tomcat, Caucho Resin, Orion, Macromedia JRun, Jetty, etc.).
+</li>
+</ul>
+
+<h3>Step by step instructions for Apache Tomcat:</h3>
+<ol style='margin-top: 8px;'>
+<li>
+Download and install Apache Tomcat (<a target="_blank" href="http://jakarta.apache.org/tomcat/">http://jakarta.apache.org/tomcat/</a>).
+</li>
+<li>
+Copy the entire <b>jdo-guestbook</b> directory into <b>&lt;TOMCAT_HOME&gt;/webapps</b> <br>(from <b>&lt;OBJECTDB_HOME&gt;/samples</b>).
+</li>
+<li>
+Copy ObjectDB and JDO jar files (from <b>&lt;OBJECTDB_HOME&gt;/lib</b>) into <b>&lt;TOMCAT_HOME&gt;/webapps/jdo-guestbook/WEB-INF/lib/</b> (application scope) or into <b>&lt;TOMCAT_HOME&gt;/shared/lib/</b> (server scope).
+</li>
+<li>
+Start the web server by running <b>startup.sh</b> (Unix) or <b>startup.bat</b> (Windows) <br>(located in <b>&lt;TOMCAT_HOME&gt;/bin</b>).
+</li>
+<li>
+Open a browser at <a target="_blank" href="http://localhost:8080/jdo-guestbook/">http://localhost:8080/jdo-guestbook/</a>.
+</li>
+</ol>
+ 
+<h3>Step by step instructions for Caucho Resin:</h3>
+<ol style='margin-top: 8px;'>
+<li>
+Download and install Caucho Resin (<a target="_blank" href="http://www.caucho.com/download/">http://www.caucho.com/download/</a>).
+</li>
+<li>
+Copy the entire <b>jdo-guestbook</b> directory into <b>&lt;RESIN_HOME&gt;/webapps</b> <br>(from <b>&lt;OBJECTDB_HOME&gt;/samples</b>).
+</li>
+<li>
+Copy ObjectDB and JDO jar files (from <b>&lt;OBJECTDB_HOME&gt;/lib</b>) into <b>&lt;RESIN_HOME&gt;/webapps/jdo-guestbook/WEB-INF/lib/</b> (application scope) or into <b>&lt;RESIN_HOME&gt;/lib/</b> (server scope).
+</li>
+<li>
+Start the web server, for example by running <b>httpd.sh</b> (Unix) or <b>httpd.exe</b> (Windows) <br>(located in <b>&lt;RESIN_HOME&gt;/bin</b>).
+</li>
+<li>
+Open a browser at <a target="_blank" href="http://localhost:8080/jdo-guestbook/">http://localhost:8080/jdo-guestbook/</a>.
+</li>
+</ol>
+
+<!-- 
+<h3>Step by step instructions for Jetty</h3>
+<ol style='margin-top: 8px;'>
+<li>
+Download and install Jetty (<a target="_blank" href="http://jetty.mortbay.com/jetty/download.html">http://jetty.mortbay.com/jetty/download.html</a>).
+</li>
+<li>
+Copy the entire <b>jdo-guestbook</b> directory into <b>&lt;JETTY_HOME&gt;/webapps</b> <br>(from <b>&lt;OBJECTDB_HOME&gt;/samples</b>).
+</li>
+<li>
+Copy ObjectDB and JDO jar files (from <b>&lt;OBJECTDB_HOME&gt;/lib</b>) into <b>&lt;JETTY_HOME&gt;/webapps/jdo-guestbook/WEB-INF/lib/</b> (application scope) or into <b>&lt;JETTY_HOME&gt;/lib/</b> (server scope).
+</li>
+<li>
+Start the web server, for example by running <b>jetty.sh</b> (Unix) or <b>jetty.bat</b> (Windows) <br>(located in <b>&lt;JETTY_HOME&gt;/bin</b>).
+</li>
+<li>
+Open a browser at <a target="_blank" href="http://localhost:8080/jdo-guestbook/">http://localhost:8080/jdo-guestbook/</a>.
+</li>
+</ol>
+-->
+
+<h3>Instructions for NetBeans / Sun One Studio developers:</h3>
+<ol style='margin-top: 8px;'>
+<li>
+Copy ObjectDB and JDO jar files (from <b>&lt;OBJECTDB_HOME&gt;/lib</b>) into
+<b>&lt;OBJECTDB_HOME&gt;/samples/jdo-guestbook/WEB-INF/lib/</b>.
+</li>
+<li>
+Mount the <b>jdo-guestbook</b> directory
+(located in <b>&lt;OBJECTDB_HOME&gt;/samples</b>).
+</li>
+<li>
+Select and execute <b>index.jsp</b> (by F6, context menu, etc.). 
+</li>
+</ol>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+</td></tr></table></div></body>
+</html>

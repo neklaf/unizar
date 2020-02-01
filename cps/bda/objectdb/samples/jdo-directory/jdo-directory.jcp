@@ -1,0 +1,81 @@
+! ** JCreator Project File (C)2000
+! ********** DO NOT EDIT *********
+
+VERSION := "1.10"
+LABEL := "jdo-directory"
+JDKPROFILE := "j2sdk1.4.2"
+ACTIVE := "1"
+OUTPUTPATH := "..\\\\jdo-directory"
+COMPILER := "<Default>"
+
+! Start RunTime Configuration Structure
+#[BeginRunTime]LABEL := "<Default>" RUNAPPLIC := "" RUNAPPLET := "" PARAM := "" RUN := "directory.step4.eMain" CHECK := "11" #[EndRunTime]
+#[BeginRunTime]LABEL := "Step 1 - InitDB" RUNAPPLIC := "<Default>" RUNAPPLET := "<Default>" RUNDEBUG := "<Default>" PARAM := "" RUN := "directory.step1.eMain" CHECK := "0" #[EndRunTime]
+#[BeginRunTime]LABEL := "Step 2 - Update" RUNAPPLIC := "<Default>" RUNAPPLET := "<Default>" RUNDEBUG := "<Default>" PARAM := "" RUN := "directory.step2.eMain" CHECK := "0" #[EndRunTime]
+#[BeginRunTime]LABEL := "Step 3 - Retrieve" RUNAPPLIC := "<Default>" RUNAPPLET := "<Default>" RUNDEBUG := "<Default>" PARAM := "" RUN := "directory.step3.eMain" CHECK := "0" #[EndRunTime]
+#[BeginRunTime]LABEL := "Step 4 - Manager" RUNAPPLIC := "<Default>" RUNAPPLET := "<Default>" RUNDEBUG := "<Default>" PARAM := "" RUN := "directory.step4.eMain" CHECK := "0" #[EndRunTime]
+
+! Start Required Libraries Structure
+#[BeginRLibrary]LABEL := "odb1808" #[EndRLibrary]
+
+! Start Project Folder Structure
+#[BeginFolder]
+LABEL := "Root"
+FILTER := ""
+
+#[BeginFolder]
+LABEL := "directory"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\directory\\jdo.properties" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\Utilities.java" #[EndFile]
+#[BeginFolder]
+LABEL := "step1"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\directory\\step1\\eMain.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step1\\InitDB.java" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "step3"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\directory\\step4\\eMain.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step4\\Manager.java" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "step2"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\directory\\step3\\eMain.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step3\\Retrieve.java" #[EndFile]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "step4"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\directory\\step2\\eMain.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step2\\Update.java" #[EndFile]
+#[BeginFolder]
+LABEL := "image"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\directory\\step4\\image\\link.gif" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step4\\image\\delete.gif" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step4\\image\\category.gif" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step4\\image\\book.gif" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\step4\\image\\manager.gif" #[EndFile]
+#[EndFolder]
+#[EndFolder]
+#[BeginFolder]
+LABEL := "pc"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\directory\\pc\\Book.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\pc\\Category.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\pc\\Element.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\pc\\Item.java" #[EndFile]
+#[BeginFile]SOURCE := "\\directory\\pc\\package.jdo" #[EndFile]
+#[EndFolder]
+#[EndFolder]
+#[EndFolder]

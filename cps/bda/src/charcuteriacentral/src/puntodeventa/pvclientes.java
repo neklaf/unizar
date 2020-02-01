@@ -1,0 +1,118 @@
+/*
+ * Clientes.java
+ *
+ * Created on 12 de febrero de 2005, 14:14
+ */
+
+/**
+ *
+ * @author  Administrador
+ */
+package PuntoDeVenta;
+
+import java.util.*;
+
+public class PVClientes {
+
+    protected String cif;
+    protected String nombre;
+    protected String localizacion;
+    protected String tfno;
+    protected String email;
+    protected String web;
+    protected String persContacto;
+    protected boolean eliminado;
+    protected ArrayList pedidos = new ArrayList(); // lista de la clase Pedidos
+
+    
+    /** Creates a new instance of Clientes */
+    public PVClientes() {    
+    }
+
+    public PVClientes( String cif, String nombre, String localizacion, String tfno, String email, String web, String persContacto, boolean eliminado, ArrayList pedidos) {    
+        this.cif = cif;
+        this.nombre = nombre;
+        this.localizacion = localizacion;
+        this.tfno = tfno;
+        this.email = email;
+        this.web = web;
+        this.persContacto = persContacto;
+        this.pedidos = pedidos;
+        this.eliminado = eliminado;
+    }
+
+    public void setCif (String cif){
+        this.cif = cif;
+    }
+    
+    public String getCif (){
+        return this.cif;
+    }
+    
+    public void setNombre (String nombre){
+        this.nombre = nombre;
+    }
+    
+    public String getNombre (){
+        return this.nombre;
+    }
+    
+    public void setLocalizacion (String localizacion){
+        this.localizacion = localizacion;
+    }
+    
+    public String getLocalizacion (){
+        return this.localizacion;
+    }
+    
+    public void setTfno (String tfno){
+        this.tfno = tfno;
+    }
+    
+    public String getTfno (){
+        return this.tfno;
+    }
+    
+    public void setEmail (String email){
+        this.email = email;
+    }
+    
+    public String getEmail (){
+        return this.email;
+    }
+    
+    public void setWeb (String web){
+        this.web = web;
+    }
+    
+    public String getWeb (){
+        return this.web;
+    }
+    
+    public void setPersContacto (String persContacto){
+        this.persContacto = persContacto;
+    }
+    
+    public String getPersContacto (){
+        return this.persContacto;
+    }
+    
+    public void setEliminado (boolean eliminado){
+        this.eliminado = eliminado;
+    }
+    
+    public boolean getEliminado (){
+        return this.eliminado;
+    }
+    
+    public void addPedido(PVPedidos nuevo_pedido){
+        if (this.pedidos == null){
+            this.pedidos = new ArrayList();
+        }
+        this.pedidos.add(nuevo_pedido);
+    }
+    
+    public ArrayList getAllPedidos(){
+        return this.pedidos;
+    }
+}

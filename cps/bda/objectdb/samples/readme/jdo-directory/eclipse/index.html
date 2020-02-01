@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>ObjectDB for Java/JDO Demo - JDO Directory - Eclipse</title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<table width='100%' cellspacing='0' cellpadding='0'><tr>
+<td>
+    <h1>ObjectDB for Java/JDO Demo<br>Instructions for Eclipse</h1>
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td width='150'>
+    <img src='../images/jdo-dir-logo.gif' width='192' height='105'
+           alt='JDO Directory'>
+</td>
+</tr></table>
+<hr>
+<div align='right'>
+<a href='../index.html'>Demo Home</a>
+</div>
+
+<p>
+The JDO Directory demo has been tested with <b>Eclipse 2.1.0</b>.
+<br>
+Eclipse can be downloaded from:
+<a href='http://www.eclipse.org/downloads/' target='_blank'>
+    http://www.eclipse.org/downloads/</a>.
+<br>
+
+<p>
+<h2>Create the Project</h2>
+
+<p>
+From the main menu select <b>File => New => Project...</b>.
+<br>
+In the <b>New Project</b> dialog select <b>Java Project</b>
+and press <b>Next</b>:
+
+<p>
+<div align='center'>
+    <img src='images/eclipse-1.gif' width='500' height='301'
+           alt='JDO Eclipse'>
+</div>
+
+<p>
+Specify the <b>Project Name</b> and the demo <b>Directory</b>, and press <b>Next</b>:
+
+<p>
+<div align='center'>
+    <img src='images/eclipse-2.gif' width='500' height='298'
+           alt='JDO Eclipse'>
+</div>
+
+<p>
+Finally, select the <b>Libraries</b> tab and add <b>jdo.jar</b> and ObjectDB
+jar file (<b>odbfe.jar / odbse.jar / odbee.jar</b>) located in the ObjectDB
+lib directory using the <b>Add External JARs...</b> button.
+Adding these JAR files is necessary for every project which uses ObjectDB and JDO:
+<br>
+
+<p>
+<div align='center'>
+    <img src='images/eclipse-3.gif' width='500' height='500'
+           alt='JDO Eclipse'>
+</div>
+
+<p>
+Make sure that <b>JRE System Library [jdk1.4]</b> or above is specified, and then close the dialog with the <b>Finish</b> button.   
+
+<p>
+<h2>Build & Run</h2>
+
+<p>
+You can build the demo by <b>Project => Rebuild Project</b> in the main menu (it might be done automatically when the project is created).
+To run a step in the demo you can simply select its <code>eMain</code> class in the <b>Package Explorer</b> and then use the <b>Run => Run As => Java Application</b> command in the main menu.
+Alternatively you can use the <b>Run => Run...</b> command, setting explictly a configuration for each step using the <b>New</b> button (set the configuration <b>Name</b> and <b>Main Class</b> and then press the <b>Run</b> button):
+
+<p>
+<div align='center'>
+    <img src='images/eclipse-4.gif' width='578' height='440'
+           alt='JDO Eclipse'>
+</div>
+
+<p>
+<b><u>Step 1</u></b>
+<br>
+This step creates a new ObjectDB database and stores an initial object graph
+using JDO.
+<p>
+The expected output is:
+<p>
+<div align='center'>
+    <img src='images/eclipse-5.gif' width='562' height='94'
+           alt='JDO Eclipse'>
+</div>
+
+<p>
+The [ObjectDB Enhancer] message, indicating "on the fly" JDO enhancement of four
+persistence capable classes, is not shown if these classes are already
+enhanced.
+
+<p>
+<b><u>Step 2</u></b>
+<br>
+This step uses JDO to create, update and delete an object.
+Eventualy, the database content remains the same after these operations.
+<p>
+The expected output is:
+<p>
+<div align='center'>
+    <img src='images/eclipse-6.gif' width='561' height='94'
+           alt='JDO Eclipse'>
+</div>
+
+<p>
+<b><u>Step 3</u></b>
+<br>
+This step retrieves objects from the database using JDO extents and queries, 
+without modifying the database.
+<p>
+The expected output is:
+<p>
+<div align='center'>
+    <img src='images/eclipse-7.gif' width='561' height='156'
+           alt='JDO Eclipse'>
+</div>
+
+<p>
+<b><u>Step 4</u></b>
+<br>
+The final step opens the visual manager window.
+<p>
+<div align='center'>
+<img src='../images/jdo-dir-manager.gif' width='561' height='308'
+       alt='JDO Directory Swing/JFC Application Screenshot'>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html> 

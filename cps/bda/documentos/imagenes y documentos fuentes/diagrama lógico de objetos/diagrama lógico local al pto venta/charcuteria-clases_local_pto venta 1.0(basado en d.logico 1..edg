@@ -1,0 +1,1302 @@
+EDGE Diagram File
+Version 4.16
+
+## Globals Section:
+
+X -176
+Y 206
+Scale 100
+Orientation 1
+Paper 9
+PaperWidth 2100
+PaperLength 2969
+PageMarginLeft 128
+PageMarginTop 128
+PageMarginRight 128
+PageMarginBottom 128
+PosterRows 1
+PosterCols 1
+Color1 255,255,255
+Color2 192,192,192
+Color3 130,130,130
+Color4 0,0,0
+Color5 0,255,255
+Color6 0,0,255
+Color7 0,0,160
+Color8 128,0,128
+Color9 255,128,0
+Color10 255,0,0
+Color11 128,0,64
+Color12 128,64,0
+Color13 0,255,0
+Color14 0,128,0
+Color15 128,128,255
+Color16 255,255,0
+GridX 32
+GridY 32
+SnapX 16
+SnapY 16
+SnapConPtsCentersEdges TRUE
+ShadowColor 130,130,130
+ShadowX 11
+ShadowY 11
+ShowGrid TRUE
+AlignToGrid TRUE
+AlignToGridConPts FALSE
+AttachMode 1
+SBarWidth 180
+SBarFigCols 4
+SBarLblCols 1
+SBarConCols 2
+SBarFigHeight 32
+SBarLblHeight 32
+SBarConHeight 24
+Parent ""
+LargeDropMenus FALSE
+LastEnd "ER mand single"
+LastEndLen 36
+EnableConPts TRUE
+ConPointMarks 0
+CornerRadius 32
+FigMarginMode 0
+FigMarginTop 12
+FigMarginBottom 12
+FigMarginLeft 12
+FigMarginRight 12
+Template "plantilla vacia clases.edg"
+TypeSize 8
+TypeFace "Arial"
+ConnectorJogs TRUE
+ConnectorJogRadius 18
+JunctionDots FALSE
+FigLblPrimarySector 8
+SelfReferenceRadius 64
+OversizeTextRect TRUE
+LineSpacingMode 0
+LineSpacingValue 0
+
+DevMode 1868
+{
+6870206465736B6A657420393430632073657269657300000000000000000000
+01041D409C00B00603DF8007010009006C007900640001000700FDFF02000100
+0000030000007274000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000001000000
+030000000100000001000000000000000000000000000000000000003E836587
+01CCDABA00000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000CCDABA00000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000034080000
+9A0B000001000000000000000000000000000000640000000000000009000000
+00000000000000005C005C00490047004E004100430049004F005C0068007000
+20006400650073006B006A006500740020003900340030006300200073006500
+72006900650073002C004C006F00630061006C004F006E006C0079002C004400
+7200760043006F006E0076006500720074000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000001000000000000000000000000000000
+00000000000000003E836587
+}
+
+DevNames 62
+{
+080011002800010077696E73706F6F6C006870206465736B6A65742039343063
+20736572696573004C5054313A0000000000000000000000000000000000
+}
+
+Preview 2451
+{
+FC424DF6A20600FF360300FF280300FF700300FF7C0300FD0100180500F6C0A2
+00001F0D00001F0D0A007FFF7FFF7FFF7FFF7FFF7FFF7FFF7FFF7FFF7FFF7FFF
+07FF0C0003FF090003FF0C0003FF030003FF030003FF120006FF03000CFF1500
+06FF030003FF180003FF030006FF15007FFF1AFF7F0032007FFF20FF0F0003FF
+090009FF030006FF120003FF060066FF03007FFF20FF0F0006FF090003FF0F00
+7EFF03007FFF20FF7F0032007FFF20FF03007FFF2CFF03007FFF20FF120006FF
+030006FF150003FF06006FFF03007FFF20FF03007FFF2CFF03007FFF20FF0C00
+7FFF23FF03007FFF20FF03007FFF2CFF03007FFF20FF1B007FFF14FF03007FFF
+20FF03007FFF2CFF03007FFF20FF030003FF090003FF0C007FFF11FF03007FFF
+20FF03007FFF2CFF03007FFF20FF27007FFF08FF03007FFF20FF03007FFF2CFF
+03007FFF20FF15007FFF1AFF03007FFF20FF15007FFF1AFF03007FFF20FF0300
+7FFF2CFF03007FFF20FF7F0032007FFF20FF030051FF0C004EFF03007FFF20FF
+7F0032007FFF5CFF030018FF030012FF06000CFF09007FFF7FFF07FF030015FF
+09000FFF090009FF0C007FFF7FFFFFFF030018FF09000FFF09000CFF030006FF
+03007FFF7AFF030021FF030015FF030018FF03007FFF77FF030003FF0C0003FF
+120003FF030009FF0F0003FF06000CFF06007FFF6EFF030024FF03001BFF0300
+1BFF03007FFF68FF030009FF0C0003FF150006FF030009FF150003FF18007FFF
+59FF030003FF030021FF09001EFF03001EFF03007FFF59FF09000CFF0F0009FF
+060021FF030021FF03007FFF56FF0C0024FF030024FF03001BFF120003FF1200
+03FF030009FF0F0003FF060066FF0C001BFF090009FF3F0009FF030018FF0C00
+7FFF29FF300009FF030039FF030009FF03001BFF3F0072FF150018FF030009FF
+0C0030FF03000CFF030018FF030039FF030072FF03002AFF030009FF030039FF
+03000FFF030015FF060003FF180003FF030015FF030072FF030003FF09001EFF
+030009FF12002AFF03000FFF030015FF030039FF030072FF03002AFF030009FF
+030039FF030012FF030012FF030003FF1B0003FF030015FF030072FF0C0003FF
+0C0012FF030009FF060003FF06002DFF030012FF030012FF030039FF030072FF
+03002AFF030009FF030039FF030015FF03000FFF030003FF0C0006FF090003FF
+030015FF030072FF0F0003FF030018FF030009FF1B0021FF030018FF03000CFF
+030039FF030072FF03002AFF030009FF030039FF030018FF03000CFF150027FF
+030072FF060027FF030009FF120003FF030024FF03001BFF030009FF1B0021FF
+030072FF300009FF090033FF03001EFF030006FF0F0003FF090021FF030072FF
+03000CFF150009FF030009FF090033FF03001EFF030006FF3F0072FF300009FF
+3F0021FF030003FF030012FF150012FF03007FFF2CFF030039FF030021FF0300
+03FF3F007FFF2CFF030015FF0F0015FF030024FF03007FFF6BFF3F0027FF0300
+7FFF7FFF0AFF09003CFF03007FFF7FFF0AFF09003FFF0C0003FF120003FF0300
+09FF0F0003FF06007FFF41FF06003FFF06007FFF7FFF0DFF03003FFF090006FF
+030006FF180003FF06007FFF56FF03003CFF3F007FFF50FF06003CFF180024FF
+03007FFF50FF06003CFF030039FF03007FFF53FF03003CFF21001BFF03007FFF
+2FFF510012FF030039FF03007FFF2FFF03004BFF030012FF1E001EFF03007FFF
+2FFF03004BFF030012FF030039FF03007FFF2FFF0F0003FF0F0006FF030006FF
+120003FF060003FF030012FF150027FF03007FFF2FFF03004BFF030012FF0300
+39FF03007FFF2FFF12003CFF030012FF120003FF030024FF03007FFF2FFF0300
+4BFF030012FF030039FF03007FFF2FFF060003FF06003FFF030012FF030003FF
+2A000CFF03007FFF2FFF03004BFF030012FF030039FF03007FFF2FFF1B0033FF
+030012FF0F0003FF030003FF120012FF03007FFF2FFF0F003FFF030012FF0300
+39FF03007FFF2FFF0F003FFF030012FF0F0003FF030003FF060003FF030003FF
+030012FF03007FFF2FFF510012FF030039FF03007FFF2FFF030015FF120003FF
+0F0012FF030012FF090003FF24000CFF03007FFF2FFF03004BFF030012FF0300
+39FF03007FFF2FFF510012FF12002AFF03007FFF7FFF13FF030039FF03007FFF
+7FFF13FF090003FF06002AFF03007FFF7FFF13FF030039FF03007FFF7FFF13FF
+150027FF03007FFF7FFF13FF090033FF030069FF7F00260003FF090033FF0300
+69FF0F0006FF090003FF0F0072FF030003FF3F0069FF0C0003FF090003FF0C00
+03FF060003FF120009FF03000CFF120003FF060006FF030003FF120006FF0300
+03FF030003FF2D0003FF060006FF030003FF180003FF030006FF0F0033FF7F00
+260003FF3F0069FF0F007FFF14FF03001EFF030003FF03007FFF05FF03007FFF
+20FF03001BFF060003FF03007FFF05FF060003FF060003FF0C007FFF05FF0300
+1BFF0C007FFF05FF03007FFF20FF030021FF06007FFF05FF12007FFF11FF0300
+1EFF030003FF03007FFF05FF03007FFF20FF03001EFF09007FFF05FF030003FF
+21007BFF03007FFF2CFF15007FFF0EFF03007FFF2CFF15007FFF0EFF03007FFF
+2CFF03007FFF20FF03007FFF2CFF7F0026007FFF2CFF030039FF120006FF1200
+3CFF03007FFF2CFF7F0026007FFF5FFF06004EFF06007FFF44FF0F0021FF0C00
+51FF06007FFF6EFF09005AFF06007FFF38FF330066FF06007FFF32FF03002DFF
+030021FF030003FF120009FF03000CFF120003FF0F0009FF0C0003FF030003FF
+030003FF090006FF030006FF030006FF0C0006FF060003FF060042FF060003FF
+1B000CFF030072FF09007FFF23FF03002DFF030021FF030003FF120006FF0300
+0CFF150006FF21007FFF14FF1E0012FF030021FF3C0018FF3C006CFF03002DFF
+030021FF120027FF03001BFF120003FF0C0015FF03006CFF0F0003FF03001BFF
+030021FF030036FF030021FF03002DFF03006CFF03002DFF030003FF0F0006FF
+060003FF150024FF030021FF0F0003FF03001BFF03006CFF0C0003FF030003FF
+060015FF060003FF030009FF0C0003FF030036FF3C0018FF03006CFF03002DFF
+030003FF06000FFF060003FF030003FF09002AFF030003FF06000FFF060003FF
+060003FF060003FF060018FF03006CFF180018FF030021FF030036FF030021FF
+03002DFF03006CFF06002AFF030021FF3C0021FF33006CFF06002AFF030021FF
+030009FF030006FF030003FF090006FF060009FF030021FF150006FF120003FF
+060069FF330021FF3C0021FF33006CFF03002DFF03007FFF7FFF1FFF03000CFF
+120003FF060006FF03007FFF7FFF1FFF33007FFF7FFF7FFF7FFF7FFF7FFF7FFF
+7FFF7FFF7FFF7FFF7FFF7FFF7FFF7FFF09FF00
+}
+
+## Graphics Section:
+
+## Figure Symbols Section:
+
+FigureSymbol "arrow right"
+{
+  FixedAspect FALSE
+  Height 96
+  Width 256
+  Reshape 14
+  FramedTextBox 41.522,289.063,698.962,703.125 0,200,700,800 0 0 1 0
+  Fill
+  {
+    Polygon 8 0,200 700,200 700,0 1000,500 700,1000 700,800 0,800 0,200
+  }
+  Outline
+  {
+    Polyline 8 0,200 700,200 700,0 1000,500 700,1000 700,800 0,800 0,200
+  }
+  Hot 8 0,200 700,200 700,0 1000,500 700,1000 700,800 0,800 0,200
+}
+
+FigureSymbol "arrow left"
+{
+  FixedAspect FALSE
+  Height 96
+  Width 256
+  Reshape 12
+  FramedTextBox 297.578,289.063,955.017,703.125 300,200,1000,800 1 0 0 0
+  Fill
+  {
+    Polygon 8 1000,200 300,200 300,0 0,500 300,1000 300,800 1000,800 1000,200
+  }
+  Outline
+  {
+    Polyline 8 1000,200 300,200 300,0 0,500 300,1000 300,800 1000,800 1000,200
+  }
+  Hot 8 1000,200 300,200 300,0 0,500 300,1000 300,800 1000,800 1000,200
+}
+
+FigureSymbol "arrow up"
+{
+  FixedAspect FALSE
+  Height 0
+  Width 0
+  Reshape 17
+  TextBox 242.578,276.087,749.609,919.255
+  Fill
+  {
+    Polygon 8 500,0 1000,>350 <850,>350 <850,1000 >150,1000 >150,>350 0,>350 500,0
+  }
+  Outline
+  {
+    Polyline 8 500,0 1000,>350 <850,>350 <850,1000 >150,1000 >150,>350 0,>350 500,0
+  }
+  Hot 8 500,0 1000,>350 <850,>350 <850,1000 >150,1000 >150,>350 0,>350 500,0
+}
+
+FigureSymbol "arrow down"
+{
+  FixedAspect FALSE
+  Height 0
+  Width 0
+  Reshape 16
+  TextBox 242.578,74.534,749.609,717.702
+  Fill
+  {
+    Polygon 8 500,1000 1000,<650 <850,<650 <850,0 >150,0 >150,<650 0,<650 500,1000
+  }
+  Outline
+  {
+    Polyline 8 500,1000 1000,<650 <850,<650 <850,0 >150,0 >150,<650 0,<650 500,1000
+  }
+  Hot 8 500,1000 1000,<650 <850,<650 <850,0 >150,0 >150,<650 0,<650 500,1000
+}
+
+FigureSymbol "class/object r3"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 2
+  FramedTextBox 46.875,42.857,949.219,150 0,0,1000,194 0 0 0 0
+  FramedTextBox 46.875,235.714,949.219,560.714 0,194,1000,606 0 0 0 0
+  FramedTextBox 46.875,646.429,949.219,953.571 0,606,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,194 1000,194
+    Line 0,606 1000,606
+  }
+}
+
+FigureSymbol "class/object r2"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 46.875,50,949.219,170.833 0,0,1000,223 0 0 0 0
+  FramedTextBox 46.875,270.833,949.219,945.833 0,223,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,223 1000,223
+  }
+}
+
+FigureSymbol "class/object"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  FramedTextBox 46.875,83.333,949.219,909.722 0,0,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+  }
+}
+
+FigureSymbol "class/object r2:2"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 29.34,49.383,968.215,181.07 0,0,1000,232.593 0 0 0 0
+  FramedTextBox 29.34,279.835,968.215,946.502 0,232.593,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,232.593 1000,232.593
+  }
+}
+
+FigureSymbol "class/object r2:9"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 23.762,49.383,974.257,181.07 0,0,1000,232.593 0 0 0 0
+  FramedTextBox 23.762,279.835,974.257,946.502 0,232.593,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,232.593 1000,232.593
+  }
+}
+
+FigureSymbol "class/object r2:18"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 23.669,35.608,974.359,122.041 0,0,1000,159.192 0 0 0 0
+  FramedTextBox 23.669,193.257,974.359,961.424 0,159.192,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,159.192 1000,159.192
+  }
+}
+
+FigureSymbol "class/object r2:33"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 23.669,29.925,974.359,104.918 0,0,1000,136.14 0 0 0 0
+  FramedTextBox 23.669,164.768,974.359,967.581 0,136.14,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,136.14 1000,136.14
+  }
+}
+
+FigureSymbol "class/object r2:76"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 18.377,32.52,980.092,111.429 0,0,1000,145.359 0 0 0 0
+  FramedTextBox 18.377,176.469,980.092,964.77 0,145.359,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,145.359 1000,145.359
+  }
+}
+
+FigureSymbol "class/object r2:39"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 23.576,17.417,974.46,61.02 0,0,1000,79.191 0 0 0 0
+  FramedTextBox 23.576,95.853,974.46,981.132 0,79.191,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,79.191 1000,79.191
+  }
+}
+
+FigureSymbol "class/object r2:81"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 29.34,29.925,968.215,104.918 0,0,1000,136.14 0 0 0 0
+  FramedTextBox 29.34,164.768,968.215,967.581 0,136.14,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,136.14 1000,136.14
+  }
+}
+
+FigureSymbol "class/object r3:85"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 2
+  FramedTextBox 9.009,28.916,990.24,106.024 0,0,1000,135.711 0 0 0 0
+  FramedTextBox 9.009,163.855,990.24,739.76 0,135.711,1000,770.314 0 0 0 0
+  FramedTextBox 9.009,797.591,990.24,968.675 0,770.314,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,135.711 1000,135.711
+    Line 0,770.314 1000,770.314
+  }
+}
+
+FigureSymbol "class/object r3:41"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 2
+  FramedTextBox 8.299,23.483,991.01,86.106 0,0,1000,110.215 0 0 0 0
+  FramedTextBox 8.299,133.072,991.01,788.649 0,110.215,1000,813.464 0 0 0 0
+  FramedTextBox 8.299,835.616,991.01,974.56 0,813.464,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,110.215 1000,110.215
+    Line 0,813.464 1000,813.464
+  }
+}
+
+FigureSymbol "class/object r2:6"
+{
+  FixedAspect FALSE
+  Height 128
+  Width 192
+  Reshape 1
+  FramedTextBox 29.126,35.608,968.446,130.564 0,0,1000,167.715 0 0 0 0
+  FramedTextBox 29.126,201.781,968.446,961.424 0,167.715,1000,1000 0 0 0 0
+  Fill
+  {
+    Rect 0,0,1000,1000
+  }
+  Outline
+  {
+    Rect 0,0,1000,1000
+    Line 0,167.715 1000,167.715
+  }
+}
+
+## End Symbols Section:
+
+EndSymbol "block"
+{
+  LineTo 100
+  Fill
+  {
+    Polygon 4 500,500 1000,300 1000,700 500,500
+  }
+  Outline
+  {
+    Polyline 4 500,500 1000,300 1000,700 500,500
+  }
+}
+
+EndSymbol "double closed"
+{
+  LineTo 75
+  Fill
+  {
+    Polygon 8 500,500 750,300 750,500 1000,300 1000,700 750,500 750,700 500,500
+  }
+  Outline
+  {
+    Polyline 8 500,500 750,300 750,500 1000,300 1000,700 750,500 750,700 500,500
+  }
+}
+
+## Figure Styles Section:
+
+FigureStyle "Title"
+{
+  Label TRUE
+  Height 64
+  Width 128
+  Description "A diagram title"
+  TextFormat 0x0024
+  Behavior 0x01824A52
+  Symbol "lbl"
+  TypeSize 14
+  TypeWeight 400
+  TypeFace "Arial"
+}
+
+FigureStyle "Title Serif"
+{
+  Label TRUE
+  Height 0
+  Width 0
+  BindToStyle FALSE
+  TextFormat 0x0022
+  Behavior 0x01A241D2
+  Symbol "lbl"
+  TypeSize 14
+  TypeWeight 400
+  TypeFace "Times New Roman"
+}
+
+FigureStyle "Label"
+{
+  Label TRUE
+  Height 64
+  Width 128
+  Description "An annotation, comment, or title"
+  TextFormat 0x0C24
+  Behavior 0x01824A52
+  Symbol "lbl"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Label Serif"
+{
+  Label TRUE
+  Height 0
+  Width 0
+  BindToStyle FALSE
+  TextFormat 0x0044
+  Behavior 0x01A241E1
+  Symbol "lbl"
+  TypeSize 8
+  TypeWeight 400
+  TypeFace "Times New Roman"
+}
+
+FigureStyle "Note"
+{
+  Label TRUE
+  Height 0
+  Width 0
+  TextColor 0,0,160
+  BindToStyle FALSE
+  TextFormat 0x0044
+  Behavior 0x01A241E1
+  Symbol "lbl"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Note Serif"
+{
+  Label TRUE
+  Height 0
+  Width 0
+  TextColor 0,0,160
+  BindToStyle FALSE
+  TextFormat 0x0044
+  Behavior 0x01A241E1
+  Symbol "lbl"
+  TypeSize 8
+  TypeWeight 400
+  TypeFace "Times New Roman"
+}
+
+FigureStyle "Arrow right"
+{
+  Category "Arrows"
+  Height 128
+  Width 289
+  BorderWidth 3
+  TextFormat 0x0A22
+  Behavior 0x01024E12
+  Symbol "arrow right"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Arrow left"
+{
+  Category "Arrows"
+  Height 128
+  Width 289
+  BorderWidth 3
+  TextFormat 0x0A22
+  Behavior 0x01024E12
+  Symbol "arrow left"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Arrow up"
+{
+  Category "Arrows"
+  Height 161
+  Width 128
+  BorderWidth 3
+  TextFormat 0x0A22
+  Behavior 0x01024E12
+  Symbol "arrow up"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Arrow down"
+{
+  Category "Arrows"
+  Height 161
+  Width 128
+  BorderWidth 3
+  TextFormat 0x0A22
+  Behavior 0x01024E12
+  Symbol "arrow down"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Class R2"
+{
+  Category "Class Diagram"
+  Height 240
+  Width 256
+  Description "A class or object with a name compartment and a body compartment"
+  DefaultText "name\sect attributes"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Class R3"
+{
+  Category "Class Diagram"
+  Height 280
+  Width 256
+  Description "A class or object with a name compartment and a body compartment"
+  DefaultText "name\sect attributes\sect operations"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql\sect \vertalt \q-
+l"
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r3"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Clases con atributos"
+{
+  HasButton TRUE
+  Height 240
+  Width 256
+  Description "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Class"
+{
+  Category "Class Diagram"
+  Height 144
+  Width 256
+  Description "A class or object (class instance)"
+  DefaultText "name"
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024E22
+  Symbol "class/object"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Clase"
+{
+  HasButton TRUE
+  Height 144
+  Width 256
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024E22
+  Symbol "class/object"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+FigureStyle "Clase con atributos y ops"
+{
+  HasButton TRUE
+  Height 280
+  Width 256
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql\sect \vertalt \q-
+l"
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r3"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+## Connector Styles Section:
+
+ConnectorStyle "Multievaluado"
+{
+  HasButton TRUE
+  Description "Relación monoevaluada"
+  End1 "null"
+  End2 "double closed"
+  End1Length 32
+  End2Length 64
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+ConnectorStyle "Monoevaluado"
+{
+  HasButton TRUE
+  Description "Relación monoevaluada"
+  End1 "null"
+  End2 "block"
+  End1Length 32
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+ConnectorStyle "Mono-Multi"
+{
+  HasButton TRUE
+  Description "Relación monoevaluada"
+  End1 "block"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+ConnectorStyle "mono-mono"
+{
+  HasButton TRUE
+  Description "Relación monoevaluada"
+  End1 "block"
+  End2 "block"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+ConnectorStyle "multi-multi"
+{
+  HasButton TRUE
+  Description "Relación monoevaluada"
+  End1 "double closed"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+ConnectorStyle "Generalización"
+{
+  HasButton TRUE
+  Description "Relación monoevaluada"
+  End1 "null"
+  End2 "block"
+  End1Length 32
+  End2Length 57
+  PenStyle 13
+  LineWidth 4
+  End1FillColor 255,255,255
+  End2FillColor 255,255,255
+  Behavior 0x00000000
+}
+
+## Figures & Connectors Section:
+
+Figure 1
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  Text "Empleados\sect \ul1 nif\ul0 \line domicilio\line cargo\line activ-
+o\line porcentajeComision\line <list> tfnoPers\line <list> tfnoEm-
+pr\line fechaAltaContrato\line nombre\line apellidos\line sueldoB-
+ase\line numcuenta\line -------\line jefe ref Empleados inv\line -
+<list> ventas ref Pedidos inv"
+  Bounds 1490,896,1999,1600
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:39"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Figure 2
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql \b0\i0\ul0\fs16\f0 Arial;\red0\gre-
+en0\blue0\sect \vertalt \ql"
+  Text "Productos\sect ref\line nombre\line descripcion\line precio\line -
+unidades\line ----"
+  Bounds 178,1768,590,2105
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:6"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Figure 3
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  Text "Proveedores\sect \ul1 cif\ul0 \line localizacion\line <list> tfno-
+\line nombre\line numcuenta\line persContacto\line web\line email-
+\line -----\line <list> ofertas ref OfetasProv inv"
+  Bounds 115,112,525,528
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:81"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Figure 4
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  Text "ProductosProveedores\sect \ul1 ref_prod\ul0 \line nombre\line des-
+cripcion\line ----\line <list> ofertas ref OfetasProv inv"
+  Bounds 1556,183,1965,426
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:2"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Connector 5
+{
+  Style "Mono-Multi"
+  Figure1 4
+  Figure2 18
+  EndPoint1 1556,304
+  EndPoint2 1293,304
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "block"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Connector 6
+{
+  Style "Mono-Multi"
+  Figure1 3
+  Figure2 18
+  EndPoint1 525,315
+  EndPoint2 788,310
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "block"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Figure 7
+{
+  Style "Clase con atributos y ops"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql\sect \vertalt \q-
+l"
+  Text "Pedidos\sect \ul1 id_pedido\ul0 \line estado\line fechaRealizacio-
+n\line precioTotal\line fechaEnvio\line ----\line vehiculo ref Ve-
+hiculos inv\line vendedor ref Empleados inv\line comprador ref Cl-
+ientes inv\line <list> <struct> ( producto ref Productos, precioC-
+ompra, unidades) \sect calculaPrecioTotal()"
+  Bounds 189,2353,1635,2864
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r3:41"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Connector 8
+{
+  Style "Mono-Multi"
+  Figure1 25
+  Figure2 7
+  EndPoint1 1531,2096
+  EndPoint2 1221,2353
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "block"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Figure 9
+{
+  Label TRUE
+  Text " "
+  Bounds 1769,1714,1777,1746
+  BindToStyle FALSE
+  TextFormat 0x0022
+  Behavior 0x00A241D2
+  Symbol "lbl"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Connector 10
+{
+  Style "Mono-Multi"
+  Figure1 16
+  Figure2 17
+  EndPoint1 976,1520
+  EndPoint2 946,1712
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "block"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Connector 11
+{
+  Style "Mono-Multi"
+  Figure1 17
+  Figure2 7
+  EndPoint1 912,2128
+  EndPoint2 912,2353
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "block"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Connector 12
+{
+  Style "Multievaluado"
+  Figure1 15
+  Figure2 3
+  EndPoint1 583,593
+  EndPoint2 522,528
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "null"
+  End2 "double closed"
+  End1Length 32
+  End2Length 64
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Connector 13
+{
+  Style "Multievaluado"
+  Figure1 15
+  Figure2 4
+  EndPoint1 1192,593
+  EndPoint2 1556,408
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "null"
+  End2 "double closed"
+  End1Length 32
+  End2Length 64
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Connector 14
+{
+  Style "Multievaluado"
+  Figure1 7
+  Figure2 2
+  EndPoint1 711,2353
+  EndPoint2 517,2105
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "null"
+  End2 "double closed"
+  End1Length 32
+  End2Length 64
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Figure 15
+{
+  Style "Clase con atributos y ops"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql\sect \vertalt \q-
+l"
+  Text "PedidosAProveedor\sect \ul1 id_pedido\ul0 \line fechaRealizacion\-
+line estado\line precioTotal\line -----\line <list> <struct> (pro-
+veedor ref Proveedores, producto ref ProductosProveedores, precio-
+Compra, unidades) \sect calculaPrecioTotal()"
+  Bounds 118,593,1450,1008
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r3:85"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Figure 16
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  Text "PuntoDistribucion\sect \ul1 zona\ul0 \line localicacion\line tfno-
+\line -----\line <list> clientes ref Clientes inv"
+  Bounds 682,1136,1335,1520
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:76"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Figure 17
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  Text "Clientes\sect \ul1 cif\ul0 \line nombre\line localizacion\line tf-
+no\line email\line web\line persContacto\line -----\line departam-
+ento ref PuntoDistribucion inv\line <list> pedidos ref Pedidos in-
+v"
+  Bounds 658,1712,1166,2128
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:33"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Figure 18
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  Text "OfertasProv\sect precio\line unidades\line ------\line producto r-
+ef ProductosProveedores inv\line proveedor ref Proveedores inv"
+  Bounds 788,183,1293,426
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:9"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Connector 19
+{
+  Style "Monoevaluado"
+  Figure1 20
+  Figure2 1
+  EndPoint1 1712,768
+  EndPoint2 1720,896
+  SuppressEnd1 TRUE
+  SuppressEnd2 FALSE
+  End1 "null"
+  End2 "block"
+  End1Length 32
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Figure 20
+{
+  Text ""
+  Bounds 1705,761,1720,776
+  FillColor 0,0,0
+  BorderWidth 0
+  BindToStyle FALSE
+  TextFormat 0x0000
+  Behavior 0x00327A12
+  Symbol "null"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Connector 21
+{
+  Style "Monoevaluado"
+  Figure1 22
+  Figure2 20
+  EndPoint1 1760,768
+  EndPoint2 1712,768
+  SuppressEnd1 TRUE
+  SuppressEnd2 TRUE
+  End1 "null"
+  End2 "block"
+  End1Length 32
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Figure 22
+{
+  Text ""
+  Bounds 1753,761,1768,776
+  FillColor 0,0,0
+  BorderWidth 0
+  BindToStyle FALSE
+  TextFormat 0x0000
+  Behavior 0x00327A12
+  Symbol "null"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+Connector 23
+{
+  Style "Monoevaluado"
+  Figure1 1
+  Figure2 22
+  EndPoint1 1756,896
+  EndPoint2 1760,768
+  SuppressEnd1 FALSE
+  SuppressEnd2 TRUE
+  End1 "null"
+  End2 "block"
+  End1Length 32
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Connector 24
+{
+  Style "Mono-Multi"
+  Figure1 1
+  Figure2 7
+  EndPoint1 1528,1600
+  EndPoint2 1068,2353
+  SuppressEnd1 FALSE
+  SuppressEnd2 FALSE
+  End1 "block"
+  End2 "double closed"
+  End1Length 57
+  End2Length 57
+  LineWidth 7
+  Behavior 0x00000000
+}
+
+Figure 25
+{
+  Style "Clases con atributos"
+  TextInits "\vertalc \qc\sect \vertalt \ql\sect \vertalt \ql"
+  Text "Vehiculos\sect \ul1 matricula\ul0 \line modelo\line fechaProxITV\-
+line fechaCompra\line precioCompra\line -----\line <list> pedidos-
+ ref Pedidos inv"
+  Bounds 1490,1744,1998,2096
+  BorderWidth 3
+  TextFormat 0x0022
+  Behavior 0x00024622
+  Symbol "class/object r2:18"
+  TypeSize 8
+  TypeFace "Arial"
+}
+
+## Staples Section:
+
+## Groups Section:

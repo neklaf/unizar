@@ -1,0 +1,1 @@
+set classpath=%classpath%;.;C:\Aplicaciones\app_bda\charcuteriaCentral\src\lib\odbse.jar;C:\Aplicaciones\app_bda\charcuteriaCentral\src\lib\jdo.jar

@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - Database Server
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 8 - ObjectDB Server</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+An ObjectDB server can manage one or more databases. Databases that are managed by a server can be accessed by multiple processes simultaneously. In addition, the server supports accessing these databases from remote machines by TCP/IP. More details about client server mode vs. embedded database mode are discussed in <a href='../chapter1/index.html#1.2'>Section 1.2</a>. Because the JDO API and the format of the database file are the same in both modes, switching between these two modes can be done very easily by simply changing the connection URL string.
+
+<p>
+This chapter contains the following sections:
+<div class='jumpers'>
+  <p>
+  <a href='#8.1'>8.1&nbsp;&nbsp;Running an ObjectDB Server</a>
+  <p>
+  <a href='#8.2'>8.2&nbsp;&nbsp;Single User Server Configuration</a>
+  <p>
+  <a href='#8.3'>8.3&nbsp;&nbsp;Multi User Server Configuration</a>
+  <p>
+  <a href='#8.4'>8.4&nbsp;&nbsp;Using Secure Socket Layer (SSL)</a>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='8.1'></a>
+<h2>8.1&nbsp;&nbsp;Running an ObjectDB Server</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+The ObjectDB server is a pure Java application, packaged in the <b>odbse.jar</b> file. The jar file contains the entire ObjectDB implementation including support for embedded mode. In order to use client server mode, you have to install the <b>odbse.jar</b> file on <b>both</b> the client and the server machines. This section explains how to run the server. More details on server configuration and operation are provided later in this chapter. 
+
+<h3>The Server as a Java program</h3>
+
+<p>
+You can run the server as a Java program from the command line, as so: 
+
+<pre>
+> java -cp &lt;OBJECTDB_HOME&gt;/lib/odbse.jar com.objectdb.Server
+</pre>
+
+<p>
+Or on Windows:
+
+<pre>
+> java -cp &lt;OBJECTDB_HOME&gt;\lib\odbse.jar com.objectdb.Server
+</pre>
+
+<p>
+where <code>&lt;OBJECTDB_HOME&gt;</code> represents the installation path of ObjectDB. 
+
+<p>
+If you add <b>odbse.jar</b> to the classpath, you can run the server simply by:
+
+<pre>
+> java com.objectdb.Server
+</pre>
+
+<p>
+Running the ObjectDB server edition without command line arguments displays a usage message, as shown below:
+
+<pre>
+Usage: java com.objectdb.Server [options] start | stop | restart
+options include:
+  -conf &lt;path&gt;  :  specify a configuration file explicitly
+  -port &lt;port&gt;  :  override configuration TCP port to listen to
+</pre>
+
+<p>
+To start the server, use the <b>start</b> command:
+
+<pre>
+> java com.objectdb.Server start
+</pre>
+
+<p>
+Running the ObjectDB server requires the specification of an ObjectDB server configuration file. ObjectDB is shipped with a default server configuration file named <b>default.xml</b>. It is recommended that you use this file as a template for constructing your own specific configuration file.  You can use the <code>&ndash;conf</code> command line parameter to specify the location of your server configuration file, as shown below:
+
+<p>
+You can also specify an explicit path to the configuration file:
+
+<pre>
+> java com.objectdb.Server -conf config.xml start
+</pre>
+
+<p>
+If you name your configuration file <b>server.xml</b>, you do not need to use the <code>&ndash;conf</code> command line parameter, because ObjectDB will automatically look for a <b>server/server.xml</b> file if the <code>&ndash;conf</code> parameter is not used.  Also, if you do not use the <code>&ndash;conf</code> parameter and do not create a <b>server.xml</b> file, the ObjectDB server will use the <b>default.xml</b> file as a last resort. Please note, if you edit the <b>default.xml</b> file, it is likely that your modifications will be overwritten when you extract a newer version of the ObjectDB server.
+
+<p>
+The TPC port on which the server is listening for new connections is specified in the configuration file (as explained in <a href='#8.2'>section 8.2</a>), but you can override this setting using the <code>&ndash;port</code> command line option to specify another port, as shown below: 
+
+<pre>
+> java com.objectdb.Server -port 8888 start
+</pre>
+
+<p>
+You can also use standard JVM arguments. For instance, you can increase the maximum allowed memory and instruct Java to run in server mode in order to enlarge the cache and improve server performance:
+
+<pre>
+> java -server -Xmx512m com.objectdb.Server start
+</pre>
+
+<p>
+To stop the server you can use the <b>stop</b> command:
+
+<pre>
+> java com.objectdb.Server stop
+</pre>
+
+<p>
+To stop the server and then immediately start it again, you can use the <b>restart</b> command: 
+
+<pre>
+> java com.objectdb.Server restart
+</pre>
+
+<p>
+While a server is running in the foreground the command window may be blocked. Therefore, you may need a new command window for the <b>stop</b> and <b>restart</b> commands.
+
+The <code>&ndash;conf</code> and <code>&ndash;port</code> commands can also be used with the <b>stop</b> and <b>restart</b> commands.  However, in this context, you must use the same port number that was specified during server startup in order for the stop/restart command to have any effect.
+
+<h3>Running the Server on Unix</h3>
+
+<p>
+On Unix you can also use a shell script to run and manage the server. A sample script, <b>server.sh</b>, is located in the <b>bin/sh</b> subdirectory. Before using that script, you have to edit the path to the <b>odbse.jar</b> file, and to the JVM. It is recommended that you do not edit this file directly.  Rather, you should copy it to the <b>bin</b> subdirectory and then edit the new copy. In this way, the edited script will not be deleted when extracting the files of a newer ObjectDB version to the same installation directory. 
+
+<p>
+Consult your operating system documentation about running the server in the background (for instance, using the &amp; character at the end of the command line), or starting the server automatically at boot time and stopping it at shutdown time, or on restarting the server periodically (for instance, using crontab). 
+	
+<h3>Running the Server on Windows</h3>
+<p>
+On Windows, you can also run the server using the <b>server.exe</b> application, located in the <b>bin</b> directory. For this to work, the original structure of ObjectDB directory must be preserved because <b>server.exe</b> tries to locate and load the <b>odbse.jar</b> and <b>jdo.jar</b> files. By default, <b>server.exe</b> starts the server using the following command:
+
+<pre>
+> java -server -Xms32m -Xmx512m com.objectdb.Server start
+</pre>
+
+<p>
+When running <b>server.exe</b>, you can specify arguments for the JVM as well as for the server (excluding the stop and the restart server commands). For example:
+
+<pre>
+> server.exe -client -Xmx256m -port 6666 
+</pre>
+
+<p>
+The specified arguments override conflicting defaults. Therefore, the above run uses the following command: 
+
+<pre>
+> java -client -Xms32m -Xmx256m com.objectdb.Server start -port 6666
+</pre>
+
+<p>
+The <b>server.exe</b> application is represented, when running, by an icon in 
+the Windows Tray. Right click the icon and use the context popup menu to manage the server (stop, restart and start), and to exit the application.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='8.2'></a>
+<h2>8.2&nbsp;&nbsp;Single User Server Configuration</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+As noted before, to run the ObjectDB server a configuration file is required. If a path to the configuration file is not explicitly specified when starting the server, default paths are checked. A valid configuration file is expected to be located on one of these paths. This section discusses a simple configuration file with a single registered user. Notice that a single user configuration may also be used by multi user applications (such as web applications) where the same username and password can be shared by all the database connections.   
+	
+<p>
+The following is a simple configuration file with one registered user:
+
+<pre>
+&lt;objectdb.com&gt;
+
+  &lt;server port="6136" reload="30"&gt;
+    &lt;data path="$objectdb/server/data" /&gt;
+    &lt;log path="$objectdb/server/log" /&gt;
+    &lt;connections max="10" user-max="10" timeout="300" /&gt;
+  &lt;/server&gt;
+  
+  &lt;users&gt;
+    &lt;user name="admin" password="admin" address="127.0.0.1"&gt;
+      &lt;dir path="/">
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+      &lt;/dir&gt;
+    &lt;/user&gt;
+  &lt;/users&gt;
+
+&lt;/objectdb.com&gt;
+</pre>
+<!--
+      &lt;admin modify="+" /&gt;
+-->      
+
+<p>
+The server configuration file is in XML format. It always includes an <code>&lt;objectdb.com&gt;</code> root element with two sub elements, <code>&lt;server&gt;</code> and <code>&lt;users&gt;</code>. The &lt;server&gt; sub element specifies general server settings, and the &lt;users&gt; sub element lists all the registered users.
+
+<h3>The &lt;server&gt; element</h3>
+<p>
+
+<pre>
+  &lt;server port="6136" reload="30"&gt;
+    &lt;data path="$objectdb/server/data" /&gt;
+    &lt;log path="$objectdb/server/log" /&gt;
+    &lt;connections max="10" user-max="10" timeout="300" /&gt;
+  &lt;/server&gt;
+</pre>
+  
+<p>
+All attributes and sub elements shown in the above <code>&lt;server&gt;</code> element are required.
+
+<p>
+The <code>port</code> attribute specifies the TPC port on which the server will be listening for new connections. Usually, it should be set to 6136, which is the default port of ObjectDB. If a port other than the default is specified, it also has to be specified by clients in the url connection string (as explained in <a href='../chapter5/index.html#5.1'>section 5.1</a>) when connecting to the database. 
+
+<p>
+The <code>reload</code> attribute specifies how often (in seconds) the server checks the configuration file for changes. For instance, a value of <code>30</code> (as specified above) indicates a check every 30 seconds. If a change is found, the new configuration is loaded automatically without having to restart the server. To turn off auto reloading specify a value of <code>"0"</code> for the reload attribute.  In this case the server has to be restarted manually to apply configuration changes. 
+
+<h3>The &lt;data&gt; element</h3>
+<p>
+The <code>&lt;data&gt;</code> element specifies the data directory containing all the database files that the server is allowed to access and manage. Please note: appropriate file system permissions have to be set on that directory to enable operations by the server process. The location of the data directory is specified in the <code>path</code> attribute using an absolute path. The <code>$objectdb</code> prefix can be used to represent ObjectDB installation directory, as demonstrated in the configuration shown above.
+The data directory of the ObjectDB server is very similar to the document root directory of a web server. Every file in the data directory or in its subdirectories can be accessed by the server but any file outside this directory cannot be accessed. When connecting to the server, the path specified in the url connection is resolved relative to the data directory. For instance, a url connection string <code>"objectdb://localhost/my/db.odb"</code> refers to a database file <b>db.odb</b> in a subdirectory <b>my</b> of the data directory. 
+
+<h3>The &lt;log&gt; element</h3>
+<p>
+The <code>&lt;log&gt;</code> element specifies a directory to which the server writes its log files. Appropriate file system permissions have to be set on that directory to enable operations by the server process. The location of the log directory is specified in the <code>path</code> attribute using an absolute path. The <code>$objectdb</code> prefix can be used to represent the ObjectDB installation directory, as demonstrated in the configuration shown above.
+
+<h3>The &lt;connections&gt; element</h3>
+<p>
+The <code>&lt;connections&gt;</code> element specifies restrictions on connections to the server. The <code>max</code> attribute specifies the maximum simultaneous connections allowed by the server. The <code>user-max</code> attribute specifies the maximum simultaneous connections allowed for each user. Because only one registered user is defined in the configuration above, there is no point to specifying different values for the <code>max</code> and <code>user-max</code> attributes (if different values are specified the lowest value is applied). A request for a connection that exceeds the maximum is blocked until some open connection is closed or until a timeout specified on the client side is exceeded. The role of the <code>timeout</code> attribute in the server configuration file is different. It specifies the maximum allowed connection inactivity time (in seconds). If a connection is inactive for more than the specified time the server may close it.   
+
+<h3>The &lt;users&gt; element</h3>
+<p>
+
+<pre>
+  &lt;users&gt;
+    &lt;user name="admin" password="admin" address="127.0.0.1"&gt;
+      &lt;dir path="/"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+      &lt;/dir&gt;
+    &lt;/user&gt;
+  &lt;/users&gt;
+</pre>
+<!--
+      &lt;admin modify="+" /&gt;
+-->
+
+<p>
+The <code>&lt;users&gt;</code> element lists all the users who are allowed to connect to the server. 
+
+<h3>The &lt;user&gt; element</h3>
+<p>
+Every user is represented by a single <code>&lt;user&gt;</code> element. The required <code>name</code> and <code>password</code> attributes specify a username and a password to be used when connecting to the server (see <a href='../chapter5/index.html'>chapter 5</a>). The <code>address</code> attribute is optional. If specified, the user is restricted to connect to the server only from the specified IP address. For instance, the <code>"127.0.0.1"</code> value above (which always represents the local machine) enables connecting to the database server only from the machine on which the server process is running. Multiple IP addresses can also be specified in a comma separated list and using a hyphen (-) to indicate a range. For example, a value <code>"192.18.0.0-192.18.194.255,127.0.0.1"</code> allows connections from any IP address in the range of 192.18.0.0 to 192.18.194.255, as well as from 127.0.0.1.
+
+<h3>The &lt;dir&gt; element</h3>
+<p>
+Every <code>&lt;user&gt;</code> element should have one or more <code>&lt;dir&gt;</code> sub elements, indicating which paths under the server data directory (as set by the <code>data</code> element) the user is allowed to access. The required <code>path</code> attribute specifies a path to a directory relative to the data directory root. A permission to access a directory always includes a permission to access the whole tree of subdirectories under that directory. Therefore, a path <code>"/"</code>, as specified in the configuration above, indicates that the user can access the entire data directory. By using the <code>&lt;dir&gt;</code> element in a multi user configuration, every user can be assigned a private subdirectory containing his or her private database files (as demonstrated in <a href='#8.3'>section 8.3</a>).           
+
+<h3>The &lt;permissions&gt; element</h3>
+<p>
+The <code>&lt;dir&gt;</code> element itself grants the user permission to view the directory content (using the Explorer). Additional permissions are granted using the <code>&lt;permissions&gt;</code> sub element and its four attributes. The <code>access</code> permission enables opening database files and the <code>modify</code> permission enables modifying their content. In order to create new subdirectories and new database files a <code>create</code> permission is required. A <code>delete</code> permission is required for deletion of subdirectories and database files. Permissions are granted by  <code>"+"</code> values in the proper attributes. Notice that a permission to do an operation in a directory always includes the permission to do the same operation in subdirectories of that directory.   
+
+<!--   
+<h3>The &lt;admin&gt; element</h3>
+<p>
+The Explorer supports editing the server configuration visually, but this operation requires a special administration permission, because editing the configuration file means full control over the whole server permission system. The optional <code>&lt;admin&gt;</code> sub element grants the user a permission to view the configuration in the Explorer. The optional <code>modify="+"</code> attribute grants the user also the permission to edit the configuration.
+
+<p>
+Note: Editing the server configuration visually in the Explorer is disabled in this version.
+-->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='8.3'></a>
+<h2>8.3&nbsp;&nbsp;Multi User Server Configuration</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Similar to a web server, which can serve either a single website or multiple websites of one or more users, an ObjectDB server can manage a single database file or multiple database files of any number of users. As long as only one user is involved, a simple configuration as demonstrated in the previous section is sufficient, even for more than just one database file. This section discusses a more complicated case in which multiple users use a shared server to manage different database files. Providing database server support on a shared server could be useful in a shared web hosting environment and in educational settings (such as universities and colleges).          
+
+<p>
+The following configuration file declares three users:  
+
+<pre>
+&lt;objectdb.com&gt;
+
+  &lt;server port="6136" update-rate="20"&gt;
+    &lt;data path="$objectdb/server/data" /&gt;
+    &lt;log path="$objectdb/server/log" /&gt;
+    &lt;sessions max="50" user-max="5" timeout="60" /&gt;
+  &lt;/server&gt;
+  
+  &lt;users&gt;
+    &lt;user name="admin" password="admin" address="192.18.97.71"&gt;
+      &lt;dir path="/"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+      &lt;/dir&gt;
+    &lt;/user&gt;
+    &lt;user name="user1" password="user1"&gt;
+      &lt;dir path="/home/user1"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+        &lt;quota subdirs="0" files="3" diskspace="500k" /&gt;
+      &lt;/dir&gt;
+    &lt;/user&gt;
+    &lt;user name="user2" password="user2"&gt;
+      &lt;dir path="/home/user2"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+        &lt;quota subdirs="20" files="100" diskspace="20m" /&gt;
+      &lt;/dir&gt;
+    &lt;/user&gt;
+  &lt;/users&gt;
+  
+&lt;/objectdb.com&gt;
+</pre>
+<!--
+      &lt;admin modify="+" /&gt;
+-->
+
+<p>
+The administrator user, <code>admin</code>, is authorized to manage database files and subdirectories anywhere in the data directory. For the sake of security, the administrator is only allowed to connect to the server from a specified IP address. The two other users, <code>user1</code> and <code>user2</code>, can connect to the server from any IP address, but each one is only authorized to access a specific directory, which is dedicated for his or her use. 
+
+<h3>The &lt;quota&gt; element</h3>
+<p>
+A <code>&lt;dir&gt;</code> element can have an optional <code>&lt;quota&gt;</code> sub element, specifying restrictions on the directory content. All three attributes are required. The <code>subdirs</code> attribute specifies how many subdirectories are allowed under that directory (nested subdirectories are also allowed). The <code>files</code> attribute specifies how many database files the directory may contain. Finally, the <code>diskspace</code> attribute specifies maximum disk space for all the files in that directory. A suffix <code>m</code> indicates megabytes and a suffix <code>k</code> indicates kilobytes. Only one <code>&lt;quota&gt;</code> element is permitted per directory. Therefore, if a directory is represented by multiple <code>&lt;dir&gt;</code> elements (in different <code>&lt;user&gt;</code> elements), no more than one of them can have a <code>&lt;quota&gt;</code> sub element.
+ 
+<h3>User Inheritance</h3>
+<p>
+User inheritance may simplify management of many similar user accounts:
+
+<pre>
+  &lt;users&gt;
+    &lt;user name="admin" password="admin"&gt;
+      &lt;dir path="/"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+      &lt;/dir&gt;
+    &lt;/user&gt;
+    &lt;user name="$standard" address="12.*.*.*"&gt;
+      &lt;dir path="/home/$user/"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+        &lt;quota subdirs="20" files="20" diskspace="5m" /&gt;
+      &lt;/dir&gt;
+      &lt;dir path="/examples"&gt;
+        &lt;permissions access="+" /&gt;      
+      &lt;/dir&gt;
+    &lt;/user&gt;
+    &lt;user name="user1" password="user1" super="$standard" /&gt;
+    &lt;user name="user2" password="user2" super="$standard" /&gt;
+  &lt;/users&gt;
+</pre>
+<!--
+      &lt;admin modify="+" /&gt;
+-->
+
+<p>
+A <code>&lt;user&gt;</code> element whose user name starts with a <code>$</code> character, such as <code>$standard</code> in the configuration above, is abstract and does not represent a real user. Connections to the database cannot be obtained using an abstract user, but an abstract <code>&lt;user&gt;</code> element can serve as a base for other ordinary <code>&lt;user&gt;</code> elements, as demonstrated by <code>user1</code> and <code>user2</code> above. Only the name of an abstract <code>&lt;user&gt;</code> element can be specified in the optional <code>super</code> attribute, and that abstract user must be declared in the configuration file before its derived users. One abstract user can inherit from another abstract user. When using the <code>super</code> attribute, all the attributes and the sub elements of the specified abstract user are inherited except the <code>name</code> attribute. The <code>$user</code> variable (in the <code>path</code> attribute of <code>$standard</code>) is evaluated, when inherited, to the name of the inheriting user. Therefore, <code>user1</code> gets access to directory <code>/home/user1</code> and <code>user2</code> to directory <code>/home/user2</code>.    
+
+<p>
+Inherited attributes can be overridden, as demonstrated by <code>user3</code>: 
+
+<pre>
+    &lt;user name="user3" password="user3" super="$standard" address=""&gt;
+      &lt;dir path="/home/$user/"&gt;
+        &lt;permissions delete="-" /&gt;      
+        &lt;quota subdirs="20" databases="20" diskspace="20m" /&gt;
+      &lt;/dir&gt;
+    &lt;/user&gt;
+</pre>
+
+<p>
+Three attributes are changed. The empty <code>address</code> attribute eliminates the inherited address restriction. The minus value in the <code>delete</code> attribute removes an inherited permission, and a new value in the <code>diskspace</code> attribute increases the disk quota for the user.
+
+<!--
+<h3>Auto User Creation</h3>
+<p>
+When editing the configuration in the Explorer, new users can be added, by one button click. Every new user inherits automatically from a special abstract user <code>$default</code>, therefore, to use this feature, a <code>$default</code> user has to be defined:      
+
+<pre>
+  &lt;users auto-password="$$##"&gt;
+    &lt;user name="admin" password="admin" ip-mask="12.*.*.*"&gt;
+      &lt;dir path="/"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+      &lt;/dirgt;
+    &lt;/user&gt;
+    &lt;user name="$default"&gt;
+      &lt;dir path="/home/$user/"&gt;
+        &lt;permissions access="+" modify="+" create="+" delete="+" /&gt;      
+        &lt;quota subdirs="20" files="20" diskspace="5m" /&gt;
+      &lt;/dir&gt;
+    &lt;/user&gt;
+    &lt;user name="user1" password="nu49" super="$default" /&gt;
+    &lt;user name="user2" password="bm74" super="$default" /&gt;
+  &lt;/users&gt;
+</pre>
+-->
+
+<!--
+      &lt;admin modify="+" /&gt;
+-->
+
+<!--
+<p>
+Every new user gets a random generated password, based on the password pattern specified in the <code>auto-password</code> attribute (in the <code>&lt;users&gt;</code> element). The pattern string is a combination of two characters, <code>$</code>, which represents letters, and <code>#</code>, which  represents digits. As demonstrated above, a pattern <code>"$$##"</code> generates passwords, such as <code>nu49</code> and <code>bm74</code>.
+
+<p>
+Note: Editing the server configuration visually in the Explorer is disabled in this version.
+-->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='8.4'></a>
+<h2>8.4&nbsp;&nbsp;Using Secure Socket Layer (SSL)</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+ObjectDB supports encryption of client server communications using the Secure Sockets Layer (SSL) protocol. Encryption is especially important when the communication between the client and the server is over an unsecured network, such as the Internet. There are several implementations of SSL available for Java. ObjectDB uses the JSSE implementation, which is integrated in J2SDK as a standard package since version 1.4. For more information on JSSE, see: 
+<br>&nbsp;&nbsp;<a target="_blank" href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html">http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html</a>
+
+<h3>Keystore and Trustore</h3>
+
+<p style="margin-bottom: 0px;">
+To use SSL you have to generate at least two files:
+<ul style="margin-top: 4px; text-align: justify;" >
+<li>
+A <b>Keystore</b> file that functions as a unique signature of your server. This file contains general details (such as a company name), an RSA private key and its corresponding public key (the SSL protocol is based on the RSA algorithm). 
+</li><li>
+A <b>Trustore</b> file that functions as a certificate that enables the client to validate the server signature. This file is generated from the Keystore file, by omitting the private key (it still contains the general information and the public key).
+</li> 
+</ul>
+
+<p>
+You can generate these files using the <b>keytool</b> utility (located in the J2SDK <b>bin</b> directory), as demonstrated in:
+<br>&nbsp;&nbsp;<a target="_blank" href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#CreateKeystore">http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#CreateKeystore</a>
+
+<p>
+Using these Keystore and Trustore files, a client can verify during SSL handshaking that it is connected to the real server, and not to another server in the way that is pretending to be the real server (what is known as "a man in the middle attack"). The server, on the other hand, might be less selective and allow connections from any machine, as long as valid username and password are provided. If an authentication of the client machine by the server is also required, a Keystore file (which might be different from the server Keystore) has to be installed on the client machine, and its corresponding Trustore file has to be installed on the server machine.
+
+<h3>Setting the Server to use SSL</h3>
+
+<p>
+To setup an ObjectDB server for using SSL, you have to put an &lt;ssl&gt; element with a &lt;keystore&gt; sub element inside the &lt;server&gt; element. The Keystore file and its password are specified in the two required attributes of the &lt;keystore&gt; element, where <code>$objectdb</code> represents the ObjectDB installation directory, as shown below:
+
+<p>
+<pre>
+  &lt;server port="6136"&gt;
+      :
+    &lt;ssl&gt;
+      &lt;keystore path="$objectdb/server/keystore" password="ksp-pwd" /&gt;
+    &lt;/ssl&gt;
+      :
+  &lt;/server&gt;
+</pre>
+
+<p>
+When client authentication is also required, the &lt;ssl&gt; element should also contain a &lt;truststore&gt; sub element that serves as a certification of the client signature:
+
+<p>
+<pre>
+  &lt;server port="6136"&gt;
+      :
+    &lt;ssl&gt;
+      &lt;keystore path="$objectdb/server/keystore" password="ksp-pwd" /&gt;
+      &lt;truststore path="$objectdb/server/truststore" password="ts-pwd" /&gt;
+    &lt;/ssl&gt;
+      :
+  &lt;/server&gt;
+</pre>
+
+<h3>Setting the Client to use SSL</h3>
+
+<p>
+To access an ObjectDB server that is set to use SSL, a Truststore file for authentication of the server has to be provided. If the <code>PersistenceManagerFactory</code> is initialized using a property file, two lines should be added to specify the path of the Truststore file and its password:  
+
+<pre>
+com.objectdb.ssl.truststore.path=$objectdb/lib/truststore
+com.objectdb.ssl.truststore.password=ts-pwd
+</pre>
+
+<p>
+Alternatively, the <code>PersistenceManagerFactory</code>'s properties can be set at runtime:
+
+<p>
+
+<pre>
+  Properties properties = new Properties();
+    :  
+    :  
+  properties.setProperty(
+    "com.objectdb.ssl.truststore.path", "$objectdb/lib/truststore");
+  properties.setProperty(
+    "com.objectdb.ssl.truststore.password", "ts-pwd");
+
+  PersistenceManagerFactory pmf =
+    JDOHelper.getPersistenceManagerFactory(properties);
+</pre>
+
+<p>
+If client authentication is also required, the client's Keystore can also be specified in a property file:
+
+<pre>
+com.objectdb.ssl.keystore.path=$objectdb/lib/keystore
+com.objectdb.ssl.keystore.password=ks-pwd
+</pre>
+
+<p>
+or at runtime:
+
+<pre>
+  Properties properties = new Properties();
+    :  
+    :  
+  properties.setProperty(
+    "com.objectdb.ssl.keystore.path", "$objectdb/lib/keystore");
+  properties.setProperty(
+    "com.objectdb.ssl.keystore.password", "ks-pwd");
+</pre>
+
+<p>
+Finally, to access the server using SSL, the connection URL should start with <code>objectdbs://</code> instead of with <code>objectdb://</code>. Otherwise, the Keystore and the Truststore properties are ignored and an attempt to establish an ordinary non secured connection is performed. Of course, this attempt is expected to fail if the server is set to use SSL.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

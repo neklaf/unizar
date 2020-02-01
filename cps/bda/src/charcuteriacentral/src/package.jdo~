@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+<jdo>
+    <package name="Central">
+        <class name="CentralClientes" />
+        <class name="CentralEmpleados" />
+        <class name="CentralProductosProveedores" />
+        <class name="CentralProveedores" />
+        <class name="CentralPuntoDistribucion" />
+        <class name="CentralVehiculos" />
+    </package>
+    <package name="PuntoDeVenta">
+        <class name="PVClientes" />
+        <class name="PVEmpleados" />
+        <class name="PVPedidos" />
+        <class name="PVPedidosAProveedor" />
+        <class name="PVProductos" />
+        <class name="PVProductosProveedores" />
+        <class name="PVProveedores" />
+        <class name="PVPuntoDistribucion" />
+        <class name="PVVehiculos" />
+    </package>
+</jdo>

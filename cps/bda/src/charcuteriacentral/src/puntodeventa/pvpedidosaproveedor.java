@@ -1,0 +1,125 @@
+/*
+ * PedidosAProveedor.java
+ *
+ * Created on 12 de febrero de 2005, 15:09
+ */
+
+/**
+ *
+ * @author  Administrador
+ */
+package PuntoDeVenta;
+
+import java.util.*;
+import ConexionBD.*;
+import javax.jdo.*;
+
+public class PVPedidosAProveedor {
+
+    
+    protected String id_pedido;
+    protected Date fechaRealizacion;
+    protected int estado; //0-pedido  1-recibido
+    protected double precioTotal;
+    protected PVPuntoDistribucion departamentoComprador;
+    protected ArrayList detallePedidos;
+
+    
+    /** Creates a new instance of PedidosAProveedor */
+    public PVPedidosAProveedor() {
+    }
+ 
+    public PVPedidosAProveedor(String id_pedido,Date fechaRealizacion,int estado, PVPuntoDistribucion departamentoComprador, ArrayList detallePedidos) {
+        this.id_pedido = id_pedido;
+        this.fechaRealizacion = fechaRealizacion;
+        this.estado = estado;
+        this.detallePedidos = detallePedidos;
+
+        this.departamentoComprador = departamentoComprador;
+        
+        this.precioTotal = calculaPrecioTotal();
+        
+    }
+    
+    
+    /**
+    * Devuelve el precio total del pedido que se corresponde con la suma del precio de cada uno de los pedidos.
+    * @author  Ignacio Carcas
+    */
+    public double calculaPrecioTotal(){
+        double precioTotal = 0.0;
+        
+        Iterator i = detallePedidos.iterator();
+        while (i.hasNext()){
+            PVDetallePedidosAProveedor detalle = (PVDetallePedidosAProveedor) i.next();
+            precioTotal += detalle.getPrecioCompra()*detalle.getUnidades();
+        }
+        
+        return (precioTotal);
+    }
+    
+    public void setId_pedido (String id_pedido){
+        this.id_pedido = id_pedido;
+    }
+    
+    public String getId_pedido (){
+        return this.id_pedido;
+    }
+    
+    public void setFechaRealizacion (Date fechaRealizacion){
+        this.fechaRealizacion = fechaRealizacion;
+    }
+    
+    public Date getFechaRealizacion (){
+        return this.fechaRealizacion;
+    }
+    
+    public void setEstado (int estado){
+        this.estado = estado;
+    }
+    
+    public int getEstado (){
+        return this.estado;
+    }
+    
+    public void setPrecioTotal (double precioTotal){
+        this.precioTotal = precioTotal;
+    }
+    
+    public double getPrecioTotal (){
+        return this.precioTotal;
+    }
+    
+    public void setDepartamentoComprador (PVPuntoDistribucion departamentoComprador){
+        this.departamentoComprador = departamentoComprador;
+    }
+    
+    public PVPuntoDistribucion getDepartamentoComprador (){
+        return this.departamentoComprador;
+    }
+    
+    public void addDetallePedidos(PVDetallePedidos detalle){
+        if (detallePedidos == null){
+            detallePedidos = new ArrayList();
+        }
+        
+        this.detallePedidos.add(detalle);
+        
+        this.precioTotal = calculaPrecioTotal();
+    }
+    
+    public ArrayList getAllPedidos (){
+        return this.detallePedidos;
+    }
+    
+    public void addAllPedidos(ArrayList detalle){
+        if (detallePedidos == null){
+            this.detallePedidos = new ArrayList();
+        }
+
+        this.detallePedidos = detalle;
+        
+        this.precioTotal = calculaPrecioTotal();
+    }
+    
+}

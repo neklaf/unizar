@@ -1,0 +1,30 @@
+<!-- ObjectDB Server Configuration File -->
+<objectdb.com>
+	<!-- Server -->
+	<server port="6136" reload="30">
+		<data path="$objectdb/server/data" />
+		<log path="$objectdb/server/log" />
+		<connections max="100" user-max="100" timeout="0" />
+	 </server> 
+
+	<!-- Users -->
+	<users auto-password="$$##">
+		<user name="admin" password="admin">
+			<dir path="/">
+				<permissions access="+" modify="+" create="+" delete="+" />
+			</dir>
+			<admin modify="+" />
+		</user>
+		<user name="$default" password="">
+		      <dir path="/home/$user/">
+				<permissions access="+" modify="+" create="+" delete="+" />      
+				<quota subdirs="2" files="10" diskspace="5m" />
+			</dir>
+		      <dir path="/samples/">
+				<permissions access="+" />      
+			</dir>
+		</user>
+		<user name="user1" password="user1" super="$default" />
+		<user name="user2" password="user2" super="$default" />
+	</users> 
+</objectdb.com>

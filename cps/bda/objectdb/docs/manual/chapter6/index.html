@@ -1,0 +1,623 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>
+  ObjectDB for Java/JDO Developer's Guide - Persistent Objects
+  </title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><b>ObjectDB for Java/JDO - Developer's Guide</b>
+<h1>Chapter 6 - Persistent Objects</h1>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+This chapter describes how to use ObjectDB to manage database objects: 
+
+<div class='jumpers'>
+  <p>
+  <a href='#6.1'>6.1&nbsp;&nbsp;Making Objects Persistent</a>
+  <br>
+  Shows how to store new objects in the database.
+  <p>
+  <a href='#6.2'>6.2&nbsp;&nbsp;Object IDs and Names</a>
+  <br>
+  Explains how objects in the database can be identified.
+  <p>
+  <a href='#6.3'>6.3&nbsp;&nbsp;Retrieving Persistent Objects</a>
+  <br>
+  Shows various ways of retrieving objects from the database.
+  <p>
+  <a href='#6.4'>6.4&nbsp;&nbsp;Modifying Persistent Objects</a>
+  <br>
+  Shows how to modify objects that are already in the database. 
+  <p>
+  <a href='#6.5'>6.5&nbsp;&nbsp;Deleting Persistent Objects</a>
+  <br>
+  Shows how to delete objects from the database.
+  <p>
+  <a href='#6.6'>6.6&nbsp;&nbsp;Object States</a>
+  <br>
+  Discusses the different states of in-memory objects in a JDO application.
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='6.1'></a>
+<h2>6.1&nbsp;&nbsp;Making Objects Persistent</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+In JDO applications, every object in memory is either a persistent object, i.e. represents some database content, or a transient object, i.e. not related to any database.
+
+<h3>Storing Objects Explicitly</h3>
+
+<p>
+When a new object is constructed by the <code>new</code> operator, it always starts as a transient object, regardless of its type. Instances of persistent classes can become persistent later, as demonstrated by the following code:
+
+<pre>
+  pm.currentTransaction().begin();
+
+  Person person = new Person("George", "Bush");
+  Address address = new Address("White House");
+  person.setAddress(address);
+  pm.makePersistent(person); 
+
+  pm.currentTransaction().commit();
+</pre>
+
+<p>
+First, the <code>Person</code> instance is constructed as a simple transient object. Then it becomes persistent by an explicit call to the <code>makePersistent(</code>...<code>)</code> method. When a transient object becomes persistent during an active transaction, its content is automatically stored in the database when the transaction is committed (unless it is being deleted before commit). An attempt to call <code>makePersistent(</code>...<code>)</code> when there is no active transaction throws an exception, because operations that modify the database require an active transaction. An exception is also thrown if the argument to <code>makePersistent(</code>...<code>)</code> is not an instance of a persistent class (as defined in <a href='../chapter3/index.html'>chapter 3</a>). 
+
+<p>
+Only the call to <code>makePersistent(</code>...<code>)</code> has to be within an active transaction. Therefore, the following code is legal and equivalent to the code above: 
+
+<pre>
+  Person person = new Person("George", "Bush");
+  Address address = new Address("The White House");
+  person.setAddress(address);
+
+  pm.currentTransaction().begin();
+  pm.makePersistent(person); 
+  pm.currentTransaction().commit();
+</pre>
+
+<p>
+Multiple objects can become persistent, either by multiple calls to <code>makePersistent(</code>...<code>)</code>, or by passing a collection or array of objects to <code>makePersistentAll(</code>...<code>)</code>, which is another method of <code>PersistenceManager</code>.  The <code>makePersistentAll(</code>...<code>)</code> method stores all the elements in the specified collection or array in the database, but not the collection or array itself (unlike passing a collection to <code>Utilities.bind(</code>...<code>)</code>).
+
+<h3>Persistence By Reachability</h3>
+
+<p>
+The <code>Address</code> instance in the code above also starts out as a transient object. It, however, becomes persistent, not by an explicit call to <code>makePersistent(</code>...<code>)</code>, but rather, because of the <i>persistence by reachability</i> rule. According to this JDO rule, every transient object that, at commit time, is reachable from a persistent object (using persistent fields) also becomes persistent, i.e. its content is also stored in the database. This mechanism prevents broken references in the database and simplifies development.
+
+<p>
+The JDO specification limits the use of <code>makePersistent(</code>...<code>)</code> to instances of user defined persistent classes.  However, persistence by reachability is applicable to all persistent types, including system types, such as <code>String</code> and <code>ArrayList</code> (a complete list of persistent types is available at <a href='../chapter3/index.html#3.2'>section 3.2</a>). ObjectDB provides an additional storing method, <code>Utilities.bind(</code>...<code>)</code>. This method (discussed in the next section) enables the assignment of names to objects in the database and the storing of instances of any persistent type explicitly, including system types. 
+
+<h3>Embedded Objects</h3>
+
+<p>
+An embedded object is an object that is stored in the database as part of a containing object. Objects stored explicitly by <code>makePersistent(</code>...<code>)</code> are never embedded. Objects stored as a result of persistence by reachability can be embedded. By default, system types are embedded and user defined types (like the <Code>Address</code> instance above) are not. This behavior can be changed as explained in <a href='../chapter4/index.html#4.3'>section 4.3</a>  
+
+<p>
+Embedded objects can reduce storage space and improve efficiency, but they also have some limitations. An embedded object cannot have an object ID. An embedded object cannot be shared by references from multiple objects. In addition, embedded objects of persistent classes are not included in the extents of their classes, so they cannot be iterated or queried directly (an embedded object can only be retrieved using a reference from its containing object). 
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='6.2'></a>
+<h2>6.2&nbsp;&nbsp;Object IDs and Names</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Identifying database objects by unique IDs and by names is useful in object retrieval, as shown in the next section (<a href='#6.3'>section 6.3</a>). 
+ObjectDB supports two identifying methods for database objects. The first method, object IDs, is supported by JDO. The second method, object names, is not supported by JDO, but ObjectDB supports it as an extension because of its popularity in object databases. Both methods are only supported for non embedded objects.
+
+<h3>Object IDs</h3>
+
+<p>
+ObjectDB assigns a unique numeric ID to every persistent object when it is first stored in the database. The ID of the first object in the database is always 1, the ID of the second object is 2, and so on. Once assigned, the object ID cannot be modified or replaced. It represents the object as long as the object exists in the database. If an object is deleted from the database, its unique ID is never used again to represent another object. The JDO specification refers to object IDs assigned automatically by the JDO implementation as datastore identity. Application identity, in which the application assigns object IDs to objects, is not supported by ObjectDB.
+
+<p>
+Accessing the object ID of a persistent object can be done as follows:
+
+<pre>
+  Object oid = pm.getObjectId(obj);
+</pre>
+
+<p>
+Or by a static method (useful when a <code>PersistenceManager</code> is unavailable):
+
+<pre>
+  Object oid = JDOHelper.getObjectId(obj);
+</pre>
+
+<p>
+JDO does not define a specific type for object IDs, and different JDO implementations may use different types. Therefore, a JDO portable application should manage Object IDs using <code>java.lang.Object</code> references. You can assume that whatever type is used by a given JDO implementation, it implements the <code>Serializable</code> interface and it has a meaningful <code>toString()</code> method. The <code>toString()</code> method of object IDs in ObjectDB returns the numeric ID of the object as a string. 
+The ability to convert Object IDs to strings, and the ability to convert strings back to object IDs (as shown in the next section), make object IDs very useful for representing objects in web applications (in which parameters are represented by strings).
+
+<p>
+If <code>getObjectID(</code>...<code>)</code> is called with a transient parameter, it returns <code>null</code>. If it is called with a new persistent object that has not been stored in the database yet, an incomplete object ID is returned, and its <code>toString()</code> returns a temporary negative number, because a database object ID is not allocated yet. Such an object ID is fixed on <code>commit()</code>. For example: 
+
+<pre>
+pm.currentTransaction().begin();
+Person person = new Person("George", "Bush");
+pm.makePersistent(person);
+Object oid = pm.getObjectId(person);
+String s1 = oid.toString(); // s1 contains a temporary negative number 
+pm.currentTransaction().commit();
+String s2 = oid.toString(); // s2 contains a permanent positive number
+</pre>
+
+<p>
+The above code shows that calling <code>toString()</code> on the same object ID before and after <code>commit()</code> returns different values. Using temporary IDs instead of allocating permanent object IDs immediately on <code>makePersistent(</code>...<code>)</code> improves efficiency because the database only has to be accessed once, as part of the <code>commit()</code>.
+
+<h3>Object Names</h3>
+
+<p>
+ObjectDB supports assigning names to specific persistent objects, as shown in the following code:
+
+<pre>
+import com.objectdb.Utilities;
+    :	
+    :	
+  pm.currentTransaction().begin();
+  Utilities.bind(pm, person, "me");
+  pm.currentTransaction().commit();
+</pre>
+
+<p>
+The <code>Utilities.bind(</code>...<code>)</code> method is very similar to the <code>makePersistent(</code>...<code>)</code> method, and can only be called within an active transaction. When the transaction is committed, the object is stored in the database with the specified name. If the object is already in the database, the new name is assigned to it but its content is only updated if it has changed since the last store. An object name must be unique in the database. The <code>bind(</code>...<code>)</code> method throws a <code>JDOUserException</code> if the name is already in use.    
+
+<p>
+In addition to the naming issue, there is another difference between <code>makePersistent(</code>...<code>)</code> and <code>bind(</code>...<code>)</code>. The <code>bind(</code>...<code>)</code> method is not restricted to only storing instances of persistent classes, but  
+can directly store instances of <b>any</b> persistent type in the database. A complete list of persistent types is shown in <a href='../chapter3/index.html#3.2'>section 3.2</a>.   
+
+<p>
+The <code>Utilities.unbind(</code>...<code>)</code> method removes an object name: 
+
+<pre>
+import com.objectdb.Utilities;
+    :	
+    :	
+  pm.currentTransaction().begin();
+  Utilities.unbind(pm, "me");
+  pm.currentTransaction().commit();
+</pre>
+
+<p>
+Removing a name also requires an active transaction. When the transaction is committed, the name is removed from the database. Notice that <code>unbind(</code>...<code>)</code> is not exactly an inverse operation of <code>bind(</code>...<code>)</code>, because the object is not deleted from the database, just its name is removed.
+
+<p>
+Objects with names are called <i>root objects</i> in object databases, because navigation in the database can easily start from them, as explained in the next section.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='6.3'></a>
+<h2>6.3&nbsp;&nbsp;Retrieving Persistent Objects</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+There are various ways to retrieve objects from an ObjectDB database.
+Every object can be retrieved directly by using its object ID. A root object can also be retrieved by its name. It is also possible to use an <code>Extent</code> instance to iterate over all the objects of a specific class, retrieving them from the database one by one. If more selective retrieval is needed, a <code>Query</code> can be used to retrieve only objects that satisfy some well defined criteria. In addition, after an object is retrieved, all the objects that are reachable from it can be retrieved simply by navigating through the persistent fields (this is part of the <i>transparent persistence</i> feature of JDO).
+No matter which way an object is retrieved from the database, its no-arg constructor is used to construct a memory object to represent it. Therefore, for efficiency sake, it is recommended to avoid time consuming operations in no-arg constructors of persistent classes, and to keep them as simple as possible.       
+
+<h3>The Persistent Object Cache</h3>
+
+<p>
+As noted before, persistent objects are memory objects that represent some content in the database. When an object is retrieved from the database, no matter which method is used, ObjectDB has to return a persistent object representing that database object. Every <code>PersistenceManager</code> instance manages a cache of persistent objects that are in use by the application. If the cache already contains a persistent object representing the requested database object, that object is returned. If an object is not found in the cache, a new object is constructed, filled with the content of the database object, added to the cache and finally returned to the application. Persistent objects that have not been modified or deleted during a transaction are held in the cache by weak references. Therefore, when a persistent object is no longer in use by the application the garbage collector can discard it, and it is automatically removed from the cache.
+
+<p>
+The main role of the persistent object cache is to make sure that, within the same <code>PersistenceManager</code>, a database object is represented by no more than one memory object. Every <code>PersistenceManager</code> instance manages its own cache and its own persistent objects. Therefore, a database object can be represented by different memory objects in different <code>PersistenceManager</code> instances. But retrieving the same database object more than once using the same <code>PersistenceManager</code> instance should always return the same memory object. In addition to the object cache that is required by JDO, ObjectDB manages another cache containing database pages, in order to improve efficiency. Unlike the object cache, which is always on the client side, the page cache is located on the server side in client-server mode.
+ 
+<h3>Retrieval by an Object ID</h3>
+
+<p>
+If an object ID instance, <code>oid</code>, is available, an object can be retrieved simply by:
+
+<pre>
+  Person person = (Person)pm.getObjectById(oid, false);
+</pre>
+
+<p>
+The second argument of <code>getObjectById(</code>...<code>)</code> indicates whether or not the retrieved object has to be verified against the database, in case it is already found in the cache and it is unclear if its content in memory is up to date. If <code>true</code> is specified and the object in database is different, the cached object is refreshed from  the database, and only then it is returned.
+
+<p>
+A more common scenario is starting with a string representation of an Object ID  (obtained once by calling <code>toString()</code> on a real object ID instance), rather than an actual object ID instance. This is a classic case in web applications, in which passing string values between web pages is easier than passing real object ID instances. In this case an additional step is needed to build the object ID instance from a string <code>str</code> that represents it:
+
+<pre>
+  Object oid = pm.newObjectIdInstance(Person.class, str);
+  Person person = (Person)pm.getObjectById(oid, false);
+</pre>
+
+<p>
+Notice that the <code>newObjectIdInstance(</code>...<code>)</code> method requires not only an object ID string, but also a <code>Class</code> instance. ObjectDB ignores the first argument. Therefore, a <code>null</code> value can also be specified, but in order to keep the application JDO portable, a proper <code>Class</code> should be specified. The class can also be encoded in an object ID string, using:
+
+<pre>
+  String str = JDOHelper.getObjectId(obj) + '@' + obj.getClass();
+</pre>
+
+
+<p>
+In this case the object can be retrieved later using <code>str</code> by:
+ 
+<pre>
+  String[] s = str.split("@");
+  Object oid = pm.newObjectIdInstance(Class.forName(s[0]), s[1]);
+  Person person = (Person)pm.getObjectById(oid, false);
+</pre>
+
+<h3>Retrieval by an Object Name</h3>
+
+<p>
+A root object, which is a database object with an assigned name, can be retrieved by using its name. For example, a root with the name "me" can be retrieved with:
+  
+<pre>
+  Person person = (Person)pm.getObjectById("me", false);
+</pre>
+
+<p>
+This is the same <code>getObjectById(</code>...<code>)</code> method that is used to retrieve objects by their object IDs, but when the first argument is a <code>String</code> instance, it is considered an object name. As already noted, object names are supported by ObjectDB but not by JDO.   
+
+<h3>Retrieval by an Extent</h3>
+
+<p>
+An <code>Extent</code> enables iteration over all the persistent instances of a specific persistent class (excluding embedded objects). The objects are retrieved one by one:
+
+<pre>
+  Extent extent = pm.getExtent(Person.class, false);
+  java.util.Iterator itr = extent.iterator();
+  try {
+    while (itr.hasNext())
+    {
+      Person person = (Person)itr.next();
+      System.out.println(person.getName());
+    }
+  }
+  finally {
+    extent.close(itr); // closes a specified iterator
+    //extent.closeAll(); // closes all active iterators
+  } 
+</pre>
+
+<p>
+An <code>Extent</code> instance is obtained by the <code>PersistenceManager</code>'s <code>getExtent(</code>...<code>)</code> method.
+The persistent class for which the <code>Extent</code> is required is specified by the first argument. The second argument specifies whether or not persistent instances of subclasses should also be included (<code>true</code> indicates that subclasses are required). 
+
+<p>
+Iteration over an <code>Extent</code> is similar to iteration over any ordinary Java collection using an <code>Iterator</code> instance. Each call to <code>next()</code> retrieves another instance of the class from the database, until <code>hasNext()</code> returns <code>false</code>, which indicates there are no more instances. In ObjectDB (but not necessarily in other JDO implementations) the iteration order is from the oldest object to a newest, i.e. from a lower object ID to a higher one. 
+
+<p>
+Unlike an iterator over an ordinary Java collection, an iterator over an <code>Extent</code> should be closed at the end of its use. This is mainly important in client server mode in which an active iterator might consume resources in the remote server. The Extent's <code>close(</code>...<code>)</code> method closes a specified iterator. Alternatively, all the active iterators on an <code>Extent</code> can be closed by the Extent's <code>closeAll()</code> method (the commented line in the code above). 
+
+<h3>Retrieval by Query</h3>
+
+<p>
+The most advanced method for retrieving objects from the database is to use queries. The official query language of JDO is JDOQL (JDO Query Language). It enables retrieval of objects from the database using simple queries as well using complex, sophisticated queries. The results can also be sorted by specified order expressions. <a href='../chapter7/index.html'>Chapter 7</a> is devoted to JDOQL queries.        
+
+<h3>Retrieval by Access</h3>
+
+<p> 
+When an object is retrieved from the database (in whatever manner) all its persistent fields can be accessed freely. This includes fields that reference other persistent objects, which may or may not have not been loaded from the database yet (and may be seen as <code>null</code> values in the debugger). When an access to another persistent object is made, the object is retrieved automatically by ObjectDB from the database if it is not already present. From the point of view of the developer, it looks like the entire graph of objects is present in memory for his or her use. This illusion is part of the <i>transparent persistence</i> feature of JDO, which hides some of the direct interaction with the database, in order to make database programming easier.
+
+<p>
+For example, after retrieving a <code>Person</code> instance from the database, its <code>address</code> field can be accessed, causing an <code>Address</code> instance to be loaded from the database automatically:
+
+<pre>
+  Person person = (Person)pm.getObjectById(oid, false);
+  Address address = person.address; // an Address instance is retrieved 
+</pre>
+
+<p>
+To enable this automatic retrieval, special JDO code has to be added to every class in which persistent fields are accessed or modified directly. The addition of this code to persistent classes, along with the addition of the implementation code for the <code>PersistenceCapable</code> interface, is done automatically by the JDO enhancer.  Non persistent classes that directly access persistent fields of other classes are referred to as <i>persistence aware</i>. Persistence aware classes must also be run through the JDO enhancer, which enhances them to include the code needed for transparent persistence. But, because these classes are not described in the JDO metadata files, the enhancer identifies them as not persistent and does not enhance them with the code that implements the <code>PersistenceCapable</code> interface. Persistence aware classes are discussed in more detail in <a href='../chapter3/index.html#3.3'>section 3.3</a>. 
+
+<h3>Refresh and Retrieve</h3>
+
+<p>
+The <code>PersistenceManager</code> interface includes some methods for special retrieval operations. The <code>retrieve(</code>...<code>)</code> method is used to load all the fields of a specified persistent object that have not been loaded yet, without waiting for them to be accessed. A collection or array of persistent objects can be passed to <code>retrieveAll(</code>...<code>)</code>, for the same purpose. The <code>refresh(</code>...<code>)</code> method is used to reload an object from the database. If the object was modified since it was previously loaded, and the changes were not committed yet, they are discarded. Multiple objects can be refreshed, either by multiple calls to <code>refresh(</code>...<code>)</code>, or by a single call to  <code>refreshAll(</code>...<code>)</code>. 
+
+<h3>Non Transactional Persistent Objects</h3>
+
+<p>
+Because <code>NonTransactionalRead</code> is enabled in ObjectDB by default, objects can also be retrieved without an active transaction. Persistent objects outside an active transaction are referred to as <i>non transactional</i> persistent objects. By default, these objects are read-only and a <code>JDOUserException</code> is thrown on any attempt to modify them (unless <code>NonTransactionalWrite</code> is enabled as explained in <a href='../chapter5/index.html#5.3'>section 5.3</a>).   
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='6.4'></a>
+<h2>6.4&nbsp;&nbsp;Modifying Persistent Objects</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Modifying existing database objects using JDO is straightforward, because it is also based on transparent persistence. After retrieving a persistent object from the database (no matter which way), it can simply be modified in memory while a transaction is active. When the transaction is committed, the content of that object in the database is physically updated:   
+
+<pre>
+  pm.currentTransaction().begin();
+  Person person = (Person)pm.getObjectById(oid, false);
+  person.address = new Address("Texas"); // persistent field is modified
+  pm.currentTransaction().commit();
+</pre>
+
+<p>
+If, during a transaction, a transient object becomes reachable from a persistent object (as the new <code>Address</code> instance above), it is also stored in the database as a new persistent object, following the persistence by reachability rule. Of course, if the transaction is ended with <code>rollback()</code> and not with <code>commit()</code>, all the modifications are discarded, and nothing is propagated to the database. It is important to note in the code above that an old <code>Address</code> instance, if there were one, would not be deleted automatically. <a href='#6.5'>Section 6.5</a> discusses persistent object deletion.
+
+<p>
+When <code>NonTransactionalRead</code> is enabled (the default in ObjectDB), only the <b>modification</b> of the object is required to occur within an active transaction. The object itself can be retrieved before the transaction begins: 
+
+<pre>
+  Person person = (Person)pm.getObjectById(oid, false);
+
+  pm.currentTransaction().begin();
+  person.address = new Address("Texas");
+  pm.currentTransaction().commit();
+</pre>
+
+<p>
+However, if possible, it is better to retrieve an object for modification in the same transaction in which it is modified because this is slightly more efficient. 
+
+<p>
+Notice that any code that modifies persistent fields must be enhanced, either as persistence capable or as persistence aware. Otherwise, modifications cannot be tracked by ObjectDB, and at transaction commit, cannot be propagated to the database.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='6.5'></a>
+<h2>6.5&nbsp;&nbsp;Deleting Persistent Objects</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+In order to delete an object from the database, it must first be retrieved (no matter which way), and then, when a transaction is active, it can be deleted 
+using the <code>deletePersistent(</code>...<code>)</code> method:
+
+<pre>
+  pm.currentTransaction().begin();
+  Person person = (Person)pm.getObjectById(oid, false);
+  pm.deletePersistent(person); // object is marked for deletion 
+  pm.currentTransaction().commit(); // object is physically deleted
+</pre>
+
+<p>
+The object is physically deleted from the database when the transaction is committed. If the transaction is rolled back and not committed, the object is not deleted. Only the call to <code>deletePersistent(</code>...<code>)</code> must be made within an active transaction. The object can be retrieved before the transaction begins (even though it is slightly less efficient).
+
+<p>
+Multiple objects can be deleted, either by multiple calls to <code>deletePersistent(</code>...<code>)</code>, or by passing a collection or an array of objects to <code>deletePersistentAll(</code>...<code>)</code>, which is also a method of <code>PersistenceManager</code>.
+
+<h3>Deleting Dependent Objects</h3> 
+<p>
+When an object is deleted from the database, all the embedded objects that it contains are also deleted automatically. Non embedded objects referred to by the deleted object are not deleted with it, so if they are not needed anymore they have to be deleted explicitly. An elegant way to delete non embedded dependent objects is to implement the <code>InstanceCallback</code> interface, as demonstrated in <a href='../chapter3/index.html#3.4'>section 3.4</a>.
+<p>
+Usually, instances of system persistent types are embedded by default, while instances of user defined persistent classes are not (more details are provided in <a href='../chapter4/index.html#4.3'>section 4.3</a> and <a href='../chapter4/index.html#4.4'>section 4.4</a>). Therefore, by default, <code>String</code> and <code>Date</code> fields, as well as collection fields (such as <code>ArrayList</code>) are deleted automatically when their containing object is deleted. When possible, it is useful to define dependent objects of user defined classes as embedded. In addition to being simpler to delete, embedded objects are usually more efficient in terms of execution time and database space. However, because of the limitations of embedded objects (as discussed in <a href='#6.1'>section 6.1</a>), using them is not always an option.   
+
+<h3>Database Garbage Collector</h3> 
+<p>
+The database garbage collector is a tool that scans an ObjectDB database, locates unreachable objects, and deletes them from the database. Instances of a persistent class with <code>Extent</code> support (excluding embedded objects) are always considered reachable. Root objects (objects with names) are also always reachable. In addition, every object that can be accessed by navigation from a reachable object using persistent fields is also reachable. On every run of the garbage collector, all the unreachable objects are located and deleted.
+
+<p>
+Unlike the Java memory garbage collector, execution of the database garbage collector requires an explicit call. It can be run in the Database Explorer, as discussed in <a href='../chapter9/index.html'>chapter 9</a>, or by the application:
+
+<pre>
+import com.objectdb.Utilities;
+    :	
+    :	
+  Thread thread = Utilities.startGarbageCollector(pm);
+</pre>
+
+<p>
+Only a single database garbage collector thread can run at any given time. But, the database garbage collector does not require exclusive access to the database and can run while the database is also being used by other processes or threads. The <code>Thread</code> instance returned from <code>Utilities.startGarbageCollector(</code>...<code>)</code> may be used to manipulate the garbage collector thread (i.e. to change priority, to wait until it finishes, and so on).
+
+<p>
+Even if you do not use the database garbage collector for production, it may be useful for debugging and testing. If the garbage collector locates unreachable database objects, the application can be fixed to delete these objects before they become unreachable. JDO portable applications should not use the garbage collector as it is an ObjectDB extension and probably not supported in other JDO implementations.
+
+<p>
+Note: The database garbage collector is not supported by the ObjectDB free edition.
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name='6.6'></a>
+<h2>6.6&nbsp;&nbsp;Object States</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<p>
+Objects in a JDO application are divided into persistent objects, which represent database objects, and transient objects, which are ordinary memory objects not related to any database. States of persistent objects are distinguished by several factors. This section contains a brief description of object states in JDO. More details can be found in any book on JDO.    
+
+<h3>Examining Object States</h3>
+
+<p>
+The state of an object in a JDO application can be examined using five <code>JDOHelper</code> static methods:   
+
+<pre>
+  boolean b1 = JDOHelper.isPersistent(obj);
+  boolean b2 = JDOHelper.isTransactional(obj);
+  boolean b3 = JDOHelper.isNew(obj);
+  boolean b4 = JDOHelper.isDeleted(obj);
+  boolean b5 = JDOHelper.isDirty(obj);
+</pre>
+
+<p>
+All of these methods return <code>false</code> if <code>obj</code> is not persistent (i.e. a transient object or <code>null</code>).
+
+<p>
+If <code>obj</code> is persistent, i.e. <code>isPersistent(obj)</code> returns <code>true</code>, the other methods provide more details:   
+
+<div style='margin-left: 20px;'>
+<code>JDOHelper.isTransactional(obj)</code>
+<p style='margin-left: 20px;'>
+Returns <code>true</code> if <code>obj</code> is <i>transactional</i>, i.e. if <code>obj</code> is associated with an active transaction. Every object that becomes persistent or retrieved from the database during an active transaction is transactional. Objects retrieved from the database when no transaction is active are non transactional. Transactional objects become non transactional automatically when the transaction is ended. Non transactional objects become transactional if they are accessed or modified when a transaction is active. 
+</p>
+
+<code>JDOHelper.isNew(obj)</code>
+<p style='margin-left: 20px;'>
+Returns <code>true</code> if <code>obj</code> is a new persistent object of the current transaction, and not yet stored in the database.
+</p>
+
+<code>JDOHelper.isDeleted(obj)</code>
+<p style='margin-left: 20px;'>
+Returns <code>true</code> if <code>obj</code> has been physically deleted from the database or if <code>obj</code> has been marked for deletion in the current transaction using <code>deletePersistent(</code>...<code>)</code> and it is expected to be deleted at transaction commit.
+</p>
+
+<code>JDOHelper.isDirty(obj)</code>
+<p style='margin-left: 20px;'>
+Returns <code>true</code> if the state or the content of <code>obj</code> has been changed in the current transaction. Particularly, it returns <code>true</code> if <code>isNew(obj)</code> or <code>isDeleted(obj)</code> return <code>true</code>, and also if one of the persistent fields of <code>obj</code> has been modified.
+
+<h3>Object States and Locks</h3>
+
+<p>
+As explained in <a href='../chapter5/index.html#5.3'>section 5.3</a>, ObjectDB manages an automatic lock mechanism in order to prevent two or more different <code>PersistenceManager</code> instances from modifying the same object at the same time. When using data store transactions (which is the default in ObjectDB), there is a strong relationship between object states and object locks. 
+
+<p>
+Only persistent transactional objects that are not new are locked. Therefore, a persistent object <code>obj</code> is locked only when the following expression evaluates to <code>true</code>:
+<pre>
+  JDOHelper.isPersistent(obj) &&
+  JDOHelper.isTransactional(obj) &&
+  !JDOHelper.isNew(obj)
+</pre>
+
+<p>
+When a <code>JDOHelper.isDirty(obj)</code> is <code>true</code> a WRITE lock is used and when it is <code>false</code> a READ lock is used. When the state of the object is changed (for example a persistent object is modified) an automatic action is taken by ObjectDB to update the object lock (for example from READ to WRITE). Locks are released automatically when the transaction is ended because, at that point, all the objects have become non transactional. If these objects are later accessed in a new transaction, they are then locked again because they become transactional.    
+</p>
+
+<h3>Changing Object States</h3>
+
+<p>
+An object's state can change either implicitly or explicitly.
+Implicit changes occur when its fields are accessed or modified, or when the transaction associated with it is ended.  An object’s state is changed explicitly when the object is passed as an argument to a method like <code>makePersistent(</code>...<code>)</code> or <code>deletePersistent(</code>...<code>)</code>. The <code>PersistenceManager</code> interface includes other methods for changing object states, which are not discussed in this guide, because in most applications they are rarely used.
+
+<p style="margin-bottom: 0px; padding-bottom: 0px;">
+Among them:
+<ul style="margin-top: 0px; padding-top: 0px;">
+<li> 
+<code>evict(</code>...<code>)</code> and
+<code>evictAll(</code>...<code>)</code>,
+</li>
+<li> 
+<code>makeTransactional(</code>...<code>)</code> and
+<code>makeTransactionalAll(</code>...<code>)</code>,
+</li>
+<li> 
+<code>makeNonTransactional(</code>...<code>)</code> and
+<code>makeNonTransactionalAll(</code>...<code>)</code>,
+</li>
+<li> 
+<code>makeTransient(</code>...<code>)</code> and <code>makeTransientAll(</code>...<code>)</code>
+</li>
+</ul>
+
+<p>
+The last two methods, for instance, can change the state of one or more persistent objects to transient. A persistent object that becomes transient is not managed by JDO anymore, and it is immediately removed form the persistent object cache. More details about these methods can be found books on JDO.  
+
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html>

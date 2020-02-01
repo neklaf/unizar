@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <title>ObjectDB for Java/JDO Demo - JDO Directory - Java 2 SDK for Windows</title>
+  <style type='text/css'>
+body {
+    font-family: Arial, Verdana, sans-serif;
+}
+     
+body, .background {
+    background: #ffffff;
+}
+h1 {
+    font-size: 16pt; letter-spacing: 0pt;
+    line-height: 30px;
+    margin-top: 12px; margin-bottom: 8px;
+    padding: 3px; padding-left: 4px;
+    background-color: #7b9cc6; color: #ffffff;
+    border-style: solid; border-width: 1px; border-color: #336699;
+}
+h2 {
+    font-size: 13pt; letter-spacing: 0pt;
+    line-height: 24px;
+    margin-top: 24px; margin-bottom: 4px; padding-left: 4px;
+    background-color: #666699; color: #ffffff;
+}
+h3 {
+    font-size: 12pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+h4 {
+    font-size: 10pt; text-decoration: none; font-weight: bold;
+    margin-top: 24px; margin-bottom: 4px; padding-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px; margin-bottom: 12px;
+    padding-top: 0px; padding-bottom: 0px; 
+    line-height: 100%;
+}
+p {
+		text-align: justify; margin-top: 8px; margin-bottom: 16px;
+}
+p, li {
+    font-size: 11pt; line-height: 140%; 
+}
+li {
+    margin-right: 20px;
+}
+td {
+    font-size: 11pt; line-height: 100%; 
+}
+td.small {
+    padding-top: 0px; padding-bottom: 0px;
+    line-height: 90%;  font-size: 10pt;
+}
+.frame {
+    background: #666699;
+}
+.center {
+    background: #ffffff;
+}
+.center2 {
+    padding: 2px; text-align: left; font-weight: normal;
+    background: #ffffff; color: #000000;
+    line-height: 90%;  font-size: 10pt;
+}
+.tableHeader {
+    background: #AAAADD; color: #000000;
+}
+.topMenu {
+    color: #ffffff; font-size: 12px; text-decoration: none; font-weight: bold;
+}
+.topMenu:hover {
+    color: #ffff00;
+}
+.topMenuSep {
+    color: #336699; font-size: 12px; font-weight: 900; padding: 2px; 
+}
+.leftMenu {
+    color: #FFFFFF;
+    font-size: 13px; text-decoration: none; font-weight: 900;
+    padding-left: 8px; line-height: 20px;
+}
+.leftMenu:hover {
+    color: #FFFF00;
+}
+.headBox {
+    background-color: #7b9cc6; color: #ffffff; border-color: #336699;
+    font-family: Verdana, 'Lucida Sans', Arial, Geneva, sans-serif; 
+    font-weight: bold; text-decoration: none; font-size: 10pt;
+    border-style: solid; border-width: 1px; padding: 4px;
+    display: block; text-align: left; text-decoration: none;
+} 
+.dynaContent {
+    padding: 2px; text-align: left; font-size: 10pt; font-weight: normal;
+    line-height: 110%;
+} 
+
+.footer, smallerFont {
+    font-size: 12px; color: #ffffff;
+}
+code, pre {
+	font-size: 10pt;
+}
+pre {
+	background: #e0e0e0; line-height: 130%; padding: 4px;
+	margin-top: 4px; margin-bottom: 18px;
+  margin-left: 12px; margin-right: 8px;
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link rel="shortcut icon" href="http://www.objectdb.com/favicon.ico"> 
+</head>
+
+<body><div align='center'><table width='100%'><tr><td>
+
+<table width='100%' cellspacing='0' cellpadding='0'><tr>
+<td>
+    <h1>ObjectDB for Java/JDO Demo<br>Java 2 SDK for Windows</h1>
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td width='150'>
+    <img src='../images/jdo-dir-logo.gif' width='192' height='105'
+           alt='JDO Directory'>
+</td>
+</tr></table>
+<hr>
+<div align='right'>
+<a href='../index.html'>Demo Home</a>
+</div>
+
+<p style='text-align: left;'>
+The JDO Directory demo has been tested with <b>Java 2 SDK 1.4.1</b>,
+<br>
+Java 2 SDK can be downloaded from:
+<a href='http://java.sun.com/j2se/downloads.html' target='_blank'>
+    http://java.sun.com/j2se/downloads.html
+</a>.
+
+<p>
+<h2>Set the Environment</h2>
+
+<p style='text-align: left;'>
+Open a command prompt and set the current directory to be the demo
+directory. For example:
+<pre>
+C:\> <b>cd c:\objectdb\samples\jdo-directory</b>
+</pre>
+
+<p><br>
+Set the CLASSPATH to include the current directory and ObjectDB / JDO jar files:
+<pre>
+C:\...\jdo-directory> <b>set classpath=.;..\lib\jdo.jar;..\lib\odbfe.jar</b>
+</pre>
+
+<p>
+Use <b>odbse.jar</b> or <b>odbee.jar</b> for other ObjectDB editions.
+
+<p>
+<h2>Compile the Demo</h2>
+<p>
+Use the javac compiler to compile all the demo source files:
+<pre>
+C:\...\jdo-directory> <b>javac directory\*.java</b>
+<br>
+C:\...\jdo-directory> <b>javac directory\pc\*.java</b>
+<br>
+C:\...\jdo-directory> <b>javac directory\step1\*.java</b>
+<br>
+C:\...\jdo-directory> <b>javac directory\step2\*.java</b>
+<br>
+C:\...\jdo-directory> <b>javac directory\step3\*.java</b>
+<br>
+C:\...\jdo-directory> <b>javac directory\step4\*.java</b>
+</pre>
+
+<p><br>
+If javac does not work, you may need to update the PATH environment variable. For example:
+<pre>
+C:\...\jdo-directory> <b>path=%path%;c:\j2sdk1.4.1\bin</b>
+</pre>
+(assuming c:\j2sdk1.4.1 is the path in which Java is installed).
+
+
+<p>
+<h2>Run the Demo</h2>
+
+<p>
+<b><u>Step 1</u></b>
+<br>
+This step creates a new ObjectDB database and stores an initial object graph
+using JDO.
+<pre>
+C:\...\jdo-directory> <b>java directory.step1.eMain</b>
+</pre>
+<p>
+The expected output is:
+<pre>
+[ObjectDB Enhancer] 4 new persistence capable classes have been enhanced.
+Database is ready now...
+</pre>
+<p>
+The [ObjectDB Enhancer] message, indicating "on the fly" JDO enhancement of four
+persistence capable classes, is not shown if these classes are already
+enhanced.
+
+<p>
+<b><u>Step 2</u></b>
+<br>
+This step creates, updates and deletes an object:
+<pre>
+C:\...\jdo-directory> <b>java directory.step2.eMain</b>
+</pre>
+<p>
+The expected output is:
+<pre>
+Operations have been completed...
+</pre>
+<p>
+Eventualy, the database content remains the same after these operations.
+
+<p>
+<b><u>Step 3</u></b>
+<br>
+This step retrieves objects from the database using JDO extents and queries, 
+without modifying the database:
+<pre>
+C:\...\jdo-directory> <b>java directory.step3.eMain</b>
+</pre>
+<p>
+The expected output is:
+<pre>
+All directory.pc.Category instances:
+  JDO Directory
+  Consulting & Training
+  Books
+All directory.pc.Item instances:
+  Object Identity
+  Ogilvie Partners
+  Smart Soft
+  Robin Roos, Java Data Objects, Addison-Wesley 2002
+  David Jordan and Craig Russell, Java Data Objects, O'Reilly & Associates,
+Inc. 2003
+  David Ezzio, Using and Understanding Java Data Objects, Apress 2003
+  K. McCammon, H. Bobzin, S. Tyagi and M. Vorburger, Core JDO Book,
+Sun Press and Prentice Hall 2003
+Books with more than 300 pages:
+  David Jordan and Craig Russell, Java Data Objects, O'Reilly & Associates,
+Inc. 2003
+  David Ezzio, Using and Understanding Java Data Objects, Apress 2003
+Items in small categories:
+  Object Identity
+  Ogilvie Partners
+  Smart Soft
+Books published in 2002:
+  Robin Roos, Java Data Objects, Addison-Wesley 2002
+Categories containing an item with a short name:
+  JDO Directory
+  Consulting & Training
+</pre>
+<br>
+
+<p>
+<b><u>Step 4</u></b>
+<br>
+The final step opens the visual manager window:
+<pre>
+C:\...\jdo-directory> <b>java directory.step4.eMain</b>
+</pre>
+
+<p>
+<div align='center'>
+<img src='../images/jdo-dir-manager.gif' width='561' height='308'
+       alt='JDO Directory Swing/JFC Application Screenshot'>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<p><hr><font size='-1'>Copyright (C) 2001-2004 by ObjectDB Software. All rights reserved.</font>
+
+<p>
+</td></tr></table></div></body>
+</html> 

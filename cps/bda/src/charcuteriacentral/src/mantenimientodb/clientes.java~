@@ -1,0 +1,479 @@
+/*
+ * Clientes.java
+ *
+ * Created on 14 de febrero de 2005, 21:17
+ */
+
+package MantenimientoDB;
+
+import java.util.*;
+import MantenimientoDB.*;
+import ConexionBD.*;
+import Central.CentralClientes;
+import Central.CentralPuntoDistribucion;
+import PuntoDeVenta.PVClientes;
+import javax.jdo.*;
+
+/**
+ *
+ * @author  Ignacio Carcas
+ */
+public class Clientes {
+    
+    /** Creates a new instance of Clientes */
+    public Clientes() {
+    }
+    
+    /**
+     *Se encarga de insertar un Cliente
+     *@param cif: cif del cliente a insertar
+     *@param nombre: nombre de la empresa del cliente
+     *@param localizacion: domicilio del cliente
+     *@param tfno: su tfno
+     *@param email: su email
+     *@param web: su dirección de la página web
+     *@param persContacto: nombre de la persona de contacto del cliente
+     *@param zona: punto de venta de nuestra empresa a la que pertenece como cliente 
+     *
+     * @author Ignacio Carcas
+     */
+    public int insertar(String cif, String nombre, String localizacion, String tfno, String email, String web, String persContacto, boolean eliminado, int zona){
+        //Insertar en BD Central
+        //Insertar en BD del nodo
+        int ok = 0;
+        String mensaje = "";
+
+        try{
+            if (new Utilities().obtenIdObjeto(CentralClientes.class, "this.cif==\""+cif+"\"", constantes.NODO_CENTRAL) == null){
+                ok = 1; //Nos dará 1 si no existe = todo ok.    
+            }
+        
+            int[] peticion;
+            if (zona == constantes.NODO_CENTRAL){
+                peticion = new int[1];
+                peticion[0] = constantes.NODO_CENTRAL;
+            }else{
+                peticion = new int[2];
+                peticion[0] = constantes.NODO_CENTRAL;
+                peticion[1] = zona;
+            }
+        
+            PersistenceManager conexiones[] = new Utilities().obtenerConexiones(peticion);
+
+            if ( (ok==1) && (conexiones != null) ){
+                try {
+                    for (int i=0; i<conexiones.length; i++){
+                        conexiones[i].currentTransaction().begin();
+                    }
+
+                    //   SEDE CENTRAL
+                    //Buscar el departamento
+                    CentralPuntoDistribucion pd = (CentralPuntoDistribucion) conexiones[0].getObjectById(new Utilities().obtenIdObjeto(CentralPuntoDistribucion.class, "this.zona=="+zona, constantes.NODO_CENTRAL),false);
+                    //Creamos el empleado
+                    CentralClientes clienteCentral = new CentralClientes(cif, nombre, localizacion, tfno, email, web, persContacto, pd, eliminado);
+
+                    //Añadimos el empleado a la lista de empleados del punto de distribucion
+                    pd.addCliente(clienteCentral);
+                   
+                    //Hacemos persistente el objeto
+                    conexiones[0].makePersistent(clienteCentral);
+
+                    //   PUNTO DE VENTA
+                    if (zona!=constantes.NODO_CENTRAL){ // Lo insertamos sólamente si el punto de venta no es la sede central
+                        
+                        //Creamos el empleado
+                        ArrayList pedidos = null;
+                        PVClientes clientePV = new PVClientes(cif, nombre, localizacion, tfno, email, web, persContacto, eliminado, pedidos);
+                        //Hacemos persistente el objeto
+                        conexiones[1].makePersistent(clientePV);
+                    }
+               
+                    for (int i=0; i<conexiones.length; i++){
+                        conexiones[i].currentTransaction().commit();
+                    }
+                    ok = 1;
+                }catch (RuntimeException x) {
+                    System.out.println("Error en insertar cliente: " + x.getMessage());
+                    ok = 0;
+                    mensaje = "Error al insertar el cliente";
+                }
+
+                // Close the PersistenceManager instance:
+                finally {
+                    //Cerramos las BDs si están abiertas
+                    new Utilities().ejecutaFinally(conexiones);
+                }
+            }else{
+                ok = 0;
+                mensaje = "No se puede insertar el cliente al no existir conexion o ser una clave repetida";
+                System.err.println("No se puede insertar el cliente al no existir conexion o ser una clave repetida");
+            }
+        }catch(Exception e){
+            ok = 0;
+            System.err.println(e.getMessage());;
+        }
+        return (ok);
+    }
+    
+    
+    /**
+     *Se encarga de eliminar un Cliente dado
+     *
+     * @author Ignacio Carcas
+     */
+    public int eliminar(String cif){
+        //Eliminar de BD Central
+        //Eliminar de BD del nodo
+        
+        int ok = 0;
+        String mensaje = "";
+        
+        PersistenceManager conexion1 = new Utilities().obtenerConexiones(constantes.NODO_CENTRAL);
+        PersistenceManager conexion2 = null;
+        
+        if (conexion1 != null){
+            try {
+                conexion1.currentTransaction().begin();
+                
+                //ELIMINAMOS DE LA SEDE CENTRAL
+                //Obtenemos el objeto
+                CentralClientes cliente = (CentralClientes) conexion1.getObjectById(new Utilities().obtenIdObjeto(CentralClientes.class,"this.cif==\""+cif+"\" && this.eliminado==false", constantes.NODO_CENTRAL),false);
+                
+                if (cliente == null){
+                    mensaje = "El empleado no existe, no puede ser eliminado o ya está desactivado";
+                    throw new Exception("El empleado no existe o ya está desactivado");
+                }
+                
+                //Obtenemos la segunda conexion
+                int zona = cliente.getDepartamento().getZona();
+                
+                
+                /*
+                //Obtenemos el punto de distribucion para eliminar su enlace con el empleado a eliminar
+                //CentralPuntoDistribucion pd = (CentralPuntoDistribucion) conexion1.getObjectById(new Utilities().obtenIdObjeto(CentralPuntoDistribucion.class, "this.zona=="+zona, constantes.NODO_CENTRAL),false);
+                //Eliminamos el empleado con el nif indicado del punto de distribucion --> // pd.deleteEmpleado(empleado);
+                ***/
+                // Deshacemos su persistencia -->//conexion1.deletePersistent(empleado);
+                cliente.setEliminado(true);
+                
+                // PUNTO DE VENTA: Sólo eliminamos de nuevo el empleado si no pertenece a la SEDE CENTRAL
+                if (zona != constantes.NODO_CENTRAL){
+                    conexion2 = new Utilities().obtenerConexiones(zona);
+                    conexion2.currentTransaction().begin();
+                    
+                    //Obtenemos el objeto
+                    PVClientes clientePV = (PVClientes) conexion2.getObjectById(new Utilities().obtenIdObjeto(PVClientes.class,"this.cif==\""+cif+"\"", zona),false);
+                    
+                    // Deshacemos su persistencia --> // conexion2.deletePersistent(empleadoPV);
+                    clientePV.setEliminado(true);
+                    
+                    conexion2.currentTransaction().commit();
+
+                }
+                
+                //Cerramos la transacción
+                conexion1.currentTransaction().commit();
+                
+                ok = 1;
+            }catch (RuntimeException x) {
+                System.out.println("Error en eliminar cliente 1: " + x.getMessage());
+                ok = 0;
+            }catch (Exception e){
+                System.out.println("Error en eliminar cliente 2: " + e.getMessage());
+                ok = 0;
+            }
+
+            // Close the PersistenceManager instance:
+            finally {
+                //Cerramos las BDs si están abiertas
+                PersistenceManager []conexiones = {conexion1, conexion2};
+                new Utilities().ejecutaFinally(conexiones);
+            }
+        }else{
+            ok = 0;
+            System.err.println("No se puede eliminar en cliente al no existir conexion");
+        }
+        
+        return (ok);
+    }
+    
+    
+    /**
+     *Se encarga de modificar el cif de un Cliente dado en todas las BD
+     *
+     * @author Ignacio Carcas
+     */
+    public void cambiaCifEnTodasDB(String antiguoCif, String nuevoCif, PersistenceManager[] conexiones) throws Exception{
+        //comprobar primero que nadie tiene el nuevo nif, lo comprobamos en la sede central ya que tiene todos los clientes
+        Object objCliente = new Utilities().obtenIdObjeto(CentralClientes.class,"this.cif==\""+nuevoCif+"\"", constantes.NODO_CENTRAL);
+        //Si ningún cliente tiene ese nif
+        if (objCliente==null){
+            //cambiar todos los cif antiguos por los nuevos
+            //primero cambiamos el de la sede central
+            CentralClientes cliente = (CentralClientes) conexiones[0].getObjectById(new Utilities().obtenIdObjeto(CentralClientes.class,"this.cif==\""+antiguoCif+"\"", constantes.NODO_CENTRAL),false);
+            cliente.setCif(nuevoCif);
+            conexiones[0].makePersistent(cliente);
+
+            //ahora cambiamos el del resto de sedes
+            for (int i=1; i<conexiones.length; i++){
+                //buscar si tiene un cliente con ese cif y sustituirlo
+                objCliente = new Utilities().obtenIdObjeto(PVClientes.class,"this.cif==\""+antiguoCif+"\"", i+1);
+                PVClientes clientePV = null;
+                if (objCliente != null){
+                    clientePV = (PVClientes) conexiones[i].getObjectById(objCliente,false);
+                    clientePV.setCif(nuevoCif);
+                }
+            }
+        }else{
+            throw new Exception("El cif nuevo ya lo posee otro cliente");
+        }
+        
+    }
+    
+    
+    /**
+     *Se encarga de modificar un Cliente dado
+     *
+     * @author Ignacio Carcas
+     */
+    public int modificar(String antiguoCif, String nuevoCif, String nombre, String localizacion, String tfno, String email, String web, String persContacto, boolean eliminado, int zona){
+        //Modificar en la BD de la sede central
+        
+        //Modificar en la BD del nodo
+        int ok = 0;
+        String mensaje = "";
+
+        PersistenceManager[] conexiones = null;
+        conexiones = new Utilities().obtenerConexiones(null);
+        
+        if (conexiones[0] != null){
+            try {
+                for (int i=0; i<conexiones.length; i++){
+                    conexiones[i].currentTransaction().begin();
+                }
+                
+                //MODIFICAMOS DE LA SEDE CENTRAL
+                //Obtenemos el objeto
+                CentralClientes cliente = (CentralClientes) conexiones[0].getObjectById(new Utilities().obtenIdObjeto(CentralClientes.class,"this.cif==\""+antiguoCif+"\"", constantes.NODO_CENTRAL),false);
+
+                if (cliente == null){
+                    mensaje = "El cliente no existe, no puede ser modificado";
+                    throw new Exception("El cliente no existe, no se puede modificar");
+                }
+
+                int zonaAnterior = cliente.getDepartamento().getZona();
+                
+                //Modificamos sus propiedades
+                //String nombre, String localizacion, String tfno, String email, String web, String persContacto, int zona
+                cliente.setNombre(nombre);
+                cliente.setLocalizacion(localizacion);
+                cliente.setTfno(tfno);
+                cliente.setEmail(email);
+                cliente.setWeb(web);
+                cliente.setPersContacto(persContacto);
+                cliente.setEliminado(eliminado);
+
+                
+                //Si se le cambia de la zona actual a otra se establece el nuevo dept en la BD de la Sede central
+                if (zonaAnterior != zona){
+                    CentralPuntoDistribucion pd;
+                    // Borrar del punto de distribución anterior ese cliente 
+                    Object obj1 = new Utilities().obtenIdObjeto(CentralPuntoDistribucion.class, "this.zona=="+zonaAnterior, constantes.NODO_CENTRAL);
+                    pd = (CentralPuntoDistribucion) conexiones[0].getObjectById(obj1,false);
+                   
+                    pd.deleteCliente(cliente);
+
+                    // Cambiar su puntero departamento a la nueva sede a la que pertenece
+                    obj1 = new Utilities().obtenIdObjeto(CentralPuntoDistribucion.class, "this.zona=="+zona, constantes.NODO_CENTRAL);
+                    pd = (CentralPuntoDistribucion) conexiones[0].getObjectById(obj1,false);
+                    cliente.setDepartamento(pd);
+
+                    // Añadir el cliente al nuevo punto de distribucion
+                    pd.addCliente(cliente);
+                }
+                
+                PVClientes clientePV = null;
+                // PUNTO DE VENTA: Sólo modificamos de nuevo el cliente si no pertenece a la SEDE CENTRAL
+                if (zonaAnterior != constantes.NODO_CENTRAL){
+                    
+                    //Obtenemos el objeto
+                    clientePV = (PVClientes) conexiones[zonaAnterior-1].getObjectById(new Utilities().obtenIdObjeto(PVClientes.class,"this.cif==\""+antiguoCif+"\"", zonaAnterior),false);
+                    
+                    if (clientePV == null){
+                        mensaje = "El cliente no existe, no puede ser modificado";
+                        throw new Exception("El cliente no existe, no se puede modificar");
+                    }
+
+                    //Modificamos sus propiedades
+                    clientePV.setNombre(nombre);
+                    clientePV.setLocalizacion(localizacion);
+                    clientePV.setTfno(tfno);
+                    clientePV.setEmail(email);
+                    clientePV.setWeb(web);
+                    clientePV.setPersContacto(persContacto);
+                    
+                    //Si se le cambia de la zona actual a otra
+                    if (zonaAnterior != zona){
+                        //eliminar el cliente de ese punto de venta
+                        clientePV.setEliminado(true);
+                    }else{
+                        clientePV.setEliminado(eliminado);
+                    }
+                }
+                
+                if (zonaAnterior!=zona){
+                    if (zona!=constantes.NODO_CENTRAL){
+                        // Se le cambia a cualquier otro punto de venta que NO sea la sede central
+                        //Insertarlo en el nuevo punto de venta
+
+                        //Nos aseguramos que antes no existia
+                        PVClientes clientePVNuevo = null;
+                        Object objCliente = new Utilities().obtenIdObjeto(PVClientes.class,"this.cif==\""+antiguoCif+"\"", zona);
+
+                        if (objCliente != null){
+                            clientePVNuevo = (PVClientes) conexiones[zona-1].getObjectById(objCliente,false);
+                        }
+                      
+                        if (clientePVNuevo == null){ // no hay ningun cliente con esos datos en ese punto de venta, se puede insertar
+                            //Creamos el cliente
+                            ArrayList pedidos = null;
+                            if (clientePV != null){
+                                pedidos = clientePV.getAllPedidos();
+                            }
+                            clientePVNuevo = new PVClientes(nuevoCif, nombre, localizacion, tfno, email, web, persContacto, eliminado, pedidos);
+
+                            //Lo insertamos
+                            //Hacemos persistente el objeto
+                            conexiones[zona-1].makePersistent(clientePVNuevo);
+                        }else{ // existia un cliente con esos datos en ese punto de venta
+                            clientePVNuevo.setEliminado(eliminado);
+                            clientePVNuevo.setNombre(nombre);
+                            clientePVNuevo.setLocalizacion(localizacion);
+                            clientePVNuevo.setTfno(tfno);
+                            clientePVNuevo.setEmail(email);
+                            clientePVNuevo.setWeb(web);
+                            clientePVNuevo.setPersContacto(persContacto);
+                        }
+                    }
+                    /*else{ // habria que insertarlo en la sede central, pero ya está insertado
+                        
+                    }*/
+                }
+                
+                if (!antiguoCif.equals(nuevoCif)){
+                    cambiaCifEnTodasDB(antiguoCif, nuevoCif, conexiones);
+                }
+
+                //Cerramos la transacción
+                for (int i=0; i<conexiones.length; i++){
+                    conexiones[i].currentTransaction().commit();
+                }
+                ok = 1;
+            }catch (RuntimeException x) {
+                System.out.println("Error en modificar cliente 1: " + x.getMessage());
+                ok = 0;
+            }catch (Exception e){
+                System.out.println("Error en modificar cliente 2: " + e.getMessage());
+                ok = 0;
+            }
+
+            // Close the PersistenceManager instance:
+            finally {
+                //Cerramos las BDs si están abiertas
+                new Utilities().ejecutaFinally(conexiones);
+            }
+        }else{
+            ok = 0;
+            System.err.println("No se puede eliminar en cliente al no existir conexion");
+        }
+        
+        return (ok);
+    }
+   
+    
+    /**
+     *Se encarga de buscar los Clientes con unos parámetros
+     *@param cif: busca el cliente con ese cif. Si cif ="-1" devuelve todos.
+     *@param zona: indica el punto de distribución del cual se quieren obtener los clientes. Si zona=-1 obtienen los de todos los puntos de distribución
+     *
+     * @author Ignacio Carcas
+     */
+   public Vector buscar(String cif, int zona){
+        //Buscar en la BD de los nodos
+        Vector v = new Vector();
+        
+        int peticion = constantes.NODO_CENTRAL;
+        PersistenceManager conexion = new Utilities().obtenerConexiones(peticion);
+        
+        if (conexion != null){
+            // Creamos un try-catch para comprobar que todo va bien en la consulta
+            Query query = null;
+            Collection result = null;
+            String consulta = "";
+            String parameters = "";
+            Map args = new HashMap();
+            try{
+                
+                query = conexion.newQuery(CentralClientes.class);
+                    
+                 if (!cif.equals("-1")){
+                    //Creamos la consulta
+                    consulta += "this.cif==cif";
+                    //Declaramos el nuevo parámetro
+                    parameters += "String cif";
+                    args.put("cif", cif);
+                }
+                
+                if (zona != -1){
+                    if (!consulta.equals("")){
+                        consulta += " && ";
+                    }
+                    //Creamos la consulta
+                    consulta += "this.departamento.zona==zona";
+                    //Declaramos el nuevo parámetro
+                    if (!parameters.equals("")){
+                        parameters += ", ";
+                    }
+                    parameters += "int zona";
+                    args.put("zona", new Integer(zona));
+                }
+                
+                //Declaramos los parámetros
+                if (!parameters.equals("")){
+                    query.declareParameters(parameters);
+                }
+                
+                //Establecemos el filtro de consulta
+                if (!consulta.equals("")){
+                    query.setFilter(consulta);
+                    //System.out.println(consulta);
+                }
+                
+                // Ejecutamos la sentencia pasándole los parámetros
+                if (args.size()>0){
+                    //System.out.println("Tamanio:"+args.size());
+                    result = (Collection) query.executeWithMap(args);
+                }else{
+                    result = (Collection) query.execute();
+                }
+
+                v.addAll(result);
+                
+            }catch(Exception e){ 
+                System.out.println("Error consultando clientes: " + e.getMessage());
+                v = null;
+            }finally{
+                query.close(result);
+                if (!conexion.isClosed()){
+                    conexion.close();
+                }
+            }
+        }else{
+            v = null; // Fallo en la conexión. 
+            System.err.println("¿Exiten de clientes? Fallo en la conexión a la BD");
+        }
+        return (v);
+    }
+   
+    
+}

@@ -1,0 +1,23 @@
+! ** JCreator Project File (C)2000
+! ********** DO NOT EDIT *********
+
+VERSION := "1.10"
+LABEL := "jdo-person"
+JDKPROFILE := "j2sdk1.4.0"
+ACTIVE := "1"
+OUTPUTPATH := "..\\jdo-person"
+COMPILER := "<Default>"
+
+! Start RunTime Configuration Structure
+#[BeginRunTime]LABEL := "<Default>" RUNAPPLIC := "<Default>" RUNAPPLET := "<Default>" RUNDEBUG := "<Default>" PARAM := "George Bush 57" RUN := "eMain" CHECK := "11" #[EndRunTime]
+! Start Required Libraries Structure
+
+! Start Project Folder Structure
+#[BeginFolder]
+LABEL := "Root"
+FILTER := ""
+
+#[BeginFile]SOURCE := "\\eMain.java" #[EndFile]
+#[BeginFile]SOURCE := "\\Main.java" #[EndFile]
+#[BeginFile]SOURCE := "\\Person.java" #[EndFile]
+#[EndFolder]

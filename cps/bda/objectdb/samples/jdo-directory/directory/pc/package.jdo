@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo SYSTEM "http://java.sun.com/dtd/jdo_1_0.dtd">
+
+<jdo>
+    <package name="directory.pc" >
+        <class name="Element" />
+        <class name="Item" persistence-capable-superclass="Element" />
+        <class name="Book" persistence-capable-superclass="Item" />
+        <class name="Category" persistence-capable-superclass="Element" />
+    </package>
+</jdo>

@@ -1,0 +1,16 @@
+! ** JCreator Workspace File (C)2000
+! ********** DO NOT EDIT *********
+
+VERSION := "1.00"
+LABEL := "jdo-person"
+
+! Start Project Structure
+#[BeginProject]SOURCE := "\\jdo-person.jcp" #[EndProject]
+
+! Start Last Document Structure
+#[BeginFile]SOURCE := "\\eMain.java" #[EndFile]
+#[BeginFile]SOURCE := "\\Main.java" #[EndFile]
+#[BeginFile]SOURCE := "\\Person.java" #[EndFile]
+
+! Start Breakpoint Structure
+

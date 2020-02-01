@@ -1,0 +1,338 @@
+/*
+ * InitDB.java
+ *
+ * Created on 14 de febrero de 2005, 20:32
+ */
+
+/**
+ *
+ * @author  Administrador
+ */
+import javax.jdo.*;
+import Central.*;
+import PuntoDeVenta.*;
+import java.util.*;
+
+public class InitDB {
+    
+    /** Creates a new instance of InitDB */
+    public InitDB() {
+    }
+    
+    
+    public void inicializa(){
+        reinicializarDB();
+        //new MantenimientoDB.Empleados().pruebaVariosCommitAnidados();
+        
+        
+        /// OPERACIONES CON PUNTOS DE DISTRIBUCION
+        //new MantenimientoDB.PuntoDistribucion().modificar("si tralara","99999998");
+        //muestraBusqueda( new MantenimientoDB.PuntoDistribucion().buscar(-1));
+        
+        /// OPERACIONES CON EMPLEADOS
+        ArrayList tfnoPers = new ArrayList();
+        ArrayList tfnoEmpr = new ArrayList();
+        tfnoPers.add("976554488");
+        tfnoPers.add("911123131");
+        
+        tfnoEmpr.add("123456");
+        tfnoEmpr.add("123456");
+        
+          //Empleado en zona 2
+        //new MantenimientoDB.Empleados().insertar("56356566H","Condes de Aragon num 20", "Jefe", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Ignacio", "Carcas", 1000.0, "123123", "");
+        //new MantenimientoDB.Empleados().modificarTfno("56356566H", tfnoPers, 1);
+        //new MantenimientoDB.Empleados().modificarTfno("56356566H", tfnoEmpr, 2);
+          //Empleado en zona 2 y subordinado del dni 56356566H
+        //new MantenimientoDB.Empleados().insertar("7777777G","Downing Street num 10", "Empleadillo", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Tony", "Blair", 10.0, "123123", "56356566H");
+          //Empleado en zona 2 y subordinado del dni 7777777G
+        //new MantenimientoDB.Empleados().insertar("8888888L","Domicilio", "Empleadillo 2", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Pepe", "Aznar", 10.0, "123123", "7777777G");
+          //Empleado en zona 2
+        //new MantenimientoDB.Empleados().insertar("87878787B","Via Universitas num 56", "Jefe", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Ignacio", "Carcas", 1000.0, "123123", "");
+                  
+          //Prueba para cambiar el jefe a null
+        //new MantenimientoDB.Empleados().modificar("7777777G","7777777G","Domicilio", "Empleadillo 2", 20.0, new java.util.Date(), "Pipo", "Aznor", 20.0, "222111", "", true);
+          //Cambio de jefe 
+        //new MantenimientoDB.Empleados().modificar("7777777G","7777777G","Domicilio", "Empleadillo 2", 20.0, new java.util.Date(), "Pipo", "Aznor", 20.0, "222111", "12345678J", true);
+          //Cambio de jefe y modificando el DNI
+        //new MantenimientoDB.Empleados().modificar("87878787B","65656565J","Domicilio", "Empleadillo 2", 20.0, new java.util.Date(), "Pipo", "Aznor", 20.0, "222111", "8888888L", false);
+          // Eliminamos
+        //new MantenimientoDB.Empleados().eliminar("7777777G");
+        
+          // bucamos
+        //muestraBusqueda(new MantenimientoDB.Empleados().buscar("-1",0));
+        //muestraBusqueda(new MantenimientoDB.Empleados().buscar("56356566H",2));
+        
+        
+        /// OPERACIONES CON CLIENTES
+          // Insertamos cliente 
+        //new MantenimientoDB.Clientes().insertar("cliente1", "Universidad de Zaragoza", "Plaza San Francisco", "976 55 55 55", "consulta@unizar.es", "www.unizar.es", "Sr Rector", false);
+          // Insertamos cliente
+        //new MantenimientoDB.Clientes().insertar("cliente2", "CPS", "Maria de Luna", "976 33 33 33", "consulta@cps.unizar.es", "www.cps.unizar.es", "Sr director del cps", false);
+
+          // Modificamos el dni
+        //new MantenimientoDB.Clientes().modificar("cliente2", "cliente2_1", "CPS 2", "Maria de Luna 2", "976 44 44 44", "consulta@cps.unizar.es 2", "www.cps.unizar.es 2", "Sr director del cps 2", false);
+            // Comprobamos que con el modificar podemos eliminar y activar
+        //new MantenimientoDB.Clientes().modificar("cliente2_1", "cliente2_1", "CPS 2", "Maria de Luna 2", "976 44 44 44", "consulta@cps.unizar.es 2", "www.cps.unizar.es 2", "Sr director del cps 2", true);
+        //new MantenimientoDB.Clientes().modificar("cliente2_1", "cliente2_1", "CPS 2", "Maria de Luna 2", "976 44 44 44", "consulta@cps.unizar.es 2", "www.cps.unizar.es 2", "Sr director del cps 2", false);
+        
+          // Eliminamos
+        //new MantenimientoDB.Clientes().eliminar("cliente1");
+          // bucamos
+        //muestraBusqueda(new MantenimientoDB.Clientes().buscar("-1"));
+        //muestraBusqueda(new MantenimientoDB.Clientes().buscar("cliente2"));
+        
+        
+        ///OPERACIONES CON VEHICULOS
+          // Insertamos vehiculo
+        //new MantenimientoDB.Vehiculos().insertar("vehiculo1","peugeot 206", new java.util.Date(), new java.util.Date(), 12000.0, false);
+          // Insertamos vehiculo
+        //new MantenimientoDB.Vehiculos().insertar("vehiculo2","peugeot 806", new java.util.Date(), new java.util.Date(), 24000.0, false);
+          // Modificamos la matricula
+        //new MantenimientoDB.Vehiculos().modificar("vehiculo2","vehiculo3","peugeot 806", new java.util.Date(), new java.util.Date(), 24000.0, false);
+            // Comprobamos que se puede activar y eliminar a través del modificar
+        //new MantenimientoDB.Vehiculos().modificar("vehiculo3","vehiculo3","peugeot 806", new java.util.Date(), new java.util.Date(), 24000.0, true);
+        //new MantenimientoDB.Vehiculos().modificar("vehiculo3","vehiculo3","peugeot 806", new java.util.Date(), new java.util.Date(), 24000.0, false);
+
+          // Eliminamos
+        //new MantenimientoDB.Vehiculos().eliminar("vehiculo1");
+          // bucamos
+        //muestraBusqueda(new MantenimientoDB.Vehiculos().buscar("-1"));
+        //muestraBusqueda(new MantenimientoDB.Vehiculos().buscar("vehiculo1"));
+        
+        
+        ///OPERACIONES CON PROVEEDORES
+        //new MantenimientoDB.Proveedores().insertar("prov1", "Plaza del pilar 1", null, "Proveedor 1", "12-256-200", "Rafael Gutierrez", "www.proveedor1.com", "consultas@proveedor1.com", false);
+        //new MantenimientoDB.Proveedores().insertar("prov2", "Fuenterravía 8", null, "Proveedor 2", "11-5647-9", "Pepe Sancho", "www.proveedor2.com", "consultas@proveedor2.com", false);
+        //new MantenimientoDB.Proveedores().modificar("prov1", "prov3", "Plaza del pilar 2", null, "Proveedor 2", "2-12-256-200", "Rafael Gutierrez 2", "www.proveedor2.com", "consultas@proveedor2.com", false);
+          // Eliminación y activación mediante la modificación -> 
+        //new MantenimientoDB.Proveedores().modificar("prov3", "prov3", "Plaza del pilar 2", null, "Proveedor 2", "2-12-256-200", "Rafael Gutierrez 2", "www.proveedor2.com", "consultas@proveedor2.com", true);
+        //new MantenimientoDB.Proveedores().modificar("prov3", "prov3", "Plaza del pilar 2", null, "Proveedor 2", "2-12-256-200", "Rafael Gutierrez 2", "www.proveedor2.com", "consultas@proveedor2.com", false);
+          // modificamos los tfno
+        //new MantenimientoDB.Proveedores().modificarTfno("prov3", tfnoPers);
+          // Eliminación normal
+        //new MantenimientoDB.Proveedores().eliminar("prov3");
+          // bucamos
+        //muestraBusqueda(new MantenimientoDB.Proveedores().buscar("-1"));
+        //muestraBusqueda(new MantenimientoDB.Proveedores().buscar("prov1"));
+        
+        
+        ///OPERACIONES CON PRODUCTOS PROVEEDORES
+        //new MantenimientoDB.ProductosProveedores().insertar("MIprod 1","Chorizo","Sin descripcion",10.35, 1.0, false, "prov2");
+        //new MantenimientoDB.ProductosProveedores().modificar("MIprod 1", "MIprod 2", "Jamón", "Pata negra",400.50, 2.0, false, "prov2");
+          // Eliminación mediante la modificación -> 
+        //new MantenimientoDB.ProductosProveedores().modificar("MIprod 2", "MIprod 18", "Jamón", "Pata negra",400.50, 2.0, true, "prov2");
+        //new MantenimientoDB.ProductosProveedores().modificar("MIprod 18", "MIprod 18", "Jamón", "Pata negra",400.50, 2.0, false, "prov2");
+          //eliminamos
+        //new MantenimientoDB.ProductosProveedores().eliminar("MIprod 18");
+          // bucamos
+        //muestraBusqueda(new MantenimientoDB.ProductosProveedores().buscar("-1", "-1"));
+        //muestraBusqueda(new MantenimientoDB.ProductosProveedores().buscar("MIprod 1", "-1"));
+        //muestraBusqueda(new MantenimientoDB.ProductosProveedores().buscar("-1", "prov2"));
+        
+        
+        ///OPERACIONES CON PRODUCTOS
+          // insertamos productos generales
+        //new MantenimientoDB.Productos().insertar("prod gen 19", "producto 19", "Sin descripcion", 15.20, 1.0, false);
+        //new MantenimientoDB.Productos().insertar("prod gen 29", "producto 29", "Sin descripcion", 11.25, 2.0, false);
+          // insertamos productos regionales
+        //new MantenimientoDB.Productos().insertar("prod reg 40", "producto 39", "Sin descripcion", 5.0, 4.0, false, 2);
+        //new MantenimientoDB.Productos().insertar("prod reg 50", "producto 49", "Sin descripcion", 5.0, 4.0, false, 2);
+        //new MantenimientoDB.Productos().insertar("prod reg 39", "producto 59", "Sin descripcion", 2.0, 6.0, false, 2);
+        
+          // modificamos producto sin cambiar referencia, ni tipo (regional o general)
+        //new MantenimientoDB.Productos().modificar("prod gen 19","prod gen 19", "Jamón de York", "Envasado al vacío", 3.0, 2.0, false);
+          // modificamos cambiando referencia
+        //new MantenimientoDB.Productos().modificar("prod gen 19","prod gen 59", "Jamón de York", "Envasado al vacío", 3.0, 2.0, false);
+          // modificamos el anterior modificando tipo de general a regional
+        //new MantenimientoDB.Productos().modificar("prod gen 59","prod gen 59", "Jamón de York", "Envasado al vacío", 3.0, 2.0, true);
+          // modificamos un producto regional del todo
+        //new MantenimientoDB.Productos().modificar("prod reg 40","prod reg 49", "Jamón de York", "Envasado al vacío", 3.0, 2.0, false);        
+        
+           // eliminamos y activamos desde modificar
+        //new MantenimientoDB.Productos().modificar("prod gen 59","prod gen 59", "Jamón de York", "Envasado al vacío", 3.0, 2.0, true);
+        //new MantenimientoDB.Productos().modificar("prod gen 59","prod gen 59", "Jamón de York", "Envasado al vacío", 3.0, 2.0, false);
+        
+          // eliminamos un producto general
+        //new MantenimientoDB.Productos().modificarEliminado("prod reg 49", true);
+          // eliminamos un producto regional
+        //new MantenimientoDB.Productos().modificarEliminado("prod gen 59", true);
+        
+          // bucamos
+        //muestraBusqueda(new MantenimientoDB.Productos().buscar("-1"));
+        //muestraBusqueda(new MantenimientoDB.Productos().buscar("prod reg 49"));
+        
+        
+        //OPERACIONES CON PEDIDOS
+          //Creacion de los detalle pedidos
+        /*
+        ArrayList detallePedidos = new ArrayList();
+        
+        detallePedidos.clear();
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(1,1.2,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(4,6.0,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(10,14.01,"prod gen 19",2));
+        new MantenimientoDB.Pedidos().insertar("pedido 1", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        
+        detallePedidos.clear();
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(1,1.2,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(4,6.0,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(10,14.01,"prod gen 19",2));
+        new MantenimientoDB.Pedidos().insertar("pedido 2", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        
+        detallePedidos.clear();
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(1,1.2,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(4,6.0,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(10,14.01,"prod gen 19",2));
+        new MantenimientoDB.Pedidos().insertar("pedido 3", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        
+        detallePedidos.clear();
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(1,1.2,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(4,6.0,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(10,14.01,"prod gen 19",2));
+        new MantenimientoDB.Pedidos().insertar("pedido 4", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        
+        detallePedidos.clear();
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(1,1.2,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(4,6.0,"prod gen 19", 2));
+        detallePedidos.add(new MantenimientoDB.Pedidos().creaDetPed(10,14.01,"prod gen 19",2));
+        new MantenimientoDB.Pedidos().insertar("pedido 5", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        */
+        
+          // modificacion de pedidos
+             // cambia solo id_pedido
+        //new MantenimientoDB.Pedidos().modificar("pedido 5" ,"pedido 6", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+             // cambia todo menos id_pedido
+        //new MantenimientoDB.Pedidos().modificar("pedido 6" ,"pedido 6", new java.util.Date(), 2, new java.util.Date(), "vehiculo1", "11111111J", "cliente1", detallePedidos);
+          
+          // eliminacion de pedidos
+        //new MantenimientoDB.Pedidos().eliminar("pedido 1");
+        
+          // busca todos los pedidos de todas las bd
+        //muestraBusqueda(new MantenimientoDB.Pedidos().buscar("-1"));
+          // busca todos los pedidos del punto de venta 2
+        //muestraBusqueda(new MantenimientoDB.Pedidos().buscar("-1"));
+          //busca todos los pedidos que pertenecen al cliente 99999999E en todas las BD
+        //muestraBusqueda(new MantenimientoDB.Pedidos().buscar("99999999E"));
+          //busca todos los pedidos del punto de venta 2 que pertenecen al cliente 99999999E
+        //muestraBusqueda(new MantenimientoDB.Pedidos().buscar("33333333E"));
+        
+        
+        //OPERACIONES CON PEDIDOS A PROVEEDOR
+          // inserción de pedidos
+        //ArrayList detallePedidosAProveedor = new ArrayList();
+        //new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 1", new java.util.Date(), 1, detallePedidosAProveedor);
+        //new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 2", new java.util.Date(), 1, detallePedidosAProveedor);
+        //new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 3", new java.util.Date(), 1, detallePedidosAProveedor);
+        //new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 4", new java.util.Date(), 1, detallePedidosAProveedor);
+        //new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 5", new java.util.Date(), 1, detallePedidosAProveedor);
+          
+          // modificacion de pedidos
+             // cambia solo id_pedido
+        //new MantenimientoDB.PedidosAProveedor().modificar("pedidoProv 5" ,"pedidoProv 6", new java.util.Date(), 1, detallePedidosAProveedor);
+             // cambia todo menos id_pedido
+        //new MantenimientoDB.PedidosAProveedor().modificar("pedidoProv 6" ,"pedidoProv 6", new java.util.Date(), 2, detallePedidosAProveedor);
+          
+          // eliminacion de pedidos
+        //new MantenimientoDB.PedidosAProveedor().eliminar("pedidoProv 4");
+          // busca todos los pedidos de todas las bd
+        //muestraBusqueda(new MantenimientoDB.PedidosAProveedor().buscar());
+        
+    }
+    
+    public void muestraBusqueda(Vector v){
+        if (v==null){
+            System.out.println("No se ha encontrado nada de nada");
+        }else{
+            System.out.println("El número de objetos encontrados es: "+ v.size());
+        }
+    }
+    
+    public void reinicializarDB(){
+        //Borrar la base de datos
+        //borrarDB();
+        
+        
+        // empleados de cada centro con su jerarquia
+        ArrayList tfnoPers = new ArrayList();
+        ArrayList tfnoEmpr = new ArrayList();
+        tfnoPers.add("976554488");
+        tfnoPers.add("911123131");
+        tfnoEmpr.add("123456");
+        tfnoEmpr.add("123456");
+          //Empleado en zona 2
+        new MantenimientoDB.Empleados().insertar("56356566H","Condes de Aragon num 20", "Jefe", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Ignacio", "Carcas", 1000.0, "123123", "");
+          //Empleado en zona 2 y subordinado del dni 56356566H
+        new MantenimientoDB.Empleados().insertar("7777777G","Downing Street num 10", "Empleadillo", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Tony", "Blair", 10.0, "123123", "56356566H");
+          //Empleado en zona 2 y subordinado del dni 7777777G
+        new MantenimientoDB.Empleados().insertar("8888888L","Domicilio", "Empleadillo 2", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Pepe", "Aznar", 10.0, "123123", "7777777G");
+          //Empleado en zona 2
+        new MantenimientoDB.Empleados().insertar("87878787B","Via Universitas num 56", "Jefe", true, 10.0, tfnoPers, tfnoEmpr, new java.util.Date(), "Ignacio", "Carcas", 1000.0, "123123", "");
+        
+        
+        // clientes
+          // Insertamos cliente 
+        new MantenimientoDB.Clientes().insertar("cliente1", "Universidad de Zaragoza", "Plaza San Francisco", "976 55 55 55", "consulta@unizar.es", "www.unizar.es", "Sr Rector", false);
+          // Insertamos cliente
+        new MantenimientoDB.Clientes().insertar("cliente2", "CPS", "Maria de Luna", "976 33 33 33", "consulta@cps.unizar.es", "www.cps.unizar.es", "Sr director del cps", false);
+
+        
+        // vehiculos
+          // Insertamos vehiculo
+        new MantenimientoDB.Vehiculos().insertar("vehiculo1","peugeot 206", new java.util.Date(), new java.util.Date(), 12000.0, false);
+          // Insertamos vehiculo
+        new MantenimientoDB.Vehiculos().insertar("vehiculo2","peugeot 806", new java.util.Date(), new java.util.Date(), 24000.0, false);
+
+        // proveedores
+        new MantenimientoDB.Proveedores().insertar("prov1", "Plaza del pilar 1", null, "Proveedor 1", "12-256-200", "Rafael Gutierrez", "www.proveedor1.com", "consultas@proveedor1.com", false);
+        new MantenimientoDB.Proveedores().insertar("prov2", "Fuenterravía 8", null, "Proveedor 2", "11-5647-9", "Pepe Sancho", "www.proveedor2.com", "consultas@proveedor2.com", false);
+        
+        
+        // productos proveedores
+        new MantenimientoDB.ProductosProveedores().insertar("MIprod 1","Chorizo","Sin descripcion",10.35, 1.0, false, "prov1");
+        
+        // productos
+            // insertamos productos generales
+        new MantenimientoDB.Productos().insertar("prod gen 19", "producto 19", "Sin descripcion", 15.20, 1.0, false);
+        new MantenimientoDB.Productos().insertar("prod gen 29", "producto 29", "Sin descripcion", 11.25, 2.0, false);
+          // insertamos productos regionales
+        new MantenimientoDB.Productos().insertar("prod reg 19", "producto 39", "Sin descripcion", 5.0, 4.0, false, 2);
+        new MantenimientoDB.Productos().insertar("prod reg 29", "producto 49", "Sin descripcion", 5.0, 4.0, false, 2);
+        new MantenimientoDB.Productos().insertar("prod reg 39", "producto 59", "Sin descripcion", 2.0, 6.0, false, 2);
+        
+         
+        //OPERACIONES CON PEDIDOS
+          //Creacion de los detalle pedidos
+        
+          // inserción de pedidos
+        ArrayList detallePedidos = new ArrayList();
+        
+        detallePedidos.add(new PuntoDeVenta.PVDetallePedidos(1,1.2,"prod gen 19", 2) );
+        detallePedidos.add(new PuntoDeVenta.PVDetallePedidos(4,6.0,"prod gen 29", 2) );
+        detallePedidos.add(new PuntoDeVenta.PVDetallePedidos(10,14.01,"prod reg 19",2) );
+        new MantenimientoDB.Pedidos().insertar("pedido 1", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        new MantenimientoDB.Pedidos().insertar("pedido 2", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        new MantenimientoDB.Pedidos().insertar("pedido 3", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        new MantenimientoDB.Pedidos().insertar("pedido 4", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+        new MantenimientoDB.Pedidos().insertar("pedido 5", new java.util.Date(), 1, new java.util.Date(), "1125-cgb", "72978561K", "33333333E", detallePedidos);
+ 
+        
+        //OPERACIONES CON PEDIDOS A PROVEEDOR
+          // inserción de pedidos
+          //Creacion de los detalle pedidos
+        PuntoDeVenta.PVDetallePedidosAProveedor detalleProv1 = new PuntoDeVenta.PVDetallePedidosAProveedor(1,1.2,"prod 1", 2);
+        PuntoDeVenta.PVDetallePedidosAProveedor detalleProv2 = new PuntoDeVenta.PVDetallePedidosAProveedor(4,6.0,"MIprod 1", 2);
+        PuntoDeVenta.PVDetallePedidosAProveedor detalleProv3 = new PuntoDeVenta.PVDetallePedidosAProveedor(10,14.01,"prod 2", 2);
+          // inserción de pedidos
+        ArrayList detallePedidosAProveedor = new ArrayList();
+        detallePedidosAProveedor.add(detalleProv1);
+        detallePedidosAProveedor.add(detalleProv2);
+        detallePedidosAProveedor.add(detalleProv3);
+        new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 1", new java.util.Date(), 1, detallePedidosAProveedor);
+        new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 2", new java.util.Date(), 1, detallePedidosAProveedor);
+        new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 3", new java.util.Date(), 1, detallePedidosAProveedor);
+        new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 4", new java.util.Date(), 1, detallePedidosAProveedor);
+        new MantenimientoDB.PedidosAProveedor().insertar("pedidoProv 5", new java.util.Date(), 1, detallePedidosAProveedor);
+        
+    }
+   
+}
